@@ -1,6 +1,13 @@
 import React from 'react';
 import './HomePage.css';
 
+// Importing the images from the assets folder correctly
+import yogaImage from '../assets/images/yoga-course.png';
+import pilatesImage from '../assets/images/pilates-course.png';
+import fullBodyImage from '../assets/images/fullbody-course.webp';
+import stretchImage from '../assets/images/stretch-flexibility-course.webp';
+import meditationImage from '../assets/images/meditation-course.png';
+
 const HomePage = () => {
   const scrollToCourses = () => {
     document.getElementById('courses-section').scrollIntoView({ behavior: 'smooth' });
@@ -23,42 +30,92 @@ const HomePage = () => {
         <div className="course-cards">
           {/* Yoga Course */}
           <div className="course-card">
-            <img src="path/to/yoga-course.jpg" alt="Yoga" />
-            <h3>Yoga</h3>
-            <p>Join our Yoga classes to improve flexibility and mental clarity.</p>
-            <button>View Course</button>
+            <div className="course-labels">
+              <span className="availability-label">Available</span>
+              <span className="category-label">Yoga</span>
+            </div>
+            <img src={yogaImage} alt="Yoga" />
+            <h3 className="course-title">Sunrise Yoga Class</h3>
+            <div className="course-details">
+              <span className="course-duration"><i className="fas fa-clock"></i> 4-5 hrs</span>
+              <span className="course-learners">200 learners</span>
+            </div>
+            <div className="course-buttons">
+              <button className="info-button">More Info</button>
+              <button className="start-button">Start Course</button>
+            </div>
           </div>
 
           {/* Pilates Course */}
           <div className="course-card">
-            <img src="path/to/pilates-course.jpg" alt="Pilates" />
-            <h3>Pilates</h3>
-            <p>Strengthen your core and improve balance with our Pilates classes.</p>
-            <button>View Course</button>
+            <div className="course-labels">
+              <span className="availability-label">Available</span>
+              <span className="category-label">Pilates</span>
+            </div>
+            <img src={pilatesImage} alt="Pilates" />
+            <h3 className="course-title">Core Strength Pilates</h3>
+            <div className="course-details">
+              <span className="course-duration"><i className="fas fa-clock"></i> 3-4 hrs</span>
+              <span className="course-learners">150 learners</span>
+            </div>
+            <div className="course-buttons">
+              <button className="info-button">More Info</button>
+              <button className="start-button">Start Course</button>
+            </div>
           </div>
 
           {/* Full Body Training Course */}
           <div className="course-card">
-            <img src="path/to/fullbody-course.jpg" alt="Full Body Training" />
-            <h3>Full Body Training</h3>
-            <p>Get a full-body workout from the comfort of your home.</p>
-            <button>View Course</button>
+            <div className="course-labels">
+              <span className="availability-label">Available</span>
+              <span className="category-label">Full Body</span>
+            </div>
+            <img src={fullBodyImage} alt="Full Body Training" />
+            <h3 className="course-title">Total Body Bootcamp</h3>
+            <div className="course-details">
+              <span className="course-duration"><i className="fas fa-clock"></i> 5-6 hrs</span>
+              <span className="course-learners">180 learners</span>
+            </div>
+            <div className="course-buttons">
+              <button className="info-button">More Info</button>
+              <button className="start-button">Start Course</button>
+            </div>
           </div>
 
           {/* Stretch & Flexibility Course */}
           <div className="course-card">
-            <img src="path/to/stretch-flexibility-course.jpg" alt="Stretch & Flexibility" />
-            <h3>Stretch & Flexibility</h3>
-            <p>Enhance your range of motion and reduce muscle tension with our Stretch & Flexibility classes.</p>
-            <button>View Course</button>
+            <div className="course-labels">
+              <span className="availability-label">Available</span>
+              <span className="category-label">Stretch & Flexibility</span>
+            </div>
+            <img src={stretchImage} alt="Stretch & Flexibility" />
+            <h3 className="course-title">Flexibility Flow</h3>
+            <div className="course-details">
+              <span className="course-duration"><i className="fas fa-clock"></i> 2-3 hrs</span>
+              <span className="course-learners">120 learners</span>
+            </div>
+            <div className="course-buttons">
+              <button className="info-button">More Info</button>
+              <button className="start-button">Start Course</button>
+            </div>
           </div>
 
           {/* Meditation & Mindfulness Course */}
           <div className="course-card">
-            <img src="path/to/meditation-course.jpg" alt="Meditation & Mindfulness" />
-            <h3>Meditation & Mindfulness</h3>
-            <p>Find peace and balance through guided meditation and mindfulness exercises.</p>
-            <button>View Course</button>
+            <div className="course-labels">
+              <span className="availability-label">Available</span>
+              <span className="category-label">Meditation</span>
+            </div>
+            <img src={meditationImage} alt="Meditation & Mindfulness" />
+            <h3 className="course-title">Mindfulness Meditation</h3>
+            <div className="course-details">
+              <span className="course-duration"><i className="fas fa-clock"></i> 1-2 hrs</span>
+              <span className="course-learners">220 learners</span>
+            </div>
+            <div className="course-buttons">
+              <button className="info-button">More Info</button>
+              <button className="start-button">Start Course</button>
+            </div>
           </div>
         </div>
       </div>

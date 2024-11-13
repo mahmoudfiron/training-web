@@ -1,6 +1,6 @@
 import React from 'react';
 import './NavBar.css';  // Assuming the CSS file is in the same directory
-import logo from '../assets/logo.jpg';  // Assuming the logo is in the assets directory
+import logo from '../assets/icons/logo.jpg';  // Assuming the logo is in the assets directory
 
 const NavBar = () => {
   return (

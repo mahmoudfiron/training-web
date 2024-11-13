@@ -1,107 +1,182 @@
-/* src/components/HomePage.css */
-.hero-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh; /* Height of the section set to 80% of the viewport */
-    width: 100%;
-    background-image: url('../assets/hero-background.webp'); /* Add your image here */
-    background-size: cover; /* Ensures the image covers the entire hero section */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat;
-    color: white;
-    text-align: center;
-    position: relative;
-  }
-  
-  .hero-content {
-    max-width: 600px;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black for contrast */
-    padding: 2rem;
-    border-radius: 10px;
-    z-index: 1;
-  }
-  
-  .cta-button {
-    margin-top: 1rem;
-    padding: 1rem 2rem;
-    background-color: #ff5722; /* Make it stand out */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: background-color 0.3s;
-  }
-  
-  .cta-button:hover {
-    background-color: #e64a19; /* Slightly darker for hover */
-  }
-  
+/* HomePage.css */
 
-  .courses-section {
-    padding: 3rem 2rem;
-    background-color: #f9f9f9; /* Light background for contrast */
+/* Hero Section Styles */
+.hero-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* Height of the section set to 80% of the viewport */
+  width: 100%;
+  background-image: url('../assets/images/hero-background.webp');
+  background-size: cover; /* Ensures the image covers the entire hero section */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Ensures it doesn’t repeat */
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 600px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.cta-button {
+  margin-top: 1rem;
+  padding: 1rem 2rem;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.cta-button:hover {
+  background-color: #e64a19;
+}
+
+/* Courses Section Styles */
+.courses-section {
+  margin: 3rem auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.course-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.course-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover {
+  transform: scale(1.05);
+}
+
+.course-labels {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  font-size: 0.8rem;
+}
+
+.availability-label {
+  background: #28a745; /* Green for available */
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.category-label {
+  background: #007bff; /* Blue for category */
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.course-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.course-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.course-details i {
+  margin-right: 0.5rem;
+}
+
+.course-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.info-button {
+  background: rgb(202, 202, 202); /* Orange for more info */
+  color: rgb(146, 146, 146);
+  font-weight: bold;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.start-button {
+  background: #006400ab; /* Orange for more info */
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.info-button:hover {
+  background: rgba(202, 202, 202, 0.342); /* Darker shade for hover */
+}
+
+.start-button:hover {
+  background: #00640044; /* Darker shade for hover */
+}
+
+/* Image Styling */
+.course-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+/* General Section Headings */
+.courses-section h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content {
+    padding: 1.5rem;
+    max-width: 90%;
   }
-  
-  .courses-section h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    color: #333;
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
   }
-  
+
   .course-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem; /* Space between course cards */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
   }
-  
-  .course-card {
-    background: white;
-    border-radius: 10px;
-    padding: 1rem;
-    width: 300px; /* Fixed width for uniform card size */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions for hover effect */
-  }
-  
-  .course-card img {
-    max-width: 100%;
-    border-radius: 5px;
-    height: auto;
-  }
-  
-  .course-card h3 {
-    margin-top: 1rem;
-    font-size: 1.6rem;
-    color: #333;
-  }
-  
-  .course-card p {
-    margin: 1rem 0;
-    font-size: 1rem;
-    color: #666;
-  }
-  
-  .course-card button {
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-    background-color: #ff5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  .course-card button:hover {
-    background-color: #e64a19;
-  }
-  
-  .course-card:hover {
-    transform: translateY(-5px); /* Lift card slightly on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Darker shadow for a "pop" effect */
-  }
+}
