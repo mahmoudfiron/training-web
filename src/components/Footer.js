@@ -1,18 +1,14 @@
-// src/components/Footer.js
 import React from 'react';
-import './Footer.css';  // Footer styling
+import './Footer.css';
 
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-content">
-        <p>Follow us on:</p>
-        <ul className="footer-socials">
-          <li><a href="#facebook">Facebook</a></li>
-          <li><a href="#instagram">Instagram</a></li>
-          <li><a href="#twitter">Twitter</a></li>
-        </ul>
-        <p>Contact us for more details.</p>
+      <p>© 2024 StreamFit - All Rights Reserved</p>
+      <div className="social-links">
+        <a href="https://www.facebook.com">Facebook</a> | 
+        <a href="https://www.twitter.com">Twitter</a> | 
+        <a href="https://www.instagram.com">Instagram</a>
       </div>
     </footer>
   );

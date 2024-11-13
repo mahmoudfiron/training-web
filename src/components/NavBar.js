@@ -11,7 +11,18 @@ const NavBar = () => {
         </a>
       </div>
       <ul className="navbar-links">
-        <li><a href="/courses">Courses</a></li>
+        <li className="dropdown">
+          <button className="dropdown-button">
+            Courses <span className="dropdown-arrow"></span>
+          </button>
+          <div className="dropdown-content">
+            <a href="/yoga">Yoga</a>
+            <a href="/pilates">Pilates</a>
+            <a href="/fullbody">Full Body Training</a>
+            <a href="/stretch">Stretch & Flexibility</a>
+            <a href="/meditation">Meditation & Mindfulness</a>
+          </div>
+        </li>
         <li><a href="/calculator">Calories Calculator</a></li>
         <li><a href="/about">About Us</a></li>
       </ul>

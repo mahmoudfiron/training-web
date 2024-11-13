@@ -1,0 +1,107 @@
+/* src/components/HomePage.css */
+.hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Height of the section set to 80% of the viewport */
+    width: 100%;
+    background-image: url('../assets/hero-background.webp'); /* Add your image here */
+    background-size: cover; /* Ensures the image covers the entire hero section */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat;
+    color: white;
+    text-align: center;
+    position: relative;
+  }
+  
+  .hero-content {
+    max-width: 600px;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black for contrast */
+    padding: 2rem;
+    border-radius: 10px;
+    z-index: 1;
+  }
+  
+  .cta-button {
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    background-color: #ff5722; /* Make it stand out */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+  }
+  
+  .cta-button:hover {
+    background-color: #e64a19; /* Slightly darker for hover */
+  }
+  
+
+  .courses-section {
+    padding: 3rem 2rem;
+    background-color: #f9f9f9; /* Light background for contrast */
+  }
+  
+  .courses-section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+  
+  .course-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem; /* Space between course cards */
+  }
+  
+  .course-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    width: 300px; /* Fixed width for uniform card size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transitions for hover effect */
+  }
+  
+  .course-card img {
+    max-width: 100%;
+    border-radius: 5px;
+    height: auto;
+  }
+  
+  .course-card h3 {
+    margin-top: 1rem;
+    font-size: 1.6rem;
+    color: #333;
+  }
+  
+  .course-card p {
+    margin: 1rem 0;
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .course-card button {
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .course-card button:hover {
+    background-color: #e64a19;
+  }
+  
+  .course-card:hover {
+    transform: translateY(-5px); /* Lift card slightly on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Darker shadow for a "pop" effect */
+  }
