@@ -1,9 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import logo from '../assets/icons/logo.jpg';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 const NavBar = () => {
+  const [user, setUser] = React.useState(null);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        alert('Logged out successfully');
+        navigate('/');
+      })
+      .catch((error) => alert(error.message));
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -23,15 +45,23 @@ const NavBar = () => {
           </div>
         </li>
         <li><Link to="/calculator">Calories Calculator</Link></li>
-        <li><Link to="/about">About Us</Link></li>
+        <li><Link to="/about">Learn About</Link></li>
       </ul>
       <div className="navbar-search">
         <input type="text" placeholder="Search..." />
         <button>Search</button>
       </div>
       <ul className="navbar-actions">
-        <li><Link to="/signup">Sign Up</Link></li>
-        <li><Link to="/login">Login</Link></li>
+        {user ? (
+          <li>
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
+          </li>
+        ) : (
+          <>
+            <li><Link to="/signup">Sign Up</Link></li>
+            <li><Link to="/login">Login</Link></li>
+          </>
+        )}
       </ul>
     </nav>
   );

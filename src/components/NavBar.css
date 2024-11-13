@@ -125,3 +125,24 @@
 .dropdown-content a:hover {
   background-color: #ddd;
 }
+
+.logout-button {
+  background-color: rgb(59, 59, 59);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: rgba(59, 59, 59, 0.16);
+  transform: scale(1.05);
+}
+
+.logout-button:active {
+  background-color: rgba(59, 59, 59, 0.203);
+  transform: scale(0.98);
+}
