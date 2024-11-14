@@ -160,3 +160,16 @@
   background-color: rgba(59, 59, 59, 0.203);
   transform: scale(0.98);
 }
+
+
+.user-profile-icon {
+  font-size: 1.8rem;
+  color: #3b3b3b;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.user-profile-icon:hover {
+  color: #666;
+}

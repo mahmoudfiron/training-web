@@ -6,6 +6,7 @@ import CreateCourse from './pages/CreateCourse';
 import HomePage from './components/HomePage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} /> {/* Ensure this matches */}
           <Route path="/create-course" element={<CreateCourse />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
         <Footer />
       </div>
