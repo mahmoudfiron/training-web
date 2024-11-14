@@ -66,11 +66,25 @@
   gap: 1.5rem;
 }
 
-.navbar-actions a {
-  color: rgb(59, 59, 59);
-  text-decoration: none;
-  font-size: 1.3rem;
+.navbar-actions button {
+  background-color: rgba(59, 59, 59, 0.788); /* Green color */
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-actions button:hover {
+  background-color: rgba(59, 59, 59, 0.317);
+  transform: scale(1.05);
+}
+
+.navbar-actions button:active {
+  background-color: #3e8e41;
+  transform: scale(0.98);
 }
 
 .dropdown {

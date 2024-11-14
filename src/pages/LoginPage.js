@@ -1,45 +1,104 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import './AuthPage.css'; 
+import { Link } from 'react-router-dom';
+import './AuthPage.css'; // Common CSS file for Login and Signup pages
+import joinUsImage from '../assets/images/join-us.webp';
+import { auth } from '../firebase'; // Import Firebase Auth instance
+import { signInWithEmailAndPassword } from 'firebase/auth'; // Import signInWithEmailAndPassword from Firebase
 
-const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+const LoginPage = ({ isOpen, onClose, openSignup }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState(''); // State to manage error messages
 
-  const handleLogin = async (e) => {
+  if (!isOpen) return null;
+
+  // Handle form field changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  // Handle login form submission
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert('Logged in successfully!');
-      navigate('/'); // Redirect to the homepage after login
-    } catch (error) {
-      alert(error.message);
-    }
+    const { email, password } = formData;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Login successful
+        console.log('User logged in:', userCredential.user);
+        alert('Login successful!'); // Optional: Notify user of successful login
+        onClose(); // Close the modal after successful login
+      })
+      .catch((error) => {
+        // Handle errors during login
+        console.error('Error logging in:', error.message);
+        setError(error.message);
+      });
   };
 
   return (
-    <div className="auth-container">
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
+    <div className="auth-modal-overlay" onClick={onClose}>
+      <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Left Section */}
+        <div className="auth-left-section">
+          <img src={joinUsImage} alt="Join Us" className="auth-image" />
+          <div className="auth-left-text">
+            <h2>Join StreamFit for an Amazing Fitness Experience</h2>
+            <p>
+              Get access to the best instructors and a variety of courses, all from the comfort of your home. Start your fitness journey today and achieve your goals!
+            </p>
+            <Link to="/create-course" className="course-creator-link">
+              Are you a course creator? Click Here
+            </Link>
+          </div>
+        </div>
+
+        {/* Right Section: Login Form */}
+        <div className="auth-right-section">
+          <h2>Log In</h2>
+          <button className="social-login-button facebook">Facebook</button>
+          <button className="social-login-button google">Google</button>
+          <button className="social-login-button linkedin">LinkedIn</button>
+          <hr className="divider" />
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            {error && <p className="error-text">{error}</p>} {/* Display any error messages */}
+            <div className="form-options">
+              <label>
+                <input type="checkbox" /> Keep me logged in
+              </label>
+            </div>
+            <button type="submit" className="auth-submit-button">Log In</button>
+          </form>
+          <p className="switch-form-text">
+            Don't have an account?{' '}
+            <button onClick={openSignup} className="switch-to-signup">
+              Sign Up
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
