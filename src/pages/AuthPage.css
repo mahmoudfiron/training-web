@@ -160,3 +160,21 @@ form input {
 .switch-form-text a:hover {
   text-decoration: underline;
 }
+
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: #f00;
+}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Use Link instead of anchor tags for internal navigation
+import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of anchor tags for internal navigation
 import './AuthPage.css'; // Common CSS file for Login and Signup pages
 import joinUsImage from '../assets/images/join-us.webp';
 import { auth } from '../firebase'; // Import Firebase Auth instance
@@ -13,6 +13,7 @@ const SignupPage = ({ isOpen, onClose, openLogin }) => {
     password: ''
   });
   const [error, setError] = useState(''); // State to handle any error messages
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -45,9 +46,19 @@ const SignupPage = ({ isOpen, onClose, openLogin }) => {
       });
   };
 
+  const handleCourseCreatorClick = () => {
+    onClose(); // Close the modal
+    navigate('/create-course'); // Navigate to Create Course page
+  };
+
   return (
     <div className="auth-modal-overlay" onClick={onClose}>
       <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Close Button */}
+        <button className="close-button" onClick={onClose}>
+          &times;
+        </button>
+
         {/* Left Section */}
         <div className="auth-left-section">
           <img src={joinUsImage} alt="Join Us" className="auth-image" />
@@ -56,9 +67,9 @@ const SignupPage = ({ isOpen, onClose, openLogin }) => {
             <p>
               Get access to the best instructors and a variety of courses, all from the comfort of your home. Start your fitness journey today and achieve your goals!
             </p>
-            <Link to="/create-course" className="course-creator-link">
+            <button onClick={handleCourseCreatorClick} className="course-creator-link">
               Are you a course creator? Click Here
-            </Link>
+            </button>
           </div>
         </div>
 

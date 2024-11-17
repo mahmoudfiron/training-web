@@ -64,11 +64,20 @@ const NavBar = () => {
         </div>
         <ul className="navbar-actions">
           {user ? (
-            <li>
-              <button className="logout-button" onClick={handleLogout}>
-                Logout
-              </button>
-            </li>
+            <>
+                          <li>
+                <button className="logout-button" onClick={handleLogout}>
+                  Logout
+                </button>
+              </li>
+              
+              <li>
+                <Link to="/profile">
+                  <button className="profile-button">Profile</button>
+                </Link>
+              </li>
+
+            </>
           ) : (
             <>
               <li>
