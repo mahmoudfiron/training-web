@@ -7,6 +7,8 @@ import HomePage from './components/HomePage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import ProfilePage from './pages/ProfilePage';
+import LearnAbout from './pages/LearnAbout'; // Import the LearnAbout component
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} /> {/* Ensure this matches */}
           <Route path="/create-course" element={<CreateCourse />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/learnabout" element={<LearnAbout />} /> {/* Add this route */}
         </Routes>
         <Footer />
       </div>
