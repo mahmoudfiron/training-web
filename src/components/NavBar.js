@@ -1,21 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
-import logo from '../assets/icons/logo.jpg'; // Ensure this path is correct
-import { auth } from '../firebase'; // Import auth from the correct location
-import { onAuthStateChanged, signOut } from 'firebase/auth'; // Import signOut and onAuthStateChanged directly from firebase/auth
+import logo from '../assets/icons/logo.jpg';
+import { auth } from '../firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
+import { getUserRoleFromFirestore } from '../utils/firebaseUtils';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(''); // State to hold user role
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      // Fetch the user's role when they log in
+      if (currentUser) {
+        try {
+          const role = await getUserRoleFromFirestore(currentUser.uid);
+          setUserRole(role);
+        } catch (error) {
+          console.error("Failed to fetch user role: ", error);
+        }
+      } else {
+        setUserRole('');
+      }
     });
 
     return () => unsubscribe();
@@ -65,26 +79,37 @@ const NavBar = () => {
         <ul className="navbar-actions">
           {user ? (
             <>
-                          <li>
+              {/* Adding the Instructor Link */}
+              {userRole === 'instructor' && (
+                <li>
+                  <Link to="/create-course">Add Course</Link>
+                </li>
+              )}
+              <li>
                 <button className="logout-button" onClick={handleLogout}>
                   Logout
                 </button>
               </li>
-              
               <li>
-                <Link to="/profile">
-                  <button className="profile-button">Profile</button>
-                </Link>
+                <button
+                  className="profile-button"
+                  onClick={() => navigate('/profile')}
+                >
+                  Profile
+                </button>
               </li>
-
             </>
           ) : (
             <>
               <li>
-                <button onClick={() => setIsSignupOpen(true)} className="signup-button">Sign Up</button>
+                <button onClick={() => setIsSignupOpen(true)} className="signup-button">
+                  Sign Up
+                </button>
               </li>
               <li>
-                <button onClick={() => setIsLoginOpen(true)} className="login-button">Login</button>
+                <button onClick={() => setIsLoginOpen(true)} className="login-button">
+                  Login
+                </button>
               </li>
             </>
           )}
