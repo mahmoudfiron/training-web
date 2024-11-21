@@ -47,6 +47,23 @@
 
 .course-card-body {
   padding: 10px;
+  text-align: center; /* Ensures the name of the course is centered */
+}
+
+.course-details {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+}
+
+.hours-info, .learners-info {
+  display: flex;
+  align-items: center;
+}
+
+.hours-info .icon, .learners-info .icon {
+  margin-right: 5px;
 }
 
 .more-info-button,

@@ -1,12 +1,12 @@
+// Import necessary dependencies
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../firebase'; // Assuming you have a firebase.js file that initializes and exports db
 import { useNavigate } from 'react-router-dom'; // Step 1: Import useNavigate
-import '../styles/CreateCourse.css';
-
-
+import '../styles/CreateCourse.css'; // Assuming you have a CSS file to style this page
 
 const CreateCourse = ({ user }) => {
+  // State for form data
   const [formData, setFormData] = useState({
     courseName: '',
     categoryName: '',
@@ -14,17 +14,18 @@ const CreateCourse = ({ user }) => {
     date: '',
     duration: '',
     equipment: '',
+    imageUrl: '', // Added new field for image URL
+    available: false, // Added availability field
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Step 2: Create a navigate function
 
-
   // Handle form input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
@@ -143,6 +144,27 @@ const CreateCourse = ({ user }) => {
             id="equipment"
             name="equipment"
             value={formData.equipment}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="imageUrl">Course Image URL:</label>
+          <input
+            type="text"
+            id="imageUrl"
+            name="imageUrl"
+            value={formData.imageUrl}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="available">Available:</label>
+          <input
+            type="checkbox"
+            id="available"
+            name="available"
+            checked={formData.available}
             onChange={handleChange}
           />
         </div>

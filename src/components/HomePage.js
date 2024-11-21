@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase'; // Make sure this points to your Firebase setup
-import './HomePage.css'; // Ensure you have a CSS file to style this page
+import '../components/HomePage.css'; // Ensure you have a CSS file to style this page
+import { FaClock } from 'react-icons/fa'; // Import clock icon for the hours
 
 const HomePage = () => {
   const [courses, setCourses] = useState([]);
@@ -43,9 +44,18 @@ const HomePage = () => {
             </div>
             <img src={course.imageUrl || '/default-course.jpg'} alt={`${course.courseName}`} className="course-image" />
             <div className="course-card-body">
-              <h3>{course.courseName}</h3>
-              <p>{course.duration} hrs</p>
-              <p>{course.learners || '0'} learners</p>
+              <div className="course-details">
+                <h3>{course.courseName}</h3>
+              </div>
+              <div className="duration">
+                <FaClock className="hours-icon" />
+                <span>{course.duration} hrs</span>
+              </div>
+              <div className="learners">
+                <span>{course.learners || '0'} learners</span>
+              </div>
+            </div>
+            <div className="course-card-buttons">
               <button className="more-info-button">More Info</button>
               <button className="start-course-button">Start Course</button>
             </div>
