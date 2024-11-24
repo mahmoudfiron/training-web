@@ -16,6 +16,9 @@ const CreateCourse = ({ user }) => {
     equipment: '',
     imageUrl: '', // Added new field for image URL
     available: false, // Added availability field
+    description: '', // Added course description field
+    learningOutcomes: '', // Added learning outcomes field
+    publisherName: '', // Added publisher name field
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Step 2: Create a navigate function
@@ -166,6 +169,37 @@ const CreateCourse = ({ user }) => {
             name="available"
             checked={formData.available}
             onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="description">Course Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="learningOutcomes">Learning Outcomes (comma-separated):</label>
+          <textarea
+            id="learningOutcomes"
+            name="learningOutcomes"
+            value={formData.learningOutcomes}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="publisherName">Publisher Name:</label>
+          <input
+            type="text"
+            id="publisherName"
+            name="publisherName"
+            value={formData.publisherName}
+            onChange={handleChange}
+            required
           />
         </div>
         <button type="submit" className="submit-button">Add Course</button>

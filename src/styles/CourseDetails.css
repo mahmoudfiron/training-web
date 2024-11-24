@@ -1,0 +1,77 @@
+/* CourseDetails.css */
+
+.course-details-page {
+    margin: 40px;
+  }
+  
+  .course-summary {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .course-image {
+    width: 400px;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .course-info {
+    max-width: 600px;
+  }
+  
+  .learners-count {
+    font-size: 1.2em;
+    color: #6c757d;
+  }
+  
+  .start-course-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 10px;
+  }
+  
+  .course-details-section {
+    margin-top: 30px;
+  }
+  
+  .course-section-tabs {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .course-section-tabs button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 1.1em;
+  }
+  
+  .course-section-tabs .active-tab {
+    border-bottom: 2px solid #007bff;
+  }
+  
+  .course-description, .learning-outcomes {
+    margin-top: 20px;
+  }
+  
+  .learning-outcomes ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .learning-outcomes ul li {
+    padding-left: 20px;
+    position: relative;
+  }
+  
+  .learning-outcomes ul li::before {
+    content: '✔';
+    position: absolute;
+    left: 0;
+  }  

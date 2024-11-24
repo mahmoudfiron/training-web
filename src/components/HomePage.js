@@ -1,20 +1,18 @@
-// HomePage.js
-
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../firebase'; // Make sure this points to your Firebase setup
-import '../components/HomePage.css'; // Ensure you have a CSS file to style this page
-import { FaClock } from 'react-icons/fa'; // Import clock icon for the hours
+import { db } from '../firebase'; // Ensure this points to your Firebase setup
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import './HomePage.css'; // Ensure you have a CSS file to style this page
 
 const HomePage = () => {
   const [courses, setCourses] = useState([]);
+  const navigate = useNavigate(); // Use navigate hook to handle navigation
 
   useEffect(() => {
-    // Fetching the courses from Firestore
     const fetchCourses = async () => {
       try {
         const coursesData = [];
-        const categories = ['yoga', 'pilates', 'full-body', 'stretch', 'meditation']; // Available categories
+        const categories = ['yoga', 'pilates', 'full-body', 'stretch', 'meditation'];
 
         for (const category of categories) {
           const coursesSnapshot = await getDocs(collection(db, `courseCategories/${category}/courses`));
@@ -32,6 +30,12 @@ const HomePage = () => {
     fetchCourses();
   }, []);
 
+  // Update handleMoreInfo to be triggered when the button is clicked
+  const handleMoreInfo = (courseId, categoryName) => {
+    console.log(`Navigating to course-details for category: ${categoryName}, course ID: ${courseId}`);
+    navigate(`/course-details/${categoryName}/${courseId}`);
+  };
+
   return (
     <div className="homepage">
       <h2>Our Courses</h2>
@@ -44,19 +48,21 @@ const HomePage = () => {
             </div>
             <img src={course.imageUrl || '/default-course.jpg'} alt={`${course.courseName}`} className="course-image" />
             <div className="course-card-body">
+              <h3>{course.courseName}</h3>
               <div className="course-details">
-                <h3>{course.courseName}</h3>
+                <span className="learners-count">{course.learners || '0'} learners</span>
+                <span className="course-duration">
+                  <i className="fa fa-clock-o"></i> {course.duration} hrs
+                </span>
               </div>
-              <div className="duration">
-                <FaClock className="hours-icon" />
-                <span>{course.duration} hrs</span>
-              </div>
-              <div className="learners">
-                <span>{course.learners || '0'} learners</span>
-              </div>
-            </div>
-            <div className="course-card-buttons">
-              <button className="more-info-button">More Info</button>
+              {/* Updated the More Info button */}
+              <button
+                className="more-info-button"
+                onClick={() => handleMoreInfo(course.id, course.categoryName)}
+              >
+                More Info
+              </button>
+
               <button className="start-course-button">Start Course</button>
             </div>
           </div>

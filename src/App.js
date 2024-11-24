@@ -9,7 +9,8 @@ import HomePage from './components/HomePage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
 import ProfilePage from './pages/ProfilePage';
-
+import LearnAbout from './pages/LearnAbout';
+import CourseDetails from './pages/CourseDetails'; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -24,20 +25,19 @@ function App() {
 
   return (
     <Router>
-      <div>
-        <NavBar user={user} />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/create-course" element={<CreateCourse user={user} />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-        <Footer />
-      </div>
+      <NavBar user={user} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/create-course" element={<CreateCourse user={user} />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/learnabout" element={<LearnAbout />} />
+        <Route path="/course-details/:categoryName/:courseId" element={<CourseDetails />} />
+      </Routes>
+      <Footer />
     </Router>
   );
 }
 
 export default App;
-

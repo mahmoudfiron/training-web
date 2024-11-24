@@ -58,7 +58,7 @@ const NavBar = () => {
               Courses <span className="dropdown-arrow"></span>
             </button>
             <div className="dropdown-content">
-              <Link to="/courses/yoga">Yoga</Link>
+              <Link to="/courses/yoga">Yogaa</Link>
               <Link to="/courses/pilates">Pilates</Link>
               <Link to="/courses/fullbody">Full Body Training</Link>
               <Link to="/courses/stretch">Stretch & Flexibility</Link>
