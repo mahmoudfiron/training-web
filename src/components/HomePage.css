@@ -17,6 +17,11 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  position: relative; /* Needed for badge positioning */
+}
+
+.course-card.enrolled {
+  border: 2px solid #4caf50; /* Green border for enrolled courses */
 }
 
 .course-card-header {
@@ -39,6 +44,16 @@
   border-radius: 5px;
 }
 
+.enrolled-badge {
+  display: inline-block;
+  background-color: #4caf50; /* Green color for enrolled courses */
+  color: white;
+  padding: 8px 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
 .course-image {
   width: 100%;
   height: 150px;
@@ -57,15 +72,6 @@
   align-items: center;
 }
 
-.hours-info, .learners-info {
-  display: flex;
-  align-items: center;
-}
-
-.hours-info .icon, .learners-info .icon {
-  margin-right: 5px;
-}
-
 .more-info-button,
 .start-course-button {
   margin: 5px;
@@ -77,5 +83,10 @@
 
 .start-course-button {
   background-color: #4caf50;
+  color: white;
+}
+
+.more-info-button {
+  background-color: #007bff;
   color: white;
 }

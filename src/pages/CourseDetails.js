@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import '../styles/CourseDetails.css'; // Import CourseDetails CSS
 
 const CourseDetails = () => {
-  const { courseId, categoryName } = useParams();
+  const { courseId, categoryName } = useParams(); // Destructure categoryName and courseId from the params
   const [course, setCourse] = useState(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const user = auth.currentUser;
+  const navigate = useNavigate(); // Use navigate hook to handle navigation
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -52,10 +53,15 @@ const CourseDetails = () => {
           <p><strong>Duration:</strong> {course.duration} hours</p>
           <p><strong>Equipment:</strong> {course.equipment}</p>
           <p><strong>Availability:</strong> {course.available ? 'Available' : 'Unavailable'}</p>
-          {!isEnrolled ? (
-            <button className="start-course-button">Start Course Now</button>
+          {isEnrolled ? (
+            <span className="enrolled-badge">Enrolled</span>
           ) : (
-            <p>You are already enrolled in this course. Please visit the "My Courses" section to access it.</p>
+            <button
+              className="start-course-button"
+              onClick={() => navigate(`/course-payment/${categoryName}/${courseId}`)}
+            >
+              Start Course Now
+            </button>
           )}
         </div>
       </div>
