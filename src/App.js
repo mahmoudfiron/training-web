@@ -11,6 +11,7 @@ import Footer from './components/Footer';
 import ProfilePage from './pages/ProfilePage';
 import LearnAbout from './pages/LearnAbout';
 import CourseDetails from './pages/CourseDetails'; 
+import PaymentPage from './pages/PaymentPage'; // Import PaymentPage
 
 function App() {
   const [user, setUser] = useState(null);
@@ -34,6 +35,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/learnabout" element={<LearnAbout />} />
         <Route path="/course-details/:categoryName/:courseId" element={<CourseDetails />} />
+        <Route path="/course-payment/:categoryName/:courseId" element={<PaymentPage />} />
       </Routes>
       <Footer />
     </Router>

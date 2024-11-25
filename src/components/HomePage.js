@@ -55,7 +55,7 @@ const HomePage = () => {
                   <i className="fa fa-clock-o"></i> {course.duration} hrs
                 </span>
               </div>
-              {/* Updated the More Info button */}
+            
               <button
                 className="more-info-button"
                 onClick={() => handleMoreInfo(course.id, course.categoryName)}
@@ -63,7 +63,12 @@ const HomePage = () => {
                 More Info
               </button>
 
-              <button className="start-course-button">Start Course</button>
+              <button
+                 className="start-course-button"
+                 onClick={() => navigate(`/course-payment/${course.categoryName}/${course.id}`)}
+              >
+                 Start Course Now
+            </button>
             </div>
           </div>
         ))}
