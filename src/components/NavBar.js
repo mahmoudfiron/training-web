@@ -85,6 +85,10 @@ const NavBar = () => {
                   <Link to="/create-course">Add Course</Link>
                 </li>
               )}
+               <li>
+                <Link to="/my-courses">My Courses</Link> {/* Link to My Courses */}
+              </li>
+              
               <li>
                 <button className="logout-button" onClick={handleLogout}>
                   Logout

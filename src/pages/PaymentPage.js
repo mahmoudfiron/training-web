@@ -1,9 +1,8 @@
 // PaymentPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '../firebase';
-import { auth } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase'; // Ensure auth is imported for current user
 import '../styles/PaymentPage.css';
 
 const PaymentPage = () => {
@@ -17,21 +16,8 @@ const PaymentPage = () => {
     nameOnCard: '',
     country: '',
   });
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Fetch the current user
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const user = auth.currentUser;
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -59,31 +45,32 @@ const PaymentPage = () => {
   };
 
   const handlePayment = async () => {
-    // Assume payment is processed successfully here
-    // This is where you would integrate a real payment API like Stripe or PayPal
-    alert('Payment successful!');
+    try {
+      // Simulating payment success
+      alert('Payment successful!');
 
-    if (user) {
-      try {
-        // Update the user's enrolled courses in Firestore
-        const userRef = doc(db, 'users', user.uid);
-        await updateDoc(userRef, {
-          enrolledCourses: arrayUnion({
-            courseId,
-            categoryName,
-            courseName: course.courseName,
-            price: course.price,
-            enrolledAt: new Date().toISOString(),
-          }),
-        });
-
-        // Redirect the user to the home page
-        navigate('/');
-      } catch (error) {
-        console.error('Error updating enrolled courses:', error);
+      // Check if user is logged in
+      if (!user) {
+        alert('Please log in to complete enrollment.');
+        return;
       }
-    } else {
-      console.error('User is not authenticated.');
+
+      // Add the course to the user's enrolled courses
+      const userRef = doc(db, 'users', user.uid, 'enrolledCourses', courseId);
+      await setDoc(userRef, {
+        courseName: course.courseName,
+        categoryName: categoryName,
+        duration: course.duration,
+        price: course.price,
+        enrolledAt: new Date(),
+      });
+
+      // Navigate to the home page after successful payment
+      navigate('/');
+
+    } catch (error) {
+      console.error('Error during payment or enrollment:', error);
+      alert('Error processing payment. Please try again.');
     }
   };
 
@@ -99,12 +86,9 @@ const PaymentPage = () => {
         <h4>Then ${course.price} per year</h4>
         <div className="course-summary">
           <div className="course-info">
-            
             <h3>Learning Outcomes:</h3>
             <p>{course.learningOutcomes}</p>
             <p><strong>Price: </strong>${course.price}</p>
-            <h3>course description:</h3>
-            <h>{course.description}</h>
             <p><strong>Duration: </strong>{course.duration} hours</p>
             <img src="https://cdn.pixabay.com/photo/2021/03/19/13/15/bill-6107551_640.png" alt="Placeholder Img" />
           </div>
@@ -112,7 +96,7 @@ const PaymentPage = () => {
       </div>
       <div className="payment-right">
         <h2>Pay for your Course</h2>
-        <form className="payment-form" onSubmit={(e) => e.preventDefault()}>
+        <form className="payment-form">
           <input
             type="email"
             placeholder="Email"
