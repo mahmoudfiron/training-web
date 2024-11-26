@@ -14,11 +14,16 @@ const CreateCourse = ({ user }) => {
     date: '',
     duration: '',
     equipment: '',
-    imageUrl: '', // Added new field for image URL
-    available: false, // Added availability field
-    description: '', // Added course description field
-    learningOutcomes: '', // Added learning outcomes field
-    publisherName: '', // Added publisher name field
+    imageUrl: '', 
+    available: false, 
+    description: '', 
+    learningOutcomes: '', 
+    publisherName: '',
+    zoomLink: '',
+    zoomMeetingId: '',
+    zoomPasscode: '',
+    startTime: '',
+    endTime: ''
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Step 2: Create a navigate function
@@ -130,6 +135,28 @@ const CreateCourse = ({ user }) => {
           />
         </div>
         <div className="form-group">
+          <label htmlFor="startTime">Start Time:</label>
+          <input
+            type="time"
+            id="startTime"
+            name="startTime"
+            value={formData.startTime}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="endTime">End Time:</label>
+          <input
+            type="time"
+            id="endTime"
+            name="endTime"
+            value={formData.endTime}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
           <label htmlFor="duration">Duration (in hours):</label>
           <input
             type="number"
@@ -202,6 +229,42 @@ const CreateCourse = ({ user }) => {
             required
           />
         </div>
+
+        <div className="form-group">
+          <label htmlFor="zoomLink">Zoom Meeting Link:</label>
+          <input
+            type="text"
+            id="zoomLink"
+            name="zoomLink"
+            value={formData.zoomLink}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="zoomMeetingId">Zoom Meeting ID:</label>
+          <input
+            type="text"
+            id="zoomMeetingId"
+            name="zoomMeetingId"
+            value={formData.zoomMeetingId}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="zoomPasscode">Zoom Meeting Passcode:</label>
+          <input
+            type="text"
+            id="zoomPasscode"
+            name="zoomPasscode"
+            value={formData.zoomPasscode}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+
         <button type="submit" className="submit-button">Add Course</button>
       </form>
       {message && <p className="message-text">{message}</p>}

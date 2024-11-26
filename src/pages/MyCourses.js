@@ -39,7 +39,7 @@ const MyCourses = () => {
               <h3>{course.courseName}</h3>
               <p>Category: {course.categoryName}</p>
               <p>Duration: {course.duration} hours</p>
-              <p>Price: ${course.price}</p>
+              <p>Price: {course.price}$ </p>
             </div>
           ))}
         </div>

@@ -1,0 +1,57 @@
+/* ManageClassesPage.css */
+
+.manage-classes-page {
+    padding: 40px;
+    text-align: center;
+  }
+  
+  .classes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .class-card {
+    width: 300px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+  }
+  
+  .class-card h3 {
+    margin-bottom: 10px;
+  }
+  
+  .class-card p {
+    margin: 5px 0;
+  }
+  
+  .edit-button, .delete-button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background-color: #007bff;
+    color: white;
+    margin-right: 10px;
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .delete-button:hover {
+    background-color: #c82333;
+  }  

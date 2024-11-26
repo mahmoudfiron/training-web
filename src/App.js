@@ -13,6 +13,7 @@ import LearnAbout from './pages/LearnAbout';
 import CourseDetails from './pages/CourseDetails'; 
 import PaymentPage from './pages/PaymentPage';
 import MyCourses from './pages/MyCourses'; 
+import ManageClasses from './pages/ManageClasses'; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -36,8 +37,9 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/learnabout" element={<LearnAbout />} />
         <Route path="/course-details/:categoryName/:courseId" element={<CourseDetails />} />
-        <Route path="/course-payment/:categoryName/:courseId" element={<PaymentPage />} />
-        <Route path="/my-courses" element={<MyCourses />} />
+        <Route path="/course-payment/:categoryName/:courseId" element={<PaymentPage />} />\
+        <Route path="/My-Courses" element={<MyCourses />} />
+        <Route path="/manage-classes" element={<ManageClasses />} />
       </Routes>
       <Footer />
     </Router>

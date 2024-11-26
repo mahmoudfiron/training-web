@@ -58,7 +58,7 @@ const NavBar = () => {
               Courses <span className="dropdown-arrow"></span>
             </button>
             <div className="dropdown-content">
-              <Link to="/courses/yoga">Yogaa</Link>
+              <Link to="/courses/yoga">Yoga</Link>
               <Link to="/courses/pilates">Pilates</Link>
               <Link to="/courses/fullbody">Full Body Training</Link>
               <Link to="/courses/stretch">Stretch & Flexibility</Link>
@@ -81,19 +81,24 @@ const NavBar = () => {
             <>
               {/* Adding the Instructor Link */}
               {userRole === 'instructor' && (
-                <li>
-                  <Link to="/create-course">Add Course</Link>
-                </li>
+                <>
+                  <li>
+                    <Link to="/create-course">Add Course</Link>
+                  </li>
+                  <li>
+                    <Link to="/manage-classes">Manage Classes</Link> {/* New Link for Managing Classes */}
+                  </li>
+                </>
               )}
-               <li>
+              <li>
                 <Link to="/my-courses">My Courses</Link> {/* Link to My Courses */}
               </li>
-              
               <li>
                 <button className="logout-button" onClick={handleLogout}>
                   Logout
                 </button>
               </li>
+              
               <li>
                 <button
                   className="profile-button"
