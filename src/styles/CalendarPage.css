@@ -1,0 +1,40 @@
+/* src/styles/CalendarPage.css */
+
+.calendar-page {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .calendar-page h2 {
+    margin-bottom: 20px;
+    font-size: 2em;
+  }
+  
+  .classes-on-date {
+    margin-top: 30px;
+    text-align: left;
+  }
+  
+  .classes-on-date ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .classes-on-date li {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }  

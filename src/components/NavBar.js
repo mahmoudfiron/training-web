@@ -71,6 +71,9 @@ const NavBar = () => {
           <li>
             <Link to="/learnabout">Learn About</Link>
           </li>
+          <li>
+          <Link to="/calendar">My Calendar</Link>
+          </li>
         </ul>
         <div className="navbar-search">
           <input type="text" placeholder="Search..." />
@@ -85,13 +88,13 @@ const NavBar = () => {
                   <li>
                     <Link to="/create-course">Add Course</Link>
                   </li>
-                  <li>
-                    <Link to="/manage-classes">Manage Classes</Link> {/* New Link for Managing Classes */}
-                  </li>
                 </>
               )}
               <li>
                 <Link to="/my-courses">My Courses</Link> {/* Link to My Courses */}
+              </li>
+              <li>
+                    <Link to="/manage-classes">Manage Classes</Link> {/* New Link for Managing Classes */}
               </li>
               <li>
                 <button className="logout-button" onClick={handleLogout}>

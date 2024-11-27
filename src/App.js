@@ -14,6 +14,7 @@ import CourseDetails from './pages/CourseDetails';
 import PaymentPage from './pages/PaymentPage';
 import MyCourses from './pages/MyCourses'; 
 import ManageClasses from './pages/ManageClasses'; 
+import CalendarPage from './pages/CalendarPage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -40,6 +41,7 @@ function App() {
         <Route path="/course-payment/:categoryName/:courseId" element={<PaymentPage />} />\
         <Route path="/My-Courses" element={<MyCourses />} />
         <Route path="/manage-classes" element={<ManageClasses />} />
+        <Route path="/calendar" element={<CalendarPage />} />
       </Routes>
       <Footer />
     </Router>
