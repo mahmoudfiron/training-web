@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import '../styles/MyCourses.css';
+import { Link } from 'react-router-dom';
 
 const MyCourses = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -40,6 +41,11 @@ const MyCourses = () => {
               <p>Category: {course.categoryName}</p>
               <p>Duration: {course.duration} hours</p>
               <p>Price: {course.price}$ </p>
+
+              <Link to={`/add-lesson/${course.id}`} state={{ categoryName: course.categoryName }}>
+               Add Lesson cousin
+             </Link>
+
             </div>
           ))}
         </div>

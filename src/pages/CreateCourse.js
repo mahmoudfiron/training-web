@@ -11,19 +11,12 @@ const CreateCourse = ({ user }) => {
     courseName: '',
     categoryName: '',
     price: '',
-    date: '',
-    duration: '',
     equipment: '',
     imageUrl: '', 
     available: false, 
     description: '', 
     learningOutcomes: '', 
     publisherName: '',
-    zoomLink: '',
-    zoomMeetingId: '',
-    zoomPasscode: '',
-    startTime: '',
-    endTime: ''
   });
   const [message, setMessage] = useState('');
   const navigate = useNavigate(); // Step 2: Create a navigate function
@@ -47,10 +40,6 @@ const CreateCourse = ({ user }) => {
         setMessage('Please select a valid category.');
         return;
       }
-
-      // Log to see the generated values
-      console.log('Category:', categoryName);
-      console.log('Course Info:', courseInfo);
 
       // Navigate to category collection and add course
       const coursesCollectionRef = collection(db, `courseCategories/${categoryName}/courses`);
@@ -124,50 +113,6 @@ const CreateCourse = ({ user }) => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="date">Date:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="startTime">Start Time:</label>
-          <input
-            type="time"
-            id="startTime"
-            name="startTime"
-            value={formData.startTime}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="endTime">End Time:</label>
-          <input
-            type="time"
-            id="endTime"
-            name="endTime"
-            value={formData.endTime}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="duration">Duration (in hours):</label>
-          <input
-            type="number"
-            id="duration"
-            name="duration"
-            value={formData.duration}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
           <label htmlFor="equipment">Equipment Required:</label>
           <input
             type="text"
@@ -229,41 +174,6 @@ const CreateCourse = ({ user }) => {
             required
           />
         </div>
-
-        <div className="form-group">
-          <label htmlFor="zoomLink">Zoom Meeting Link:</label>
-          <input
-            type="text"
-            id="zoomLink"
-            name="zoomLink"
-            value={formData.zoomLink}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="zoomMeetingId">Zoom Meeting ID:</label>
-          <input
-            type="text"
-            id="zoomMeetingId"
-            name="zoomMeetingId"
-            value={formData.zoomMeetingId}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="zoomPasscode">Zoom Meeting Passcode:</label>
-          <input
-            type="text"
-            id="zoomPasscode"
-            name="zoomPasscode"
-            value={formData.zoomPasscode}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
 
         <button type="submit" className="submit-button">Add Course</button>
       </form>

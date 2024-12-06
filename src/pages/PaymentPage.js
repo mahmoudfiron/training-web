@@ -60,7 +60,6 @@ const PaymentPage = () => {
       await setDoc(userRef, {
         courseName: course.courseName,
         categoryName: categoryName,
-        duration: course.duration,
         price: course.price,
         enrolledAt: new Date(),
       });
@@ -89,7 +88,6 @@ const PaymentPage = () => {
             <h3>Learning Outcomes:</h3>
             <p>{course.learningOutcomes}</p>
             <p><strong>Price: </strong>${course.price}</p>
-            <p><strong>Duration: </strong>{course.duration} hours</p>
             <img src="https://cdn.pixabay.com/photo/2021/03/19/13/15/bill-6107551_640.png" alt="Placeholder Img" />
           </div>
         </div>

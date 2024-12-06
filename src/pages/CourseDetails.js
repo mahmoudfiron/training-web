@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import '../styles/CourseDetails.css'; // Import CourseDetails CSS
+import { Link } from 'react-router-dom';
 
 const CourseDetails = () => {
   const { courseId, categoryName } = useParams(); // Destructure categoryName and courseId from the params
@@ -53,6 +54,9 @@ const CourseDetails = () => {
           <p><strong>Duration:</strong> {course.duration} hours</p>
           <p><strong>Equipment:</strong> {course.equipment}</p>
           <p><strong>Availability:</strong> {course.available ? 'Available' : 'Unavailable'}</p>
+          <Link to={`/add-lesson/${course.id}`} className="add-lesson-button">
+          Add Lesson
+          </Link>
           {isEnrolled ? (
             <span className="enrolled-badge">Enrolled</span>
           ) : (
