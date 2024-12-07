@@ -30,27 +30,28 @@ const CreateCourse = ({ user }) => {
     });
   };
 
-  // Handle form submission and add the course to Firestore
   const handleAddCourse = async (courseData) => {
     try {
       const { categoryName, ...courseInfo } = courseData;
-
+  
       // Ensure categoryName is valid
       if (!categoryName) {
         setMessage('Please select a valid category.');
         return;
       }
-
+  
       // Navigate to category collection and add course
       const coursesCollectionRef = collection(db, `courseCategories/${categoryName}/courses`);
-      await addDoc(coursesCollectionRef, {
+      const newCourse = await addDoc(coursesCollectionRef, {
         ...courseInfo,
-        instructorUid: user?.uid,  // Ensure you have the instructor's user ID here
-        createdAt: new Date(),    // Timestamp for when the course is created
+        categoryName, // Explicitly store the category name in the course document
+        instructorUid: user?.uid, // Ensure you have the instructor's user ID here
+        createdAt: new Date(), // Timestamp for when the course is created
       });
-
+  
       setMessage('Course added successfully');
-      navigate('/'); // Step 3: Navigate to the home page after successfully adding the course
+      console.log('Course created with ID:', newCourse.id);
+      navigate('/'); // Navigate to the home page after successfully adding the course
     } catch (error) {
       console.error('Error adding course:', error);
       setMessage('Error adding course. Please try again.');

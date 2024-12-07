@@ -130,3 +130,27 @@
   border-radius: 10px;
   object-fit: cover;
 }
+
+.edit-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.edit-button:hover,
+.delete-button:hover {
+  opacity: 0.9;
+}
