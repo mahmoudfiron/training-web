@@ -10,6 +10,32 @@ const ManageClasses = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Function to check if a lesson is expired
+  const isLessonExpired = (lesson) => {
+    const currentDate = new Date();
+    const lessonDate = new Date(`${lesson.date}T${lesson.endTime}`);
+    return lessonDate < currentDate;
+  };
+
+  // Function to delete expired lessons
+  const deleteExpiredLessons = async (categoryName, courseId, lessons) => {
+    const validLessons = [];
+    for (const lesson of lessons) {
+      if (isLessonExpired(lesson)) {
+        try {
+          const lessonRef = doc(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons', lesson.lessonId);
+          await deleteDoc(lessonRef);
+          console.log(`Deleted expired lesson: ${lesson.lessonId}`);
+        } catch (error) {
+          console.error(`Error deleting lesson ${lesson.lessonId}:`, error);
+        }
+      } else {
+        validLessons.push(lesson);
+      }
+    }
+    return validLessons; // Return only valid (non-expired) lessons
+  };
+
   useEffect(() => {
     const fetchEnrolledCourses = async (userId) => {
       try {
@@ -35,10 +61,13 @@ const ManageClasses = () => {
               ...lessonDoc.data(),
             }));
 
+            // Delete expired lessons and keep valid ones
+            const validLessons = await deleteExpiredLessons(categoryName, courseId, lessons);
+
             fetchedCourses.push({
               id: courseId,
               ...courseData,
-              lessons: lessons,
+              lessons: validLessons,
             });
           }
         }
@@ -80,11 +109,11 @@ const ManageClasses = () => {
               const updatedLessons = course.lessons.filter((lesson) => lesson.lessonId !== lessonId);
               return updatedLessons.length > 0
                 ? { ...course, lessons: updatedLessons }
-                : null; // Remove course if no lessons remain
+                : null;
             }
             return course;
           })
-          .filter(Boolean) // Remove null values
+          .filter(Boolean)
       );
 
       alert('Lesson deleted successfully!');
