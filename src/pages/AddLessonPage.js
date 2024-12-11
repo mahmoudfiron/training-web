@@ -84,7 +84,7 @@ const AddLessonPage = () => {
       });
 
       setMessage('Lesson added successfully');
-      navigate('/manage-classes'); // Navigate to Manage Classes page after adding the lesson
+      navigate('/instructor-courses'); // Navigate to Manage Classes page after adding the lesson
     } catch (error) {
       console.error('Error adding lesson:', error);
       setMessage('Error adding lesson. Please try again.');

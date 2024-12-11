@@ -1,25 +1,25 @@
 // Import necessary dependencies
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase'; // Assuming you have a firebase.js file that initializes and exports db
-import { useNavigate } from 'react-router-dom'; // Step 1: Import useNavigate
-import '../styles/CreateCourse.css'; // Assuming you have a CSS file to style this page
+import { db, auth } from '../firebase'; // Import auth to ensure user ID is fetched properly
+import { useNavigate } from 'react-router-dom';
+import '../styles/CreateCourse.css';
 
-const CreateCourse = ({ user }) => {
+const CreateCourse = () => {
   // State for form data
   const [formData, setFormData] = useState({
     courseName: '',
     categoryName: '',
     price: '',
     equipment: '',
-    imageUrl: '', 
-    available: false, 
-    description: '', 
-    learningOutcomes: '', 
+    imageUrl: '',
+    available: false,
+    description: '',
+    learningOutcomes: '',
     publisherName: '',
   });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // Step 2: Create a navigate function
+  const navigate = useNavigate();
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -33,25 +33,31 @@ const CreateCourse = ({ user }) => {
   const handleAddCourse = async (courseData) => {
     try {
       const { categoryName, ...courseInfo } = courseData;
-  
+
       // Ensure categoryName is valid
       if (!categoryName) {
         setMessage('Please select a valid category.');
         return;
       }
-  
+
+      const user = auth.currentUser;
+      if (!user) {
+        setMessage('Error: User is not authenticated.');
+        return;
+      }
+
       // Navigate to category collection and add course
       const coursesCollectionRef = collection(db, `courseCategories/${categoryName}/courses`);
       const newCourse = await addDoc(coursesCollectionRef, {
         ...courseInfo,
         categoryName, // Explicitly store the category name in the course document
-        instructorUid: user?.uid, // Ensure you have the instructor's user ID here
-        createdAt: new Date(), // Timestamp for when the course is created
+        instructorUid: user.uid, // Add the instructor's UID
+        createdAt: new Date().toISOString(), // Timestamp for when the course is created
       });
-  
-      setMessage('Course added successfully');
+
+      setMessage('Course added successfully.');
       console.log('Course created with ID:', newCourse.id);
-      navigate('/'); // Navigate to the home page after successfully adding the course
+      navigate('/instructor-courses'); // Navigate to the instructor courses page after successfully adding the course
     } catch (error) {
       console.error('Error adding course:', error);
       setMessage('Error adding course. Please try again.');
@@ -61,12 +67,6 @@ const CreateCourse = ({ user }) => {
   // Handle form submission event
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-
-    if (!user) {
-      setMessage('Error: User not authenticated');
-      return;
-    }
-
     handleAddCourse(formData); // Call handleAddCourse with the form data
   };
 

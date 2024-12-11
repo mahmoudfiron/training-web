@@ -128,6 +128,17 @@ const NavBar = () => {
         </ul>
       </nav>
 
+
+{/* Add the InstructorCoursesPage button if the user is an instructor */}
+{userRole === 'instructor' && (
+          <li>
+            <Link to="/instructor-courses" className="nav-button">
+              Instructor Courses
+            </Link>
+          </li>
+        )} 
+
+
       {/* Login and Signup Modals */}
       <LoginPage isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <SignupPage isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />

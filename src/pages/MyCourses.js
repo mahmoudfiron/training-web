@@ -71,11 +71,7 @@ const MyCourses = () => {
               <h3>{course.courseName}</h3>
               <p>Category: {course.categoryName}</p>
               <p>Duration: {course.duration} hours</p>
-              <p>Price: {course.price}$</p>
-
-              <Link to={`/add-lesson/${course.id}`} state={{ categoryName: course.categoryName }}>
-                Add Lesson
-              </Link>
+              <p>Price: {course.price}$</p>          
 
               {/* Delete Button (Only for the course creator) */}
               {course.instructorUid === user?.uid && (

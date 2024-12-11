@@ -17,6 +17,8 @@ import ManageClasses from './pages/ManageClasses';
 import CalendarPage from './pages/CalendarPage';
 import AddLessonPage from './pages/AddLessonPage';
 import EditLessonPage from './pages/EditLessonPage';
+import InstructorCourses from "./pages/InstructorCourses"; // Add this page
+import EditCoursePage from './pages/EditCoursePage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -46,6 +48,9 @@ function App() {
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/add-lesson/:courseId" element={<AddLessonPage />} />
         <Route path="/edit-lesson/:courseId/:lessonId" element={<EditLessonPage />} /> 
+        <Route path="/instructor-courses" element={<InstructorCourses />} />
+        <Route path="/edit-course/:courseId" element={<EditCoursePage />} /> {/* Fixed route */}
+
       </Routes>
       <Footer />
     </Router>
