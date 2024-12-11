@@ -120,17 +120,7 @@ const EditCoursePage = () => {
             required
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="imageUrl">Image URL:</label>
-          <input
-            type="text"
-            id="imageUrl"
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        
         <button type="submit" className="submit-button">Update Course</button>
       </form>
       {message && <p className="message-text">{message}</p>}

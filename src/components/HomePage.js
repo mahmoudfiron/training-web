@@ -83,7 +83,7 @@ const HomePage = () => {
                 <span className="availability-badge">{course.available ? 'Available' : 'Unavailable'}</span>
                 <span className="category-badge">{course.categoryName}</span>
               </div>
-              <img src={course.imageUrl || '/default-course.jpg'} alt={`${course.courseName}`} className="course-image" />
+              <img src={course.imageBase64 || '/default-course.jpg'} alt={`${course.courseName}`} className="course-image" />
               <div className="course-card-body">
                 <h3>{course.courseName}</h3>
                 <div className="course-details">

@@ -1,18 +1,16 @@
-// Import necessary dependencies
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase'; // Import auth to ensure user ID is fetched properly
+import { db, auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CreateCourse.css';
 
 const CreateCourse = () => {
-  // State for form data
   const [formData, setFormData] = useState({
     courseName: '',
     categoryName: '',
     price: '',
     equipment: '',
-    imageUrl: '',
+    imageBase64: '', // Store Base64-encoded image
     available: false,
     description: '',
     learningOutcomes: '',
@@ -21,20 +19,30 @@ const CreateCourse = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  // Handle form input changes
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
+    const { name, value, type, checked, files } = e.target;
+
+    if (name === 'imageFile' && files && files[0]) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({
+          ...formData,
+          imageBase64: reader.result, // Save Base64 string
+        });
+      };
+      reader.readAsDataURL(files[0]);
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value,
+      });
+    }
   };
 
   const handleAddCourse = async (courseData) => {
     try {
       const { categoryName, ...courseInfo } = courseData;
 
-      // Ensure categoryName is valid
       if (!categoryName) {
         setMessage('Please select a valid category.');
         return;
@@ -46,28 +54,25 @@ const CreateCourse = () => {
         return;
       }
 
-      // Navigate to category collection and add course
       const coursesCollectionRef = collection(db, `courseCategories/${categoryName}/courses`);
-      const newCourse = await addDoc(coursesCollectionRef, {
+      await addDoc(coursesCollectionRef, {
         ...courseInfo,
-        categoryName, // Explicitly store the category name in the course document
-        instructorUid: user.uid, // Add the instructor's UID
-        createdAt: new Date().toISOString(), // Timestamp for when the course is created
+        categoryName,
+        instructorUid: user.uid,
+        createdAt: new Date().toISOString(),
       });
 
       setMessage('Course added successfully.');
-      console.log('Course created with ID:', newCourse.id);
-      navigate('/instructor-courses'); // Navigate to the instructor courses page after successfully adding the course
+      navigate('/instructor-courses');
     } catch (error) {
       console.error('Error adding course:', error);
       setMessage('Error adding course. Please try again.');
     }
   };
 
-  // Handle form submission event
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    handleAddCourse(formData); // Call handleAddCourse with the form data
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await handleAddCourse(formData);
   };
 
   return (
@@ -124,16 +129,23 @@ const CreateCourse = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="imageUrl">Course Image URL:</label>
+          <label htmlFor="imageFile">Course Image:</label>
           <input
-            type="text"
-            id="imageUrl"
-            name="imageUrl"
-            value={formData.imageUrl}
+            type="file"
+            id="imageFile"
+            name="imageFile"
+            accept="image/*"
             onChange={handleChange}
             required
           />
         </div>
+        {formData.imageBase64 && (
+          <img
+            src={formData.imageBase64}
+            alt="Course Preview"
+            className="image-preview"
+          />
+        )}
         <div className="form-group">
           <label htmlFor="available">Available:</label>
           <input
@@ -175,8 +187,9 @@ const CreateCourse = () => {
             required
           />
         </div>
-
-        <button type="submit" className="submit-button">Add Course</button>
+        <button type="submit" className="submit-button">
+          Add Course
+        </button>
       </form>
       {message && <p className="message-text">{message}</p>}
     </div>

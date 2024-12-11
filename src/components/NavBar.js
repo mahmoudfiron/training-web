@@ -10,7 +10,7 @@ import { getUserRoleFromFirestore } from '../utils/firebaseUtils';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState(''); // State to hold user role
+  const [userRole, setUserRole] = useState('');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const navigate = useNavigate();
@@ -19,13 +19,12 @@ const NavBar = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
-      // Fetch the user's role when they log in
       if (currentUser) {
         try {
           const role = await getUserRoleFromFirestore(currentUser.uid);
           setUserRole(role);
         } catch (error) {
-          console.error("Failed to fetch user role: ", error);
+          console.error('Failed to fetch user role: ', error);
         }
       } else {
         setUserRole('');
@@ -53,18 +52,6 @@ const NavBar = () => {
           </Link>
         </div>
         <ul className="navbar-links">
-          <li className="dropdown">
-            <button className="dropdown-button">
-              Courses <span className="dropdown-arrow"></span>
-            </button>
-            <div className="dropdown-content">
-              <Link to="/courses/yoga">Yoga</Link>
-              <Link to="/courses/pilates">Pilates</Link>
-              <Link to="/courses/fullbody">Full Body Training</Link>
-              <Link to="/courses/stretch">Stretch & Flexibility</Link>
-              <Link to="/courses/meditation">Meditation & Mindfulness</Link>
-            </div>
-          </li>
           <li>
             <Link to="/calculator">Calories Calculator</Link>
           </li>
@@ -72,7 +59,7 @@ const NavBar = () => {
             <Link to="/learnabout">Learn About</Link>
           </li>
           <li>
-          <Link to="/calendar">My Calendar</Link>
+            <Link to="/calendar">My Calendar</Link>
           </li>
         </ul>
         <div className="navbar-search">
@@ -82,26 +69,33 @@ const NavBar = () => {
         <ul className="navbar-actions">
           {user ? (
             <>
-              {/* Adding the Instructor Link */}
               {userRole === 'instructor' && (
-                <>
-                  <li>
+                <li className="dropdown">
+                  <button className="dropdown-button">
+                    Instructor Options <span className="dropdown-arrow"></span>
+                  </button>
+                  <div className="dropdown-content">
                     <Link to="/create-course">Add Course</Link>
-                  </li>
-                </>
+                    <Link to="/instructor-courses">Instructor Courses</Link>
+                  </div>
+                </li>
               )}
-              <li>
-                <Link to="/my-courses">My Courses</Link> {/* Link to My Courses */}
-              </li>
-              <li>
-                    <Link to="/manage-classes">Manage Classes</Link> {/* New Link for Managing Classes */}
-              </li>
+              {(userRole === 'user' || userRole === 'instructor') && (
+                <li className="dropdown">
+                  <button className="dropdown-button">
+                    My Options <span className="dropdown-arrow"></span>
+                  </button>
+                  <div className="dropdown-content">
+                    <Link to="/my-courses">My Courses</Link>
+                    <Link to="/manage-classes">My Lessons</Link>
+                  </div>
+                </li>
+              )}
               <li>
                 <button className="logout-button" onClick={handleLogout}>
                   Logout
                 </button>
               </li>
-              
               <li>
                 <button
                   className="profile-button"
@@ -114,12 +108,18 @@ const NavBar = () => {
           ) : (
             <>
               <li>
-                <button onClick={() => setIsSignupOpen(true)} className="signup-button">
+                <button
+                  onClick={() => setIsSignupOpen(true)}
+                  className="signup-button"
+                >
                   Sign Up
                 </button>
               </li>
               <li>
-                <button onClick={() => setIsLoginOpen(true)} className="login-button">
+                <button
+                  onClick={() => setIsLoginOpen(true)}
+                  className="login-button"
+                >
                   Login
                 </button>
               </li>
@@ -128,18 +128,6 @@ const NavBar = () => {
         </ul>
       </nav>
 
-
-{/* Add the InstructorCoursesPage button if the user is an instructor */}
-{userRole === 'instructor' && (
-          <li>
-            <Link to="/instructor-courses" className="nav-button">
-              Instructor Courses
-            </Link>
-          </li>
-        )} 
-
-
-      {/* Login and Signup Modals */}
       <LoginPage isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <SignupPage isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
     </>
