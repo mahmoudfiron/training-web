@@ -80,7 +80,7 @@ const NavBar = () => {
                   </div>
                 </li>
               )}
-              {(userRole === 'user' || userRole === 'instructor') && (
+
                 <li className="dropdown">
                   <button className="dropdown-button">
                     My Options <span className="dropdown-arrow"></span>
@@ -90,7 +90,7 @@ const NavBar = () => {
                     <Link to="/manage-classes">My Lessons</Link>
                   </div>
                 </li>
-              )}
+              
               <li>
                 <button className="logout-button" onClick={handleLogout}>
                   Logout

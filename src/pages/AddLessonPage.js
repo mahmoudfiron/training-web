@@ -1,12 +1,11 @@
 // Import necessary dependencies
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, getDocs, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase'; // Assuming you have a firebase.js file for initializing Firebase
 import '../styles/AddLessonPage.css'; // Assuming you have a CSS file to style this page
 
 const AddLessonPage = () => {
-  // State for form data
   const [formData, setFormData] = useState({
     date: '',
     startTime: '',
@@ -15,22 +14,12 @@ const AddLessonPage = () => {
     zoomPasscode: '',
   });
   const [message, setMessage] = useState('');
+  const [lessons, setLessons] = useState([]); // To store existing lessons
   const [courseName, setCourseName] = useState('');
-  const { courseId } = useParams(); // Extract courseId from URL params
-  const location = useLocation(); // To get state information passed through Link
+  const { courseId } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
-
-  // Extract categoryName from the location state
-  const { categoryName } = location.state || {}; // This will help to get categoryName if passed correctly
-
-  // Check if categoryName is available, if not, handle it properly
-  useEffect(() => {
-    if (!categoryName) {
-      console.error('Error: Category name is not defined.');
-      setMessage('Error: Cannot find the course category. Please go back and try again.');
-      return;
-    }
-  }, [categoryName]);
+  const { categoryName } = location.state || {};
 
   // Fetch course details for context
   useEffect(() => {
@@ -55,6 +44,27 @@ const AddLessonPage = () => {
     }
   }, [courseId, categoryName]);
 
+  // Fetch lessons for the course
+  useEffect(() => {
+    const fetchLessons = async () => {
+      if (!categoryName) return;
+
+      try {
+        const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons');
+        const lessonsSnapshot = await getDocs(lessonsRef);
+        const lessonsList = lessonsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setLessons(lessonsList);
+      } catch (error) {
+        console.error('Error fetching lessons:', error);
+      }
+    };
+
+    fetchLessons();
+  }, [categoryName, courseId]);
+
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -67,40 +77,46 @@ const AddLessonPage = () => {
   // Handle form submission to add a lesson
   const handleAddLesson = async (lessonData) => {
     try {
-      if (!categoryName) {
-        setMessage('Error: Cannot find the course category.');
-        return;
-      }
-
-      console.log("categoryName:", categoryName);
-      console.log("courseId:", courseId);
-
-      // Reference to add a new lesson under the specific course
       const lessonsCollectionRef = collection(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons');
-      await addDoc(lessonsCollectionRef, {
+      const docRef = await addDoc(lessonsCollectionRef, {
         ...lessonData,
-        instructorUid: auth.currentUser?.uid,  // Ensure you have the instructor's user ID here
-        createdAt: new Date(), // Timestamp for when the lesson is created
+        instructorUid: auth.currentUser?.uid,
+        createdAt: new Date(),
       });
 
+      setLessons((prevLessons) => [
+        ...prevLessons,
+        { id: docRef.id, ...lessonData },
+      ]);
+
       setMessage('Lesson added successfully');
-      navigate('/instructor-courses'); // Navigate to Manage Classes page after adding the lesson
     } catch (error) {
       console.error('Error adding lesson:', error);
       setMessage('Error adding lesson. Please try again.');
     }
   };
 
-  // Handle form submission event
+  const handleDeleteLesson = async (lessonId) => {
+    try {
+      const lessonRef = doc(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons', lessonId);
+      await deleteDoc(lessonRef);
+      setLessons((prevLessons) => prevLessons.filter((lesson) => lesson.id !== lessonId));
+      setMessage('Lesson deleted successfully');
+    } catch (error) {
+      console.error('Error deleting lesson:', error);
+      setMessage('Error deleting lesson. Please try again.');
+    }
+  };
+
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault();
 
     if (!auth.currentUser) {
       setMessage('Error: User not authenticated');
       return;
     }
 
-    handleAddLesson(formData); // Call handleAddLesson with the form data
+    handleAddLesson(formData);
   };
 
   return (
@@ -162,12 +178,23 @@ const AddLessonPage = () => {
             required
           />
         </div>
-
         <button type="submit" className="submit-button">Add Lesson</button>
       </form>
+
       {message && <p className="message-text">{message}</p>}
+
+      <h3>Existing Lessons</h3>
+      <div className="lessons-list">
+        {lessons.map((lesson) => (
+          <div key={lesson.id} className="lesson-item">
+            <p>Date: {lesson.date}</p>
+            <p>Start Time: {lesson.startTime}</p>
+            <p>End Time: {lesson.endTime}</p>
+            <button onClick={() => handleDeleteLesson(lesson.id)} className="delete-button">Delete</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
-
 export default AddLessonPage;
