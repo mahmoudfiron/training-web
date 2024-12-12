@@ -1,6 +1,6 @@
 // Import necessary dependencies
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { collection, addDoc, getDoc, doc, getDocs, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase'; // Assuming you have a firebase.js file for initializing Firebase
 import '../styles/AddLessonPage.css'; // Assuming you have a CSS file to style this page
@@ -18,7 +18,6 @@ const AddLessonPage = () => {
   const [courseName, setCourseName] = useState('');
   const { courseId } = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const { categoryName } = location.state || {};
 
   // Fetch course details for context
