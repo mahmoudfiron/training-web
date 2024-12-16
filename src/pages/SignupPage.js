@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthPage.css'; // Common CSS file for Login and Signup pages
 import joinUsImage from '../assets/images/join-us.webp';
-import { auth, db } from '../firebase'; // Import Firebase Auth and Firestore instances
+import { auth, db } from '../firebase.js'; // Import Firebase Auth and Firestore instances
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 

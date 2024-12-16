@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+import { db, auth } from '../firebase.js';
 import '../styles/CalendarPage.css'; // Custom CSS for the Calendar Page
 
 const CalendarPage = () => {

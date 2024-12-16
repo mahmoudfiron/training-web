@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthPage.css'; // Common CSS file for Login and Signup pages
 import joinUsImage from '../assets/images/join-us.webp';
-import { auth } from '../firebase'; // Import Firebase Auth instance
+import { auth } from '../firebase.js'; // Import Firebase Auth instance
 import { signInWithEmailAndPassword } from 'firebase/auth'; // Import signInWithEmailAndPassword from Firebase
 
 const LoginPage = ({ isOpen, onClose, openSignup }) => {

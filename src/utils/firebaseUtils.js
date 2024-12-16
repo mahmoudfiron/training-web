@@ -1,5 +1,5 @@
 // src/utils/firebaseUtils.js
-import { db } from '../firebase'; // Import Firestore database instance from your firebase configuration
+import { db } from '../firebase.js'; // Import Firestore database instance from your firebase configuration
 import { doc, getDoc } from 'firebase/firestore';
 
 // Function to get the user role from Firestore

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase';
+import { db, auth } from '../firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../styles/MyCourses.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,14 +10,21 @@ const ManageClasses = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Function to check if a lesson is expired
+  // Check if a lesson is expired
   const isLessonExpired = (lesson) => {
     const currentDate = new Date();
     const lessonDate = new Date(`${lesson.date}T${lesson.endTime}`);
     return lessonDate < currentDate;
   };
 
-  // Function to delete expired lessons
+  // Check if Zoom link should appear (5 minutes before the lesson starts)
+  const shouldShowZoomLink = (lesson) => {
+    const currentDate = new Date();
+    const lessonStartTime = new Date(`${lesson.date}T${lesson.startTime}`);
+    const timeDifference = (lessonStartTime - currentDate) / (1000 * 60); // Difference in minutes
+    return timeDifference <= 5 && timeDifference > 0; // Between 0 and 5 minutes before start
+  };
+
   const deleteExpiredLessons = async (categoryName, courseId, lessons) => {
     const validLessons = [];
     for (const lesson of lessons) {
@@ -43,7 +50,7 @@ const ManageClasses = () => {
         const coursesSnap = await getDocs(enrolledCoursesRef);
         const enrolledCoursesIds = coursesSnap.docs.map(doc => ({
           courseId: doc.id,
-          categoryName: doc.data().categoryName, // Assuming categoryName is saved here
+          categoryName: doc.data().categoryName,
         }));
 
         const fetchedCourses = [];
@@ -92,37 +99,6 @@ const ManageClasses = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleDeleteLesson = async (categoryName, courseId, lessonId) => {
-    try {
-      if (!categoryName) {
-        alert('Error: Cannot find the course category.');
-        return;
-      }
-
-      const lessonRef = doc(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons', lessonId);
-      await deleteDoc(lessonRef);
-
-      setEnrolledCourses((prevCourses) =>
-        prevCourses
-          .map((course) => {
-            if (course.id === courseId) {
-              const updatedLessons = course.lessons.filter((lesson) => lesson.lessonId !== lessonId);
-              return updatedLessons.length > 0
-                ? { ...course, lessons: updatedLessons }
-                : null;
-            }
-            return course;
-          })
-          .filter(Boolean)
-      );
-
-      alert('Lesson deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting lesson:', error);
-      alert('Error deleting the lesson. Please try again.');
-    }
-  };
-
   if (loading) {
     return <div>Loading your classes...</div>;
   }
@@ -146,31 +122,14 @@ const ManageClasses = () => {
                     <h4>End Time: {lesson.endTime || 'No end time'}</h4>
                     <h4>
                       Zoom Link:
-                      {lesson.zoomLink ? (
-                        <a href={lesson.zoomLink} target="_blank" rel="noopener noreferrer">Join</a>
+                      {shouldShowZoomLink(lesson) && lesson.zoomJoinUrl ? (
+                        <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
+                          Join
+                        </a>
                       ) : (
                         ' No link available'
                       )}
                     </h4>
-                    {lesson.instructorUid === auth.currentUser?.uid && (
-                      <>
-                        <Link
-                          to={`/edit-lesson/${course.id}/${lesson.lessonId}`}
-                          state={{ categoryName: course.categoryName }}
-                          className="edit-button"
-                        >
-                          Edit Lesson
-                        </Link>
-                        <button
-                          onClick={() =>
-                            handleDeleteLesson(course.categoryName, course.id, lesson.lessonId)
-                          }
-                          className="delete-button"
-                        >
-                          Delete Lesson
-                        </button>
-                      </>
-                    )}
                   </div>
                 ))
               ) : (

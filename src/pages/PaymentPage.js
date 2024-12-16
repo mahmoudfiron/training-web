@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase'; // Ensure auth is imported for current user
+import { db, auth } from '../firebase.js'; // Ensure auth is imported for current user
 import '../styles/PaymentPage.css';
 
 const PaymentPage = () => {

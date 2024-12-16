@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase'; // Ensure this points to your Firebase setup
+import { db, auth } from '../firebase.js'; // Ensure this points to your Firebase setup
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { onAuthStateChanged } from 'firebase/auth';
 import './HomePage.css'; // Ensure you have a CSS file to style this page

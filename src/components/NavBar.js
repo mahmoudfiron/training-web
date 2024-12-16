@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import logo from '../assets/icons/logo.jpg';
-import { auth } from '../firebase';
+import { auth } from '../firebase.js';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import LoginPage from '../pages/LoginPage';
-import SignupPage from '../pages/SignupPage';
-import { getUserRoleFromFirestore } from '../utils/firebaseUtils';
+import LoginPage from '../pages/LoginPage.js';
+import SignupPage from '../pages/SignupPage.js';
+import { getUserRoleFromFirestore } from '../utils/firebaseUtils.js';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);

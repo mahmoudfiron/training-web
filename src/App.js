@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './firebase';
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
-import CreateCourse from './pages/CreateCourse';
-import HomePage from './components/HomePage';
-import NavBar from './components/NavBar';
-import Footer from './components/Footer';
-import ProfilePage from './pages/ProfilePage';
-import LearnAbout from './pages/LearnAbout';
-import CourseDetails from './pages/CourseDetails'; 
-import PaymentPage from './pages/PaymentPage';
-import MyCourses from './pages/MyCourses'; 
-import ManageClasses from './pages/ManageClasses'; 
-import CalendarPage from './pages/CalendarPage';
-import AddLessonPage from './pages/AddLessonPage';
-import EditLessonPage from './pages/EditLessonPage';
-import InstructorCourses from "./pages/InstructorCourses"; // Add this page
-import EditCoursePage from './pages/EditCoursePage';
+import { auth } from './firebase.js';
+import SignupPage from './pages/SignupPage.js';
+import LoginPage from './pages/LoginPage.js';
+import CreateCourse from './pages/CreateCourse.js';
+import HomePage from './components/HomePage.js';
+import NavBar from './components/NavBar.js';
+import Footer from './components/Footer.js';
+import ProfilePage from './pages/ProfilePage.js';
+import LearnAbout from './pages/LearnAbout.js';
+import CourseDetails from './pages/CourseDetails.js'; 
+import PaymentPage from './pages/PaymentPage.js';
+import MyCourses from './pages/MyCourses.js'; 
+import ManageClasses from './pages/ManageClasses.js'; 
+import CalendarPage from './pages/CalendarPage.js';
+import AddLessonPage from './pages/AddLessonPage.js';
+import EditLessonPage from './pages/EditLessonPage.js';
+import InstructorCourses from "./pages/InstructorCourses.js"; // Add this page
+import EditCoursePage from './pages/EditCoursePage.js';
 
 function App() {
   const [user, setUser] = useState(null);
