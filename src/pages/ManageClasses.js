@@ -122,13 +122,28 @@ const ManageClasses = () => {
                     <h4>End Time: {lesson.endTime || 'No end time'}</h4>
                     <h4>
                       Zoom Link:
-                      {shouldShowZoomLink(lesson) && lesson.zoomJoinUrl ? (
-                        <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
-                          Join
-                        </a>
-                      ) : (
-                        ' No link available'
-                      )}
+                      {(() => {
+  const now = new Date();
+  const lessonStartTime = new Date(`${lesson.date}T${lesson.startTime}`);
+  const timeDifference = (lessonStartTime - now) / 60000; // Difference in minutes
+
+  if (timeDifference <= 5 && timeDifference >= 0) {
+    return (
+      <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
+        Join
+      </a>
+    );
+  } else if (timeDifference < 0) {
+    return (
+      <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
+        Join
+      </a>
+    );
+  } else {
+    return 'No link available';
+  }
+})()}
+
                     </h4>
                   </div>
                 ))
