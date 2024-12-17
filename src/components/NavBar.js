@@ -77,6 +77,7 @@ const NavBar = () => {
                   <div className="dropdown-content">
                     <Link to="/create-course">Add Course</Link>
                     <Link to="/instructor-courses">Instructor Courses</Link>
+                    <Link to="/instructor-dashboard">Instructor Dashboard</Link>
                   </div>
                 </li>
               )}
