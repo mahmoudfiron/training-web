@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { collection, addDoc, getDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, doc, getDocs, deleteDoc  } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
 import '../styles/AddLessonPage.css';
 
@@ -11,6 +11,7 @@ const AddLessonPage = () => {
     endTime: '',
   });
   const [message, setMessage] = useState('');
+  const [lessons, setLessons] = useState([]); 
   const [courseName, setCourseName] = useState('');
   const { courseId } = useParams();
   const location = useLocation();
@@ -32,13 +33,84 @@ const AddLessonPage = () => {
       }
     };
 
-    fetchCourseDetails();
+    if (courseId && categoryName) {
+      fetchCourseDetails();
+    }
   }, [courseId, categoryName]);
+
+
+// Fetch lessons for the course
+useEffect(() => {
+  const fetchLessons = async () => {
+    if (!categoryName) return;
+    try {
+      const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons');
+      const lessonsSnapshot = await getDocs(lessonsRef);
+      const lessonsList = lessonsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setLessons(lessonsList);
+    } catch (error) {
+      console.error('Error fetching lessons:', error);
+    }
+  };
+  fetchLessons();
+}, [categoryName, courseId]);
+
+
+
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
+
+  const handleAddLesson = async (lessonData) => {
+    try {
+      const lessonsCollectionRef = collection(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons');
+      const docRef = await addDoc(lessonsCollectionRef, {
+        ...lessonData,
+        instructorUid: auth.currentUser?.uid,
+        createdAt: new Date(),
+      });
+
+      setLessons((prevLessons) => [
+        ...prevLessons,
+        { id: docRef.id, ...lessonData },
+      ]);
+
+      setMessage('Lesson added successfully');
+    } catch (error) {
+      console.error('Error adding lesson:', error);
+      setMessage('Error adding lesson. Please try again.');
+    }
+  };
+
+
+  const handleDeleteLesson = async (lessonId) => {
+    try {
+      const lessonRef = doc(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons', lessonId);
+      await deleteDoc(lessonRef);
+      setLessons((prevLessons) => prevLessons.filter((lesson) => lesson.id !== lessonId));
+      setMessage('Lesson deleted successfully');
+    } catch (error) {
+      console.error('Error deleting lesson:', error);
+      setMessage('Error deleting lesson. Please try again.');
+    }
+  };
+
+
+
+
+
+
 
   const calculateDuration = (startTime, endTime) => {
     const start = new Date(`2024-12-16T${startTime}:00`);
@@ -78,6 +150,11 @@ const AddLessonPage = () => {
     try {
       const zoomDetails = await generateZoomMeeting(formData);
 
+
+      if (!auth.currentUser) {
+        setMessage('Error: User not authenticated');
+        return;
+      }
       if (!zoomDetails) {
         setMessage('Failed to create Zoom meeting. Try again.');
         return;
@@ -121,9 +198,21 @@ const AddLessonPage = () => {
         </div>
         <button type="submit" className="submit-button">Add Lesson</button>
       </form>
+
       {message && <p className="message-text">{message}</p>}
+
+      <h3>Existing Lessons</h3>
+      <div className="lessons-list">
+        {lessons.map((lesson) => (
+          <div key={lesson.id} className="lesson-item">
+            <p>Date: {lesson.date}</p>
+            <p>Start Time: {lesson.startTime}</p>
+            <p>End Time: {lesson.endTime}</p>
+            <button onClick={() => handleDeleteLesson(lesson.id)} className="delete-button">Delete</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
-
 export default AddLessonPage;
