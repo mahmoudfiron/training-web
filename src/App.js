@@ -17,7 +17,7 @@ import ManageClasses from './pages/ManageClasses.js';
 import CalendarPage from './pages/CalendarPage.js';
 import AddLessonPage from './pages/AddLessonPage.js';
 import EditLessonPage from './pages/EditLessonPage.js';
-import InstructorCourses from "./pages/InstructorCourses.js"; // Add this page
+import InstructorCourses from "./pages/InstructorCourses.js"; 
 import EditCoursePage from './pages/EditCoursePage.js';
 import InstructorDashboard from './pages/InstructorDashboard.js';
 
