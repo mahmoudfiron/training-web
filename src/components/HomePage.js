@@ -73,11 +73,11 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      <h2>Our Courses</h2>
       <div className="courses-container">
         {courses.map((course) => {
           const isEnrolled = enrolledCourses.includes(course.id);
           return (
+            
             <div className="course-card" key={course.id}>
               <div className="course-card-header">
                 <span className="availability-badge">{course.available ? 'Available' : 'Unavailable'}</span>

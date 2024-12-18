@@ -18,6 +18,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative; /* Needed for badge positioning */
+  gap: 10px;
+  margin-top: 2.5%;
 }
 
 .course-card.enrolled {

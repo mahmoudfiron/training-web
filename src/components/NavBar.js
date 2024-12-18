@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
-import logo from '../assets/icons/logo.jpg';
+import logo from '../assets/icons/logo.webp';
 import { auth } from '../firebase.js';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import LoginPage from '../pages/LoginPage.js';
@@ -46,83 +46,86 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar">
+        {/* Logo */}
         <div className="navbar-logo">
           <Link to="/">
             <img src={logo} alt="Website Logo" className="navbar-logo-image" />
           </Link>
         </div>
-        <ul className="navbar-links">
-          <li>
-            <Link to="/calculator">Calories Calculator</Link>
-          </li>
-          <li>
-            <Link to="/learnabout">Learn About</Link>
-          </li>
-          <li>
-            <Link to="/calendar">My Calendar</Link>
-          </li>
-        </ul>
-        <div className="navbar-search">
-          <input type="text" placeholder="Search..." />
-          <button>Search</button>
+
+        {/* Center Section */}
+        <div className="navbar-center">
+          <ul className="navbar-links">
+            {!user && (
+              <>
+                <li>
+                  <Link to="/contact">Contact Us</Link>
+                </li>
+                <li>
+                  <Link to="/faqs">FAQs</Link>
+                </li>
+              </>
+            )}
+            {user && (
+              <>
+                <li>
+                  <Link to="/calculator">Calories Calculator</Link>
+                </li>
+                <li>
+                  <Link to="/calendar">My Calendar</Link>
+                </li>
+              </>
+            )}
+            <li>
+              <Link to="/learnabout">About Us</Link>
+            </li>
+          </ul>
+          <div className="navbar-search">
+            <input type="text" placeholder="Search..." />
+            <button>Search</button>
+          </div>
         </div>
+
+        {/* Right Section */}
         <ul className="navbar-actions">
           {user ? (
             <>
               {userRole === 'instructor' && (
                 <li className="dropdown">
                   <button className="dropdown-button">
-                    Instructor Options <span className="dropdown-arrow"></span>
+                    Instructor Options ▼
                   </button>
                   <div className="dropdown-content">
                     <Link to="/create-course">Add Course</Link>
-                    <Link to="/instructor-courses">Instructor Courses</Link>
+                    <Link to="/instructor-courses">Manage Courses</Link>
                     <Link to="/instructor-dashboard">Instructor Dashboard</Link>
                   </div>
                 </li>
               )}
-
-                <li className="dropdown">
-                  <button className="dropdown-button">
-                    My Options <span className="dropdown-arrow"></span>
+              <li className="dropdown">
+                <button className="dropdown-button">
+                  My Options ▼ 
                   </button>
-                  <div className="dropdown-content">
-                    <Link to="/my-courses">My Courses</Link>
-                    <Link to="/manage-classes">My Lessons</Link>
-                  </div>
-                </li>
+                <div className="dropdown-content">
+                  <Link to="/my-courses">My Courses</Link>
+                  <Link to="/manage-classes">My Lessons</Link>
+                </div>
+              </li>
               
               <li>
-                <button className="logout-button" onClick={handleLogout}>
-                  Logout
-                </button>
+                <button className="logout-button" onClick={handleLogout}>Logout</button>
               </li>
               <li>
-                <button
-                  className="profile-button"
-                  onClick={() => navigate('/profile')}
-                >
-                  Profile
-                </button>
+                <button className="profile-button" onClick={() => navigate('/profile')}>Profile</button>
               </li>
             </>
           ) : (
             <>
               <li>
-                <button
-                  onClick={() => setIsSignupOpen(true)}
-                  className="signup-button"
-                >
-                  Sign Up
-                </button>
+                <button className="signup-button" onClick={() => setIsSignupOpen(true)}>Sign Up</button>
               </li>
               <li>
-                <button
-                  onClick={() => setIsLoginOpen(true)}
-                  className="login-button"
-                >
-                  Login
-                </button>
+                <button className="login-button" onClick={() => setIsLoginOpen(true)}>Login</button>
               </li>
             </>
           )}
