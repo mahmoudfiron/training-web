@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { collection, getDocs, doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../styles/MyCourses.css';
-import { Link, useNavigate } from 'react-router-dom';
 
 const ManageClasses = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   // Check if a lesson is expired
   const isLessonExpired = (lesson) => {
@@ -17,15 +15,7 @@ const ManageClasses = () => {
     return lessonDate < currentDate;
   };
 
-  // Check if Zoom link should appear (5 minutes before the lesson starts)
-  const shouldShowZoomLink = (lesson) => {
-    const currentDate = new Date();
-    const lessonStartTime = new Date(`${lesson.date}T${lesson.startTime}`);
-    const timeDifference = (lessonStartTime - currentDate) / (1000 * 60); // Difference in minutes
-    return timeDifference <= 5 && timeDifference > 0; // Between 0 and 5 minutes before start
-  };
-
-  const deleteExpiredLessons = async (categoryName, courseId, lessons) => {
+  const deleteExpiredLessons = useCallback(async (categoryName, courseId, lessons) => {
     const validLessons = [];
     for (const lesson of lessons) {
       if (isLessonExpired(lesson)) {
@@ -41,14 +31,14 @@ const ManageClasses = () => {
       }
     }
     return validLessons; // Return only valid (non-expired) lessons
-  };
+  }, []);
 
   useEffect(() => {
     const fetchEnrolledCourses = async (userId) => {
       try {
         const enrolledCoursesRef = collection(db, 'users', userId, 'enrolledCourses');
         const coursesSnap = await getDocs(enrolledCoursesRef);
-        const enrolledCoursesIds = coursesSnap.docs.map(doc => ({
+        const enrolledCoursesIds = coursesSnap.docs.map((doc) => ({
           courseId: doc.id,
           categoryName: doc.data().categoryName,
         }));
@@ -63,7 +53,7 @@ const ManageClasses = () => {
             const courseData = courseSnap.data();
             const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons');
             const lessonsSnap = await getDocs(lessonsRef);
-            const lessons = lessonsSnap.docs.map(lessonDoc => ({
+            const lessons = lessonsSnap.docs.map((lessonDoc) => ({
               lessonId: lessonDoc.id,
               ...lessonDoc.data(),
             }));
@@ -97,7 +87,7 @@ const ManageClasses = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [deleteExpiredLessons]);
 
   if (loading) {
     return <div>Loading your classes...</div>;
@@ -123,27 +113,26 @@ const ManageClasses = () => {
                     <h4>
                       Zoom Link:
                       {(() => {
-  const now = new Date();
-  const lessonStartTime = new Date(`${lesson.date}T${lesson.startTime}`);
-  const timeDifference = (lessonStartTime - now) / 60000; // Difference in minutes
+                        const now = new Date();
+                        const lessonStartTime = new Date(`${lesson.date}T${lesson.startTime}`);
+                        const timeDifference = (lessonStartTime - now) / 60000; // Difference in minutes
 
-  if (timeDifference <= 5 && timeDifference >= 0) {
-    return (
-      <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
-        Join
-      </a>
-    );
-  } else if (timeDifference < 0) {
-    return (
-      <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
-        Join
-      </a>
-    );
-  } else {
-    return 'No link available';
-  }
-})()}
-
+                        if (timeDifference <= 5 && timeDifference >= 0) {
+                          return (
+                            <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
+                              Join
+                            </a>
+                          );
+                        } else if (timeDifference < 0) {
+                          return (
+                            <a href={lesson.zoomJoinUrl} target="_blank" rel="noopener noreferrer">
+                              Join
+                            </a>
+                          );
+                        } else {
+                          return 'No link available';
+                        }
+                      })()}
                     </h4>
                   </div>
                 ))

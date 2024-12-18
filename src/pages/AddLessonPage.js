@@ -72,28 +72,6 @@ useEffect(() => {
     });
   };
 
-  const handleAddLesson = async (lessonData) => {
-    try {
-      const lessonsCollectionRef = collection(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons');
-      const docRef = await addDoc(lessonsCollectionRef, {
-        ...lessonData,
-        instructorUid: auth.currentUser?.uid,
-        createdAt: new Date(),
-      });
-
-      setLessons((prevLessons) => [
-        ...prevLessons,
-        { id: docRef.id, ...lessonData },
-      ]);
-
-      setMessage('Lesson added successfully');
-    } catch (error) {
-      console.error('Error adding lesson:', error);
-      setMessage('Error adding lesson. Please try again.');
-    }
-  };
-
-
   const handleDeleteLesson = async (lessonId) => {
     try {
       const lessonRef = doc(db, 'courseCategories', categoryName, 'courses', courseId, 'lessons', lessonId);
@@ -105,11 +83,6 @@ useEffect(() => {
       setMessage('Error deleting lesson. Please try again.');
     }
   };
-
-
-
-
-
 
 
   const calculateDuration = (startTime, endTime) => {
