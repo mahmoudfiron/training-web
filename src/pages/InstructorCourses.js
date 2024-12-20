@@ -3,11 +3,13 @@ import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import '../styles/InstructorCourses.css';
 
 const InstructorCourses = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchInstructorCourses = async (userId) => {
@@ -47,29 +49,23 @@ const InstructorCourses = () => {
 
   const handleDeleteCourse = async (categoryName, courseId) => {
     try {
-      // Step 1: Delete the course from the courses collection
       const courseRef = doc(db, `courseCategories/${categoryName}/courses`, courseId);
       await deleteDoc(courseRef);
-      console.log(`Deleted course from category: ${categoryName}, courseId: ${courseId}`);
-    
-      // Step 2: Delete the course from all users' enrolledCourses subcollections
-      const usersSnapshot = await getDocs(collection(db, 'users')); // Get all users
-    
+
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+
       for (const userDoc of usersSnapshot.docs) {
         const enrolledCoursesRef = collection(db, `users/${userDoc.id}/enrolledCourses`);
         const enrolledCoursesSnapshot = await getDocs(enrolledCoursesRef);
-    
+
         for (const enrolledDoc of enrolledCoursesSnapshot.docs) {
-          // Check if the enrolled course matches the deleted course ID
           if (enrolledDoc.id === courseId) {
             const enrolledCourseRef = doc(db, `users/${userDoc.id}/enrolledCourses`, enrolledDoc.id);
-            await deleteDoc(enrolledCourseRef); // Directly delete the enrolled course
-            console.log(`Deleted enrolled course: ${enrolledDoc.id} for user: ${userDoc.id}`);
+            await deleteDoc(enrolledCourseRef);
           }
         }
       }
-    
-      // Step 3: Update the state to remove the course from the UI
+
       setCourses((prevCourses) => prevCourses.filter((course) => course.id !== courseId));
       alert('Course and its enrollments deleted successfully!');
     } catch (error) {
@@ -90,38 +86,46 @@ const InstructorCourses = () => {
       ) : (
         <div className="courses-container">
           {courses.map((course) => (
-            <div className="course-card" key={course.id}>
-              <div className="course-card-header">
-              </div>
+            <div
+              className="course-card"
+              key={course.id}
+              onClick={(e) => {
+                if (!e.target.closest('.edit-button') && !e.target.closest('.delete-button')) {
+                  navigate(`/lessons/${course.id}`, { state: { categoryName: course.categoryName, isInstructor: true } });
+                }
+              }}
+            >
+              <div className="course-card-header"></div>
               <div className="course-card-body">
                 <h3>{course.courseName}</h3>
                 <div className="course-details">
-                <p><strong>category:</strong> {course.categoryName}</p>
-                  <p><strong>Price:</strong> ${course.price}</p>
+                  <p>
+                    <strong>Category:</strong> {course.categoryName}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ${course.price}
+                  </p>
                 </div>
 
-                <Link 
-                  to={`/edit-course/${course.id}`} 
+                <Link
+                  to={`/edit-course/${course.id}`}
                   state={{ categoryName: course.categoryName }}
-                  className="edit-link"
+                  className="edit-button"
+                  onClick={(e) => e.stopPropagation()} // Prevent propagation to the card click event
                 >
                   Edit Course
                 </Link>
 
-                <button 
-                  className="delete-button" 
-                  onClick={() => handleDeleteCourse(course.categoryName, course.id)}
+
+                <button
+                  className="delete-button"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent propagation to the card click event
+                    handleDeleteCourse(course.categoryName, course.id);
+                  }}
                 >
                   Delete Course
                 </button>
-
-                <Link 
-                  to={`/add-lesson/${course.id}`} 
-                  state={{ categoryName: course.categoryName }}
-                  className="add-lesson-link"
-                >
-                  Add Lesson
-                </Link>
               </div>
             </div>
           ))}

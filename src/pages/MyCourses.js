@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
 import '../styles/MyCourses.css';
+import { useNavigate } from 'react-router-dom';
 
 const MyCourses = () => {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const user = auth.currentUser;
+  const navigate = useNavigate();
 
   // Fetch enrolled courses for the instructor
   useEffect(() => {
@@ -66,7 +68,11 @@ const MyCourses = () => {
       ) : (
         <div className="courses-container">
           {enrolledCourses.map((course) => (
-            <div className="course-card" key={course.id}>
+            <div
+             className="course-card"
+              key={course.id}
+              onClick={() => navigate(`/lessons/${course.id}`, { state: { categoryName: course.categoryName } })}
+              >
               <h3>{course.courseName}</h3>
               <p>Category: {course.categoryName}</p>
               <p>Duration: {course.duration} hours</p>

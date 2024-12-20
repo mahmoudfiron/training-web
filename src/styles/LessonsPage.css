@@ -1,0 +1,108 @@
+.instructor-dashboard {
+    position: relative;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.no-lessons {
+    text-align: center;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-lessons h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.no-lessons p {
+    font-size: 1rem;
+    color: #666;
+}
+
+
+.lessons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.lesson-card {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 1.5%;
+}
+
+.start-button {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-right: 70%;
+}
+
+.start-button:hover {
+    background-color: #218838;
+    cursor: pointer;
+}
+
+.meeting-wait {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.blinking-circle {
+    position: absolute;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    background-color: red;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+
+.instructor-dashboard .add-lesson-button {
+    position: fixed; /* Keeps the button in the viewport */
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem; /* Slightly larger font */
+    top: 17%;
+    right: 20px;
+    z-index: 10;
+    margin-bottom: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+}
+
+.instructor-dashboard .add-lesson-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    cursor: pointer;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+}

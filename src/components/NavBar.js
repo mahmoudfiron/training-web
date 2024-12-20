@@ -98,7 +98,6 @@ const NavBar = () => {
                   <div className="dropdown-content">
                     <Link to="/create-course">Add Course</Link>
                     <Link to="/instructor-courses">Manage Courses</Link>
-                    <Link to="/instructor-dashboard">Instructor Dashboard</Link>
                   </div>
                 </li>
               )}
@@ -108,7 +107,6 @@ const NavBar = () => {
                   </button>
                 <div className="dropdown-content">
                   <Link to="/my-courses">My Courses</Link>
-                  <Link to="/manage-classes">My Lessons</Link>
                 </div>
               </li>
               

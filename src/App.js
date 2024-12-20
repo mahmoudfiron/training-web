@@ -13,13 +13,12 @@ import LearnAbout from './pages/LearnAbout.js';
 import CourseDetails from './pages/CourseDetails.js'; 
 import PaymentPage from './pages/PaymentPage.js';
 import MyCourses from './pages/MyCourses.js'; 
-import ManageClasses from './pages/ManageClasses.js'; 
 import CalendarPage from './pages/CalendarPage.js';
 import AddLessonPage from './pages/AddLessonPage.js';
 import EditLessonPage from './pages/EditLessonPage.js';
 import InstructorCourses from "./pages/InstructorCourses.js"; 
 import EditCoursePage from './pages/EditCoursePage.js';
-import InstructorDashboard from './pages/InstructorDashboard.js';
+import LessonsPage from './pages/LessonsPage.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -45,13 +44,12 @@ function App() {
         <Route path="/course-details/:categoryName/:courseId" element={<CourseDetails />} />
         <Route path="/course-payment/:categoryName/:courseId" element={<PaymentPage />} />\
         <Route path="/My-Courses" element={<MyCourses />} />
-        <Route path="/manage-classes" element={<ManageClasses />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/add-lesson/:courseId" element={<AddLessonPage />} />
         <Route path="/edit-lesson/:courseId/:lessonId" element={<EditLessonPage />} /> 
         <Route path="/instructor-courses" element={<InstructorCourses />} />
         <Route path="/edit-course/:courseId" element={<EditCoursePage />} /> {/* Fixed route */}
-        <Route path="/instructor-dashboard" element={<InstructorDashboard />} />
+        <Route path="/lessons/:courseId" element={<LessonsPage />} />
 
       </Routes>
       <Footer />
