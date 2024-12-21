@@ -1,4 +1,10 @@
 /* src/styles/CalendarPage.css */
+body {
+  background: linear-gradient(to right, #ffeffe, #e3f2fd, #fffde7);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
 .calendar-page {
     padding: 40px;

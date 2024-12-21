@@ -77,120 +77,138 @@ const CreateCourse = () => {
 
   return (
     <div className="create-course-page">
-      <h2>Create a New Course</h2>
-      <form onSubmit={handleSubmit} className="create-course-form">
-        <div className="form-group">
-          <label htmlFor="courseName">Course Name:</label>
-          <input
-            type="text"
-            id="courseName"
-            name="courseName"
-            value={formData.courseName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="categoryName">Category Name:</label>
-          <select
-            id="categoryName"
-            name="categoryName"
-            value={formData.categoryName}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a category</option>
-            <option value="yoga">Yoga</option>
-            <option value="pilates">Pilates</option>
-            <option value="full-body">Full Body Training</option>
-            <option value="stretch">Stretch & Flexibility</option>
-            <option value="meditation">Meditation & Mindfulness</option>
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="equipment">Equipment Required:</label>
-          <input
-            type="text"
-            id="equipment"
-            name="equipment"
-            value={formData.equipment}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="imageFile">Course Image:</label>
-          <input
-            type="file"
-            id="imageFile"
-            name="imageFile"
-            accept="image/*"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {formData.imageBase64 && (
-          <img
-            src={formData.imageBase64}
-            alt="Course Preview"
-            className="image-preview"
-          />
-        )}
-        <div className="form-group">
-          <label htmlFor="available">Available:</label>
-          <input
-            type="checkbox"
-            id="available"
-            name="available"
-            checked={formData.available}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="description">Course Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="learningOutcomes">Learning Outcomes (comma-separated):</label>
-          <textarea
-            id="learningOutcomes"
-            name="learningOutcomes"
-            value={formData.learningOutcomes}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="publisherName">Publisher Name:</label>
-          <input
-            type="text"
-            id="publisherName"
-            name="publisherName"
-            value={formData.publisherName}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="submit-button">
-          Add Course
-        </button>
-      </form>
+
+<form onSubmit={handleSubmit} className="create-course-form">
+<div style={{ textAlign: 'center', fontFamily: "'Poppins', sans-serif"}}>
+  <h2 style={{ fontSize: '1.6rem', fontWeight: 'bold', margin: 0, color: 'black' }}>
+    Let`s get you started
+  </h2>
+  <p style={{ fontSize: '1rem', fontWeight: 'normal', color: 'gray', marginTop: '10px', marginBottom:'40px' }}>
+    Enter the details to get going
+  </p>
+</div>
+
+  <div className="form-group-row">
+    <div className="form-group">
+      <label htmlFor="courseName">Course Name:</label>
+      <input
+        type="text"
+        id="courseName"
+        name="courseName"
+        value={formData.courseName}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="categoryName">Category Name:</label>
+      <select
+        id="categoryName"
+        name="categoryName"
+        value={formData.categoryName}
+        onChange={handleChange}
+        required
+      >
+        <option value="">Select a category</option>
+        <option value="yoga">Yoga</option>
+        <option value="pilates">Pilates</option>
+        <option value="full-body">Full Body Training</option>
+        <option value="stretch">Stretch & Flexibility</option>
+        <option value="meditation">Meditation & Mindfulness</option>
+      </select>
+    </div>
+  </div>
+
+  <div className="form-group-row">
+    <div className="form-group">
+      <label htmlFor="price">Price:</label>
+      <input
+        type="number"
+        id="price"
+        name="price"
+        value={formData.price}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="equipment">Equipment Required:</label>
+      <input
+        type="text"
+        id="equipment"
+        name="equipment"
+        value={formData.equipment}
+        onChange={handleChange}
+      />
+    </div>
+  </div>
+
+  <div className="form-group-row">
+    <div className="form-group">
+      <label htmlFor="imageFile">Course Image:</label>
+      <input
+        type="file"
+        id="imageFile"
+        name="imageFile"
+        accept="image/*"
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="available">Available:</label>
+      <input
+        type="checkbox"
+        id="available"
+        name="available"
+        checked={formData.available}
+        onChange={handleChange}
+      />
+    </div>
+  </div>
+
+  <div className="form-group-row">
+    <div className="form-group">
+      <label htmlFor="description">Course Description:</label>
+      <textarea
+        id="description"
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="learningOutcomes">Learning Outcomes:</label>
+      <textarea
+        id="learningOutcomes"
+        name="learningOutcomes"
+        value={formData.learningOutcomes}
+        onChange={handleChange}
+        required
+      />
+    </div>
+  </div>
+
+  <div className="form-group-row">
+    <div className="form-group">
+      <label htmlFor="publisherName">Publisher Name:</label>
+      <input
+        type="text"
+        id="publisherName"
+        name="publisherName"
+        value={formData.publisherName}
+        onChange={handleChange}
+        required
+      />
+    </div>
+  </div>
+
+  <button type="submit" className="submit-button">
+    Add Course
+  </button>
+</form>
+
       {message && <p className="message-text">{message}</p>}
     </div>
   );

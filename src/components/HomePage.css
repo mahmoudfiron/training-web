@@ -1,4 +1,10 @@
 /* HomePage.css */
+body {
+  background: linear-gradient(to right, #ffeffe, #e3f2fd, #fffde7);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
 .homepage {
   text-align: center;
