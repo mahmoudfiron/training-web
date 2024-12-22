@@ -1,80 +1,116 @@
-.instructor-courses-page {
+.instructor-courses {
   padding: 20px;
   font-family: Arial, sans-serif;
+  text-align: center;
   color: #333;
 }
 
-.page-title {
+.instructor-courses h2 {
   font-size: 24px;
   font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.courses-container {
+.instructor-courses .courses-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
 }
 
-.course-card {
-  width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  background-color: #fff;
+.instructor-courses .course-card {
+  width: 280px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  position: relative;
+  transition: transform 0.3s ease;
+  cursor: pointer; /* Added line to make the cursor change */
 }
 
-.course-card h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.instructor-courses .course-card:hover {
+  transform: translateY(-5px);
 }
 
-.course-card p {
-  font-size: 14px;
-  color: #555;
+.instructor-courses .card-header {
+  position: relative;
+  height: 150px;
+  background: linear-gradient(to top right, #6A82FB, #FC5C7D);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.course-card .edit-button,
-.course-card .delete-button,
-.course-card .add-lesson-button {
-  margin-top: 10px;
-  padding: 10px 15px;
-  font-size: 14px;
+.instructor-courses .course-image {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  border: 4px solid white;
+  margin-top: 100%;
+}
+
+.instructor-courses .edit-icon,
+.instructor-courses .delete-icon {
+  position: absolute;
+  top: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
   border: none;
-  border-radius: 5px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease;
 }
 
-.course-card .edit-button {
-  background-color: #4caf50;
-  color: white;
-  margin-right: 5px;
+.instructor-courses .edit-icon:hover,
+.instructor-courses .delete-icon:hover {
+  background: rgba(255, 255, 255, 1);
 }
 
-.course-card .delete-button {
-  background-color: #f44336;
-  color: white;
+.instructor-courses .edit-icon {
+  right: 10px;
 }
 
-.course-card .add-lesson-button {
-  background-color: #2196f3;
-  color: white;
-  margin-top: 5px;
+.instructor-courses .delete-icon {
+  left: 10px;
 }
 
-.course-card .edit-button:hover {
-  background-color: #45a049;
+.instructor-courses .card-body {
+  padding: 20px;
+  text-align: center;
 }
 
-.course-card .delete-button:hover {
-  background-color: #e53935;
+.instructor-courses .card-body h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+  margin-top: 100%;
 }
 
-.course-card .add-lesson-button:hover {
-  background-color: #1e88e5;
+.instructor-courses .card-body p {
+  font-size: 14px;
+  color: #666;
+}
+
+.instructor-courses .social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.instructor-courses .social-icons .icon {
+  font-size: 20px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.instructor-courses .social-icons .icon:hover {
+  color: #333;
 }

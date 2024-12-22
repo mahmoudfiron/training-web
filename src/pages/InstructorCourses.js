@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
 import '../styles/InstructorCourses.css';
 
 const InstructorCourses = () => {
@@ -18,7 +17,7 @@ const InstructorCourses = () => {
         const categories = ['yoga', 'pilates', 'full-body', 'stretch', 'meditation'];
 
         for (const category of categories) {
-          const coursesSnapshot = await getDocs(collection(db, `courseCategories/${category}/courses`));
+          const coursesSnapshot = await getDocs(collection(db, `courseCategories/${category}/courses`)); // Fixed template string
           coursesSnapshot.forEach((doc) => {
             const courseData = { id: doc.id, ...doc.data(), categoryName: category };
             if (courseData.instructorUid === userId) {
@@ -49,25 +48,22 @@ const InstructorCourses = () => {
 
   const handleDeleteCourse = async (categoryName, courseId) => {
     try {
+      // Delete all lessons associated with the course
+      const lessonsRef = collection(db, `courseCategories/${categoryName}/courses/${courseId}/lessons`);
+      const lessonsSnapshot = await getDocs(lessonsRef);
+
+      for (const lesson of lessonsSnapshot.docs) {
+        const lessonRef = doc(db, `courseCategories/${categoryName}/courses/${courseId}/lessons`, lesson.id);
+        await deleteDoc(lessonRef);
+      }
+
+      // Delete the course itself
       const courseRef = doc(db, `courseCategories/${categoryName}/courses`, courseId);
       await deleteDoc(courseRef);
 
-      const usersSnapshot = await getDocs(collection(db, 'users'));
-
-      for (const userDoc of usersSnapshot.docs) {
-        const enrolledCoursesRef = collection(db, `users/${userDoc.id}/enrolledCourses`);
-        const enrolledCoursesSnapshot = await getDocs(enrolledCoursesRef);
-
-        for (const enrolledDoc of enrolledCoursesSnapshot.docs) {
-          if (enrolledDoc.id === courseId) {
-            const enrolledCourseRef = doc(db, `users/${userDoc.id}/enrolledCourses`, enrolledDoc.id);
-            await deleteDoc(enrolledCourseRef);
-          }
-        }
-      }
-
+      // Update state to remove the deleted course from the UI
       setCourses((prevCourses) => prevCourses.filter((course) => course.id !== courseId));
-      alert('Course and its enrollments deleted successfully!');
+      alert('Course and its lessons deleted successfully!');
     } catch (error) {
       console.error('Error deleting course:', error);
       alert('Failed to delete course. Please try again.');
@@ -80,7 +76,14 @@ const InstructorCourses = () => {
 
   return (
     <div className="instructor-courses">
-      <h2>Your Created Courses</h2>
+      <div style={{ textAlign: 'center', fontFamily: "'Poppins', sans-serif"}}>
+  <h2 style={{ fontSize: '1.6rem', fontWeight: 'bold', margin: 0, color: 'black' }}>
+    your created course
+  </h2>
+  <p style={{ fontSize: '1rem', fontWeight: 'normal', color: 'gray', marginTop: '10px', marginBottom:'40px' }}>
+    click on the course to open the lessons 
+  </p>
+</div>
       {courses.length === 0 ? (
         <p>You have not created any courses yet.</p>
       ) : (
@@ -89,43 +92,38 @@ const InstructorCourses = () => {
             <div
               className="course-card"
               key={course.id}
-              onClick={(e) => {
-                if (!e.target.closest('.edit-button') && !e.target.closest('.delete-button')) {
-                  navigate(`/lessons/${course.id}`, { state: { categoryName: course.categoryName, isInstructor: true } });
-                }
-              }}
+              onClick={() =>
+                navigate(`/lessons/${course.id}`, {
+                  state: { categoryName: course.categoryName, isInstructor: true },
+                })
+              }
             >
-              <div className="course-card-header"></div>
-              <div className="course-card-body">
-                <h3>{course.courseName}</h3>
-                <div className="course-details">
-                  <p>
-                    <strong>Category:</strong> {course.categoryName}
-                  </p>
-                  <p>
-                    <strong>Price:</strong> ${course.price}
-                  </p>
-                </div>
-
+              <div className="card-header">
+                <img
+                  src={course.imageBase64 || 'default-course-image.jpg'}
+                  alt="Course Thumbnail"
+                  className="course-image"
+                />
                 <Link
-                  to={`/edit-course/${course.id}`}
+                  to={`/edit-course/${course.id}`} // Fixed template string
                   state={{ categoryName: course.categoryName }}
-                  className="edit-button"
-                  onClick={(e) => e.stopPropagation()} // Prevent propagation to the card click event
+                  className="edit-icon"
+                  onClick={(e) => e.stopPropagation()} // Prevent navigation when clicking edit icon
                 >
-                  Edit Course
+                  ✏
                 </Link>
-
-
                 <button
-                  className="delete-button"
+                  className="delete-icon"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent propagation to the card click event
+                    e.stopPropagation(); // Prevent navigation when clicking delete button
                     handleDeleteCourse(course.categoryName, course.id);
                   }}
                 >
-                  Delete Course
+                  🗑
                 </button>
+              </div>
+              <div className="card-body">
+                <h3>{course.courseName}</h3>
               </div>
             </div>
           ))}
