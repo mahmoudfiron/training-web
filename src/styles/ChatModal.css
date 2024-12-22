@@ -1,0 +1,101 @@
+.chat-modal {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    width: 300px;
+    height: 500px; /* Set a fixed height for the modal */
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.chat-header {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-history {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto; /* Enable scrolling when content overflows */
+    background: #f9f9f9;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #007bff #f9f9f9; /* Scrollbar thumb and track colors */
+    scroll-behavior: smooth; /* Smooth scrolling effect */
+}
+
+.chat-history::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.chat-history::-webkit-scrollbar-track {
+    background: #f9f9f9; /* Track color */
+}
+
+.chat-history::-webkit-scrollbar-thumb {
+    background: #007bff; /* Thumb (scroll handle) color */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.chat-history::-webkit-scrollbar-thumb:hover {
+    background: #0056b3; /* Darker blue on hover */
+}
+
+.chat-message .message-header {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.chat-message.user .message-header {
+    text-align: right;
+    color: #555; /* Slightly darker for the user's messages */
+}
+
+.chat-message.instructor .message-header {
+    text-align: left;
+    color: #007bff; /* Blue for the instructor's messages */
+}
+
+.timestamp {
+    font-size: 0.75rem;
+    color: gray;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background: #f1f1f1;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.chat-input button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background: #0056b3;
+}
+
+.close-button{
+margin-top:-3%;
+}

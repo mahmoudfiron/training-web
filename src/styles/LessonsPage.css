@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-  }
+}
 
 .instructor-dashboard {
     position: relative;
@@ -28,7 +28,6 @@ body {
     font-size: 1rem;
     color: #666;
 }
-
 
 .lessons-container {
     display: flex;
@@ -89,9 +88,8 @@ body {
     }
 }
 
-
 .instructor-dashboard .add-lesson-button {
-    position: fixed; /* Keeps the button in the viewport */
+    position: fixed;
     display: inline-block;
     margin-top: 10px;
     padding: 10px 20px;
@@ -100,7 +98,7 @@ body {
     text-decoration: none;
     border-radius: 8px;
     font-weight: bold;
-    font-size: 1rem; /* Slightly larger font */
+    font-size: 1rem;
     top: 17%;
     right: 20px;
     z-index: 10;
@@ -109,7 +107,52 @@ body {
 }
 
 .instructor-dashboard .add-lesson-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
     cursor: pointer;
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
 }
+
+.chat-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chat-icon:hover {
+    background: #0056b3;
+}
+
+.chat-icon-wrapper {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Adjusted to align vertically with the chat icon */
+    right: -5px; /* Adjusted to align horizontally with the chat icon */
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+    min-width: 20px;
+    text-align: center;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+

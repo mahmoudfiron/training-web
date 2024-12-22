@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../firebase.js';
+import { collection, query, where, onSnapshot, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase.js';
 import { Link, useLocation } from 'react-router-dom';
+import ChatModal from './ChatModal.js'; // ChatModal component
 import '../styles/LessonsPage.css';
 
-const LessonsPage = () => {
+const LessonsPage = ({ instructorId }) => {
   const [lessons, setLessons] = useState([]);
   const location = useLocation();
   const { categoryName, isInstructor } = location.state || {};
   const courseId = location.pathname.split('/').pop();
   const [loading, setLoading] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const userId = auth.currentUser?.uid;
 
   const isLessonExpired = (lesson) => {
     const currentDate = new Date();
@@ -75,6 +79,49 @@ const LessonsPage = () => {
     fetchLessons();
   }, [categoryName, courseId, deleteExpiredLessons]);
 
+  useEffect(() => {
+    if (!userId) return; // Skip the query if userId is undefined
+
+    const fetchUnreadMessages = () => {
+      const messagesRef = collection(db, `chats/${courseId}/messages`);
+      const unreadQuery = query(messagesRef, where('readBy', 'not-in', [userId]));
+  
+      const unsubscribe = onSnapshot(unreadQuery, (snapshot) => {
+        const unreadMessages = snapshot.docs.filter((doc) => {
+          const data = doc.data();
+          return !data.readBy?.includes(userId) && data.senderId !== userId;
+        });
+        setUnreadCount(unreadMessages.length);
+      });
+  
+      return unsubscribe;
+    };
+  
+    const unsubscribe = fetchUnreadMessages();
+    return () => unsubscribe();
+  }, [courseId, userId]);
+  
+  const handleChatOpen = async () => {
+    setIsChatOpen(true);
+  
+    if (!userId) return; // Skip updating messages if userId is undefined
+
+    // Mark all unread messages as read when opening the chat
+    const messagesRef = collection(db, `chats/${courseId}/messages`);
+    const unreadQuery = query(messagesRef, where('readBy', 'not-in', [userId]));
+  
+    const snapshot = await getDocs(unreadQuery);
+    const batchUpdates = [];
+    snapshot.forEach((doc) => {
+      const messageRef = doc.ref;
+      batchUpdates.push(updateDoc(messageRef, { readBy: [...(doc.data().readBy || []), userId] }));
+    });
+  
+    await Promise.all(batchUpdates);
+    setUnreadCount(0); // Reset unread count
+  };
+
+  
   const handleDeleteLesson = async (lessonId) => {
     try {
       const lessonRef = doc(db, `courseCategories/${categoryName}/courses/${courseId}/lessons`, lessonId);
@@ -154,10 +201,28 @@ const LessonsPage = () => {
                 </>
               )}
             </div>
-            
           ))}
         </div>
       )}
+       <div className="lessons-page">
+        <div className="chat-icon-wrapper">
+          {unreadCount > 0 && <div className="notification-badge">{unreadCount}</div>}
+          <button
+            className="chat-icon"
+            onClick={handleChatOpen}
+          >
+            💬
+          </button>
+        </div>
+
+        {isChatOpen && (
+          <ChatModal
+            courseId={courseId}
+            instructorId={instructorId}
+            onClose={() => setIsChatOpen(false)}
+          />
+        )}
+      </div>
     </div>
   );
 };
