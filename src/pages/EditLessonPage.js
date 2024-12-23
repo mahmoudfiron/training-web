@@ -14,23 +14,13 @@ const EditLessonPage = () => {
     date: '',
     startTime: '',
     endTime: '',
-    zoomLink: '',
-    zoomPasscode: '',
   });
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Debugging logs
-  useEffect(() => {
-    console.log("categoryName:", categoryName);
-    console.log("courseId:", courseId);
-    console.log("lessonId:", lessonId);
-  }, [categoryName, courseId, lessonId]);
-
   useEffect(() => {
     const fetchLessonDetails = async () => {
       if (!categoryName) {
-        console.error('Error: Category name is missing.');
         setMessage('Error: Cannot find the course category.');
         setLoading(false);
         return;
@@ -41,10 +31,8 @@ const EditLessonPage = () => {
         const lessonSnap = await getDoc(lessonRef);
 
         if (lessonSnap.exists()) {
-          console.log("Lesson data fetched successfully:", lessonSnap.data());
           setFormData(lessonSnap.data());
         } else {
-          console.error('Lesson not found.');
           setMessage('Error: Lesson not found.');
         }
       } catch (error) {
@@ -77,7 +65,7 @@ const EditLessonPage = () => {
       await updateDoc(lessonRef, updatedData);
 
       setMessage('Lesson updated successfully!');
-      navigate('/manage-classes');
+      navigate(`/lessons/${courseId}`, { state: { categoryName, isInstructor: true } });
     } catch (error) {
       console.error('Error updating lesson:', error);
       setMessage('Error updating lesson. Please try again.');
@@ -86,7 +74,12 @@ const EditLessonPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleUpdateLesson(formData);
+    const updatedData = {
+      date: formData.date,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
+    };
+    handleUpdateLesson(updatedData);
   };
 
   if (loading) {
@@ -94,66 +87,48 @@ const EditLessonPage = () => {
   }
 
   return (
-    <div className="edit-lesson-page">
-      <h2>Edit Lesson</h2>
-      <form onSubmit={handleSubmit} className="edit-lesson-form">
-        <div className="form-group">
-          <label htmlFor="date">Lesson Date:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
+    <div className="edit-lesson-container">
+      <h2>Edit Your Lesson Details</h2>
+      <p>Fine-Tune Your Class with Ease below:</p>
+      <form onSubmit={handleSubmit} className="form-layout">
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="date">Lesson Date:</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="startTime">Start Time:</label>
+            <input
+              type="time"
+              id="startTime"
+              name="startTime"
+              value={formData.startTime}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="endTime">End Time:</label>
+            <input
+              type="time"
+              id="endTime"
+              name="endTime"
+              value={formData.endTime}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="startTime">Start Time:</label>
-          <input
-            type="time"
-            id="startTime"
-            name="startTime"
-            value={formData.startTime}
-            onChange={handleChange}
-            required
-          />
+        <div className="form-row">
+          <button type="submit" className="submit-button">Update Lesson</button>
         </div>
-        <div className="form-group">
-          <label htmlFor="endTime">End Time:</label>
-          <input
-            type="time"
-            id="endTime"
-            name="endTime"
-            value={formData.endTime}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="zoomLink">Zoom Meeting Link:</label>
-          <input
-            type="text"
-            id="zoomLink"
-            name="zoomLink"
-            value={formData.zoomLink}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="zoomPasscode">Zoom Meeting Passcode:</label>
-          <input
-            type="text"
-            id="zoomPasscode"
-            name="zoomPasscode"
-            value={formData.zoomPasscode}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button type="submit" className="submit-button">Update Lesson</button>
       </form>
       {message && <p className="message-text">{message}</p>}
     </div>

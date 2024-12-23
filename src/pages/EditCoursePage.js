@@ -15,7 +15,8 @@ const EditCoursePage = () => {
     description: '',
     equipment: '',
     price: '',
-    imageUrl: '',
+    available: false,
+    learningOutcomes: '',
   });
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -46,10 +47,10 @@ const EditCoursePage = () => {
 
   // Handle form changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -76,54 +77,93 @@ const EditCoursePage = () => {
 
   return (
     <div className="edit-course-page">
-      <h2>Edit Course</h2>
       <form onSubmit={handleSubmit} className="edit-course-form">
-        <div className="form-group">
-          <label htmlFor="courseName">Course Name:</label>
-          <input
-            type="text"
-            id="courseName"
-            name="courseName"
-            value={formData.courseName}
-            onChange={handleChange}
-            required
-          />
+        <div style={{ textAlign: 'center', fontFamily: "'Poppins', sans-serif" }}>
+          <h2 style={{ fontSize: '1.6rem', fontWeight: 'bold', margin: 0, color: 'black' }}>
+            Edit Your Course
+          </h2>
+          <p style={{ fontSize: '1rem', fontWeight: 'normal', color: 'gray', marginTop: '10px', marginBottom: '40px' }}>
+            Update the course details below
+          </p>
         </div>
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
+
+        <div className="form-group-row">
+          <div className="form-group">
+            <label htmlFor="courseName">Course Name:</label>
+            <input
+              type="text"
+              id="courseName"
+              name="courseName"
+              value={formData.courseName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="price">Price:</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="equipment">Equipment:</label>
-          <input
-            type="text"
-            id="equipment"
-            name="equipment"
-            value={formData.equipment}
-            onChange={handleChange}
-          />
+
+        <div className="form-group-row">
+          <div className="form-group">
+            <label htmlFor="equipment">Equipment Required:</label>
+            <input
+              type="text"
+              id="equipment"
+              name="equipment"
+              value={formData.equipment}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="available">Available:</label>
+            <input
+              type="checkbox"
+              id="available"
+              name="available"
+              checked={formData.available}
+              onChange={handleChange}
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            required
-          />
+
+        <div className="form-group-row">
+          <div className="form-group">
+            <label htmlFor="description">Course Description:</label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="learningOutcomes">Learning Outcomes:</label>
+            <textarea
+              id="learningOutcomes"
+              name="learningOutcomes"
+              value={formData.learningOutcomes}
+              onChange={handleChange}
+              required
+            />
+          </div>
         </div>
-        
-        <button type="submit" className="submit-button">Update Course</button>
+
+        <button type="submit" className="submit-button">
+          Update Course
+        </button>
       </form>
-      {message && <p className="message-text">{message}</p>}
+
+      {message && <p className="message">{message}</p>}
     </div>
   );
 };
