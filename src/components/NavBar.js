@@ -5,14 +5,20 @@ import logo from '../assets/icons/logo.webp';
 import { auth } from '../firebase.js';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import LoginPage from '../pages/LoginPage.js';
-import SignupPage from '../pages/SignupPage.js';
+import SignupPage from '../pages/LoginPage.js';
+import ProfileModal from '../pages/ProfileModal.js';
 import { getUserRoleFromFirestore } from '../utils/firebaseUtils.js';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase.js'; // Firestore reference
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState('');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // Profile Modal State
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false); // Dropdown State
+  const [profilePicture, setProfilePicture] = useState(null); // State for Profile Picture
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,11 +29,20 @@ const NavBar = () => {
         try {
           const role = await getUserRoleFromFirestore(currentUser.uid);
           setUserRole(role);
+
+          // Fetch user's profile picture from Firestore
+          const docRef = doc(db, 'users', currentUser.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists() && docSnap.data().profilePicture) {
+            setProfilePicture(docSnap.data().profilePicture);
+          }
         } catch (error) {
-          console.error('Failed to fetch user role: ', error);
+          console.error('Failed to fetch user role or profile picture: ', error);
         }
       } else {
         setUserRole('');
+        setProfilePicture(null); // Reset profile picture on logout
       }
     });
 
@@ -41,6 +56,29 @@ const NavBar = () => {
         navigate('/');
       })
       .catch((error) => alert(error.message));
+  };
+
+  const closeProfileModal = () => {
+    setIsProfileModalOpen(false);
+    setIsProfileDropdownOpen(false);
+
+    // Fetch the updated profile picture after closing the modal
+    if (user) {
+      const fetchUpdatedProfilePicture = async () => {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists() && docSnap.data().profilePicture) {
+            setProfilePicture(docSnap.data().profilePicture);
+          }
+        } catch (error) {
+          console.error('Error fetching updated profile picture: ', error);
+        }
+      };
+
+      fetchUpdatedProfilePicture();
+    }
   };
 
   return (
@@ -102,28 +140,80 @@ const NavBar = () => {
                 </li>
               )}
               <li className="dropdown">
-                <button className="dropdown-button">
-                  My Options ▼ 
-                  </button>
+                <button className="dropdown-button">My Options ▼</button>
                 <div className="dropdown-content">
                   <Link to="/my-courses">My Courses</Link>
                 </div>
               </li>
-              
+
               <li>
-                <button className="logout-button" onClick={handleLogout}>Logout</button>
+                <button className="logout-button" onClick={handleLogout}>
+                  Logout
+                </button>
               </li>
-              <li>
-                <button className="profile-button" onClick={() => navigate('/profile')}>Profile</button>
+              <li className="profile-icon-container">
+                {/* Profile Dropdown */}
+                <div
+                  className="profile-icon"
+                  onClick={() =>
+                    setIsProfileDropdownOpen(!isProfileDropdownOpen)
+                  }
+                >
+                  {profilePicture ? (
+                    <img
+                      src={profilePicture}
+                      alt="Profile"
+                      className="profile-icon-image"
+                    />
+                  ) : (
+                    '👤'
+                  )}
+                </div>
+                {isProfileDropdownOpen && (
+                  <div className="profile-dropdown">
+                    <button
+                      onClick={() => {
+                        setIsProfileModalOpen(true); // Open the Profile Modal
+                        setIsProfileDropdownOpen(false); // Close the dropdown
+                      }}
+                    >
+                      Edit Personal Details
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate('/financial-account');
+                      }}
+                    >
+                      Financial Account
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate('/account-settings');
+                      }}
+                    >
+                      Account Settings
+                    </button>
+                  </div>
+                )}
               </li>
             </>
           ) : (
             <>
               <li>
-                <button className="signup-button" onClick={() => setIsSignupOpen(true)}>Sign Up</button>
+                <button
+                  className="signup-button"
+                  onClick={() => setIsSignupOpen(true)}
+                >
+                  Sign Up
+                </button>
               </li>
               <li>
-                <button className="login-button" onClick={() => setIsLoginOpen(true)}>Login</button>
+                <button
+                  className="login-button"
+                  onClick={() => setIsLoginOpen(true)}
+                >
+                  Login
+                </button>
               </li>
             </>
           )}
@@ -132,6 +222,14 @@ const NavBar = () => {
 
       <LoginPage isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <SignupPage isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
+
+      {/* Profile Modal */}
+      {isProfileModalOpen && (
+        <ProfileModal
+          isOpen={isProfileModalOpen}
+          onClose={closeProfileModal} // Close the modal
+        />
+      )}
     </>
   );
 };

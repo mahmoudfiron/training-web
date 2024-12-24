@@ -8,7 +8,7 @@ import CreateCourse from './pages/CreateCourse.js';
 import HomePage from './components/HomePage.js';
 import NavBar from './components/NavBar.js';
 import Footer from './components/Footer.js';
-import ProfilePage from './pages/ProfilePage.js';
+import ProfileModal from './pages/ProfileModal.js';
 import LearnAbout from './pages/LearnAbout.js';
 import CourseDetails from './pages/CourseDetails.js'; 
 import PaymentPage from './pages/PaymentPage.js';
@@ -39,7 +39,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/create-course" element={<CreateCourse user={user} />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile-modal" element={<ProfileModal />} />
         <Route path="/learnabout" element={<LearnAbout />} />
         <Route path="/course-details/:categoryName/:courseId" element={<CourseDetails />} />
         <Route path="/course-payment/:categoryName/:courseId" element={<PaymentPage />} />\

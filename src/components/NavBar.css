@@ -248,3 +248,64 @@ html, body {
     align-items: center;
   }
 }
+
+/* Profile Icon Styles */
+.profile-icon-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 3%;
+}
+
+.profile-icon {
+  font-size: 1.5rem;
+  color: #333;
+  border-radius: 50%;
+  background: #f1f1f1;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-icon:hover {
+  background-color: #e0e0e0;
+}
+
+/* Profile Dropdown Styles */
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.profile-dropdown button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #333;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.profile-dropdown button:hover {
+  background-color: #f1f1f1;
+}
+
+.profile-icon-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
