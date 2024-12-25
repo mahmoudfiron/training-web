@@ -19,6 +19,7 @@ import EditLessonPage from './pages/EditLessonPage.js';
 import InstructorCourses from "./pages/InstructorCourses.js"; 
 import EditCoursePage from './pages/EditCoursePage.js';
 import LessonsPage from './pages/LessonsPage.js';
+import RatingsPage from './pages/RatingsPage.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -50,7 +51,7 @@ function App() {
         <Route path="/instructor-courses" element={<InstructorCourses />} />
         <Route path="/edit-course/:courseId" element={<EditCoursePage />} /> {/* Fixed route */}
         <Route path="/lessons/:courseId" element={<LessonsPage />} />
-
+        <Route path="/ratings" element={<RatingsPage />} />
       </Routes>
       <Footer />
     </Router>

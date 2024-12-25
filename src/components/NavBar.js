@@ -39,6 +39,9 @@ const NavBar = () => {
           if (docSnap.exists() && docSnap.data().profilePicture) {
             setProfilePicture(docSnap.data().profilePicture);
           }
+
+          // Navigate to the main page on login
+          navigate('/');
         } catch (error) {
           console.error('Failed to fetch user role or profile picture: ', error);
         }
@@ -49,7 +52,7 @@ const NavBar = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     signOut(auth)
@@ -103,6 +106,9 @@ const NavBar = () => {
                 </li>
                 <li>
                   <Link to="/faqs">FAQs</Link>
+                </li>
+                <li>
+                  <Link to="/ratings">Ratings</Link>
                 </li>
               </>
             )}
