@@ -1,77 +1,226 @@
-/* CourseDetails.css */
+.course-details-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
 
-.course-details-page {
-    margin: 40px;
-  }
-  
-  .course-summary {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .course-image {
-    width: 400px;
-    height: auto;
-    border-radius: 8px;
-  }
-  
-  .course-info {
-    max-width: 600px;
-  }
-  
-  .learners-count {
-    font-size: 1.2em;
-    color: #6c757d;
-  }
-  
-  .start-course-button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 15px 25px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    margin-top: 10px;
-  }
-  
-  .course-details-section {
-    margin-top: 30px;
-  }
-  
-  .course-section-tabs {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .course-section-tabs button {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 1.1em;
-  }
-  
-  .course-section-tabs .active-tab {
-    border-bottom: 2px solid #007bff;
-  }
-  
-  .course-description, .learning-outcomes {
-    margin-top: 20px;
-  }
-  
-  .learning-outcomes ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .learning-outcomes ul li {
-    padding-left: 20px;
-    position: relative;
-  }
-  
-  .learning-outcomes ul li::before {
-    content: '✔';
-    position: absolute;
-    left: 0;
-  }  
+.course-info-container {
+  flex: 2;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.course-tabs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.tab-button {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.tab-button.active {
+  background: #007bff;
+  color: white;
+}
+
+.tab-content {
+  margin-top: 20px;
+}
+
+.modules-section h3 {
+  margin-top: 10px;
+}
+
+.dropdown-button2 {
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.dropdown-buttonM {
+  background: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 0px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-align:left;
+  width:100%;
+}
+
+.module-content {
+  list-style: none;
+  padding: 0 15px;
+}
+
+.module-content li {
+  margin: 5px 0;
+}
+
+.certification-section .certification-image {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.course-overview {
+  flex: 1;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.course-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.start-course-button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.start-course-button:hover {
+  background: #218838;
+}
+
+.content-button{
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align:left;
+  width:100%;
+}
+
+.certification-section {
+  display: flex;
+  flex-direction: column; /* Stack the text and image vertically */
+  gap: 10px; /* Add spacing between the text and image */
+  text-align: center;
+  align-items: center;
+}
+
+.certification-image-container {
+  background-image: url('/src/assets/images/White_and_Gold_Certificate_of_Appreciation.png');
+  background-size: cover; /* Ensures the image covers the entire container */
+  background-position: center; /* Centers the image */
+  height: 500px; /* Set a fixed height if required */
+  width: 100%; /* Takes the full width of the container */
+  border-radius: 8px; /* Matches the card's rounded corners */
+  overflow: hidden; /* Ensures no content overflows the container */
+  align-items: center;
+  text-align: center;
+  color: black; /* Add text color to make the text visible */
+  padding: 10px; /* Optional padding for spacing */
+  margin-top: 6%;
+}
+
+.certification-text {
+  color: black; /* Ensure the text is visible */
+  font-size: 1.2rem; /* Adjust the font size */
+  font-weight: bold; /* Optional: Make the text bold */
+  margin: 10px 0; /* Add spacing around the text */
+}
+
+/* Container for the course description */
+.description-section {
+  padding: 20px; /* Add space around the text */
+  line-height: 1.8; /* Adjust spacing between lines */
+  color: #333; /* Set a readable text color */
+  font-size: 1rem; /* Font size for readability */
+  font-family: Arial, sans-serif; /* Use a clean and modern font */
+  background-color: #ffffff; /* Background for contrast */
+  border-radius: 8px; /* Rounded edges for the container */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for emphasis */
+  text-align: justify; /* Align text to both left and right for a neat look */
+}
+
+/* Title styling (if any heading inside) */
+.description-section h3 {
+  font-size: 1.5rem; /* Larger size for headings */
+  font-weight: bold; /* Make it bold */
+  color: #007bff; /* Use a primary color for emphasis */
+  margin-bottom: 15px; /* Space below the heading */
+}
+
+/* Paragraph styling */
+.description-section p {
+  margin-bottom: 15px; /* Space between paragraphs */
+  color: #555; /* Slightly lighter color for subtext */
+}
+
+.start-course-button2 {
+  background: none; /* Remove background */
+  border: none; /* Remove border */
+  padding: 0; /* Remove padding */
+  cursor: pointer; /* Pointer cursor on hover */
+  color: #003d7e; /* Text color (use a link-like color) */
+  font-size: 1.1rem; /* Adjust font size */
+  font-weight: bold; /* Make text bold (optional) */
+  text-decoration: none; /* Remove underline (if needed) */
+  transition: color 0.3s ease; /* Smooth color transition on hover */
+  margin-right: 75%;
+}
+
+.start-course-button2:hover {
+  color: #003a77; /* Darker color on hover for effect */
+  text-decoration: underline; /* Optional: Add underline on hover */
+}
+
+.content-details{
+padding: 20px; /* Add space around the text */
+line-height: 1.8; /* Adjust spacing between lines */
+color: #333; /* Set a readable text color */
+font-size: 1rem; /* Font size for readability */
+font-family: Arial, sans-serif; /* Use a clean and modern font */
+background-color: #ffffff; /* Background for contrast */
+border-radius: 8px; /* Rounded edges for the container */
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for emphasis */
+text-align: justify; /* Align text to both left and right for a neat look */
+}
+
+.start-course-hover-button {
+  margin-left: 10px;
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+
+.module-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.content-details-unit {
+  padding-left: 20px; /* Indent content under the unit */
+  margin-top: 10px; /* Space between button and content */
+}

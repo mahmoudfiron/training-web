@@ -14,8 +14,11 @@ const CreateCourse = () => {
     available: false,
     description: '',
     learningOutcomes: '',
+    courseUnits: [], // Initialize as an array
     publisherName: '',
+
   });
+  const [unitInput, setUnitInput] = useState(''); // Temporary input for a unit
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -37,6 +40,23 @@ const CreateCourse = () => {
         [name]: type === 'checkbox' ? checked : value,
       });
     }
+  };
+
+  const addUnit = () => {
+    if (unitInput.trim()) {
+      setFormData((prevData) => ({
+        ...prevData,
+        courseUnits: [...prevData.courseUnits, unitInput],
+      }));
+      setUnitInput(''); // Clear input
+    }
+  };
+
+  const removeUnit = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      courseUnits: prevData.courseUnits.filter((_, i) => i !== index),
+    }));
   };
 
   const handleAddCourse = async (courseData) => {
@@ -76,7 +96,7 @@ const CreateCourse = () => {
   };
 
   return (
-    <div className="create-course-page">
+<div className="create-course-page">
 
 <form onSubmit={handleSubmit} className="create-course-form">
 <div style={{ textAlign: 'center', fontFamily: "'Poppins', sans-serif"}}>
@@ -133,15 +153,18 @@ const CreateCourse = () => {
     </div>
     <div className="form-group">
       <label htmlFor="equipment">Equipment Required:</label>
-      <input
-        type="text"
+      <textarea
         id="equipment"
         name="equipment"
         value={formData.equipment}
         onChange={handleChange}
+        required
       />
     </div>
   </div>
+  
+
+
 
   <div className="form-group-row">
     <div className="form-group">
@@ -178,6 +201,7 @@ const CreateCourse = () => {
         required
       />
     </div>
+    
     <div className="form-group">
       <label htmlFor="learningOutcomes">Learning Outcomes:</label>
       <textarea
@@ -189,6 +213,34 @@ const CreateCourse = () => {
       />
     </div>
   </div>
+
+
+  {/* Course Units */}
+  <div className="form-group">
+          <label>Course Units:</label>
+          <div className="unit-input">
+            <input
+              type="text"
+              value={unitInput}
+              onChange={(e) => setUnitInput(e.target.value)}
+              placeholder="Enter unit name..."
+            />
+            <button type="button" onClick={addUnit}>
+              Add Unit
+            </button>
+          </div>
+          <ul className="unit-list">
+            {formData.courseUnits.map((unit, index) => (
+              <li key={index}>
+                {unit}
+                <button type="button" onClick={() => removeUnit(index)}>
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
 
   <div className="form-group-row">
     <div className="form-group">
