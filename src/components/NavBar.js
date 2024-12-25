@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import logo from '../assets/icons/logo.webp';
@@ -23,36 +23,43 @@ const NavBar = () => {
   const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false); // My Options Dropdown State
   const navigate = useNavigate();
 
+  const hasNavigatedAfterLogin = useRef(false); // Track if navigation after login has occurred
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-
+  
       if (currentUser) {
         try {
           const role = await getUserRoleFromFirestore(currentUser.uid);
           setUserRole(role);
-
+  
           // Fetch user's profile picture from Firestore
           const docRef = doc(db, 'users', currentUser.uid);
           const docSnap = await getDoc(docRef);
-
+  
           if (docSnap.exists() && docSnap.data().profilePicture) {
             setProfilePicture(docSnap.data().profilePicture);
           }
+  
+            // Navigate to the main page only if the user just logged in
+            if (!hasNavigatedAfterLogin.current) {
+            navigate('/');
+            hasNavigatedAfterLogin.current = true; // Set flag to true after navigation
+          }
+            } catch (error) {
+            console.error('Failed to fetch user role or profile picture: ', error);
+          }  
+            } else {
+            setUserRole('');
+            setProfilePicture(null); // Reset profile picture on logout
+            hasNavigatedAfterLogin.current = false; // Reset flag when logged out
+           }
+          });
 
-          // Navigate to the main page on login
-          navigate('/');
-        } catch (error) {
-          console.error('Failed to fetch user role or profile picture: ', error);
-        }
-      } else {
-        setUserRole('');
-        setProfilePicture(null); // Reset profile picture on logout
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
+           return () => unsubscribe();
+           }, [navigate]);
+  
 
   const handleLogout = () => {
     signOut(auth)
