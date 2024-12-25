@@ -89,11 +89,12 @@ const CourseDetails = () => {
                 className={`dropdown-buttonM ${activeModule === "module1" ? "expanded" : ""}`}
                 onClick={() => toggleModule("module1")}
               >
-                <h3>{activeModule === "module1" ? "▲" : "▼"} MODULE 1</h3>
-                <p>{course.categoryName} Exercises, Positions, and Benefits of {course.categoryName}</p>
+                <h3>&nbsp;&nbsp;{activeModule === "module1" ? "▲" : "▼"} MODULE 1</h3>
+                <p>&nbsp;&nbsp;{course.categoryName} Exercises, Positions, and Benefits of {course.categoryName}</p>
               </button>
               {activeModule === "module1" && (
                 <div className="module-content">
+                  {/* Learning Outcomes */}
                   <div
                     className="module-row"
                     onMouseEnter={() => setHoveredButton("learningOutcomes")}
@@ -103,7 +104,7 @@ const CourseDetails = () => {
                       className="content-button"
                       onClick={() => toggleContent("learningOutcomes")}
                     >
-                      <h4>1). Learning Outcomes {expandedContent === "learningOutcomes" ? "▲" : "▼"}</h4>
+                      <h4> Learning Outcomes {expandedContent === "learningOutcomes" ? "▲" : "▼"}</h4>
                     </button>
                     {hoveredButton === "learningOutcomes" && (
                       <button
@@ -119,36 +120,31 @@ const CourseDetails = () => {
                     <p className="content-details">{course.learningOutcomes}</p>
                   )}
 
+                  {/* Units */}
                   {courseUnits.map((unit, index) => (
-                    <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                    <div key={index}>
                       <button
                         className="content-button"
                         onClick={() => toggleContent(`unit${index + 1}`)}
                       >
-                        <h4>
-                          {index + 2}). Unit {index + 1}{" "}
-                          {expandedContent === `unit${index + 1}` ? "▲" : "▼"}
-                        </h4>
-                        
-                        
+                        <h4> Unit {index + 1} {expandedContent === `unit${index + 1}` ? "▲" : "▼"}</h4>
                       </button>
                       {expandedContent === `unit${index + 1}` && (
-                        <div className="unit-content" style={{ padding: "10px 15px" }}>
-                          <p>{unit.trim()}</p>
-                        </div>
+                        <p className="content-details">{unit.trim()}</p>
                       )}
                     </div>
                   ))}
                 </div>
               )}
-              <br />
+                            <br />
 
               <button
+              
                 className={`dropdown-buttonM ${activeModule === "module2" ? "expanded" : ""}`}
                 onClick={() => toggleModule("module2")}
               >
-                <h3>{activeModule === "module2" ? "▲" : "▼"} MODULE 2</h3>
-                <p>Course Assessment</p>
+                <h3>&nbsp;&nbsp;{activeModule === "module2" ? "▲" : "▼"} MODULE 2</h3>
+                <p>&nbsp;&nbsp;Course Assessment</p>
               </button>
               {activeModule === "module2" && (
                 <ol className="module-content">
@@ -202,16 +198,20 @@ const CourseDetails = () => {
           className="course-image"
         />
         <div className="course-overview-info">
-          <h2>{course.courseName}</h2>
-          <p>
-            <strong>Duration:</strong> {course.duration} hours
-          </p>
+          <h3>{course.courseName}</h3>
+          <br />
           <p>
             <strong>Equipment:</strong> {course.equipment}
           </p>
+          <h4> This Online Course Includes:</h4>
           <p>
-            <strong>Availability:</strong> {course.available ? "Available" : "Unavailable"}
-          </p>
+          ✅ 1.5-3 Hours of Learning
+<br />
+
+✅ CPD Accreditation
+<br />
+
+✅ Final Assessment</p>
           <button
             className="start-course-button"
             onClick={() => navigate(`/course-payment/${categoryName}/${courseId}`)}

@@ -19,6 +19,8 @@ const NavBar = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // Profile Modal State
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false); // Dropdown State
   const [profilePicture, setProfilePicture] = useState(null); // State for Profile Picture
+  const [isInstructorDropdownOpen, setIsInstructorDropdownOpen] = useState(false); // Instructor Dropdown State
+  const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false); // My Options Dropdown State
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -130,20 +132,32 @@ const NavBar = () => {
             <>
               {userRole === 'instructor' && (
                 <li className="dropdown">
-                  <button className="dropdown-button">
-                    Instructor Options ▼
+                  <button
+                    className="dropdown-button"
+                    onClick={() => setIsInstructorDropdownOpen(!isInstructorDropdownOpen)}
+                  >
+                    Instructor Options {isInstructorDropdownOpen ? '▲' : '▼'}
                   </button>
-                  <div className="dropdown-content">
-                    <Link to="/create-course">Add Course</Link>
-                    <Link to="/instructor-courses">Manage Courses</Link>
-                  </div>
+                  {isInstructorDropdownOpen && (
+                    <div className="dropdown-content">
+                      <Link to="/create-course">Add Course</Link>
+                      <Link to="/instructor-courses">Manage Courses</Link>
+                    </div>
+                  )}
                 </li>
               )}
               <li className="dropdown">
-                <button className="dropdown-button">My Options ▼</button>
-                <div className="dropdown-content">
-                  <Link to="/my-courses">My Courses</Link>
-                </div>
+                <button
+                  className="dropdown-button"
+                  onClick={() => setIsMyOptionsDropdownOpen(!isMyOptionsDropdownOpen)}
+                >
+                  My Options {isMyOptionsDropdownOpen ? '▲' : '▼'}
+                </button>
+                {isMyOptionsDropdownOpen && (
+                  <div className="dropdown-content">
+                    <Link to="/my-courses">My Courses</Link>
+                  </div>
+                )}
               </li>
 
               <li>

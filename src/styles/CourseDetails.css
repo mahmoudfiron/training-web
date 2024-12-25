@@ -192,15 +192,16 @@
 }
 
 .content-details{
-padding: 20px; /* Add space around the text */
+padding: 10px; /* Add space around the text */
 line-height: 1.8; /* Adjust spacing between lines */
 color: #333; /* Set a readable text color */
 font-size: 1rem; /* Font size for readability */
 font-family: Arial, sans-serif; /* Use a clean and modern font */
-background-color: #ffffff; /* Background for contrast */
+background-color: #fcfcfc; /* Background for contrast */
 border-radius: 8px; /* Rounded edges for the container */
-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for emphasis */
+box-shadow: 0 6px 6px rgba(0, 0, 0, 0.1); /* Optional shadow for emphasis */
 text-align: justify; /* Align text to both left and right for a neat look */
+margin-top:1.5% ;
 }
 
 .start-course-hover-button {
