@@ -69,7 +69,7 @@ const MyCourses = () => {
         <div className="courses-container">
           {enrolledCourses.map((course) => (
             <div
-             className="course-card"
+             className="course-card2"
               key={course.id}
               onClick={() => navigate(`/lessons/${course.id}`, { state: { categoryName: course.categoryName } })}
               >

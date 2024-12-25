@@ -25,7 +25,7 @@ body {
     justify-content: center;
   }
   
-  .course-card {
+  .course-card2 {
     width: 300px;
     background: #f4f4f4;
     border: 1px solid #e0e0e0;
@@ -33,25 +33,26 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s;
+    cursor: pointer;
   }
   
-  .course-card:hover {
+  .course-card2:hover {
     transform: translateY(-10px);
   }
   
-  .course-card h3 {
+  .course-card2 h3 {
     font-size: 1.5em;
     margin: 20px 0 10px;
     color: #000000;
   }
   
-  .course-card p {
+  .course-card2 p {
     font-size: 1em;
     color: #666;
     margin: 10px 20px;
   }
   
-  .course-card p strong {
+  .course-card2 p strong {
     color: #333;
   }
   
