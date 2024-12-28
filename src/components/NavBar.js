@@ -15,21 +15,22 @@ const NavBar = () => {
   const [userRole, setUserRole] = useState('');
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false); // Profile Modal State
-  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false); // Dropdown State
-  const [profilePicture, setProfilePicture] = useState(null); // State for Profile Picture
-  const [isInstructorDropdownOpen, setIsInstructorDropdownOpen] = useState(false); // Instructor Dropdown State
-  const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false); // My Options Dropdown State
-  const navigate = useNavigate();
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [isInstructorDropdownOpen, setIsInstructorDropdownOpen] = useState(false);
+  const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false);
 
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const hasNavigatedAfterLogin = useRef(false);
+  const modalRef = useRef(null);
+  const bellRef = useRef(null);
+  const navigate = useNavigate();
 
-  const hasNavigatedAfterLogin = useRef(false); // Track if navigation after login has occurred
-
-
+  // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       if (user) {
@@ -53,43 +54,76 @@ const NavBar = () => {
     fetchNotifications();
   }, [user]);
 
+  // Close the modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target) &&
+        !bellRef.current.contains(event.target)
+      ) {
+        setIsModalOpen(false);
+      }
+    };
 
+    if (isModalOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isModalOpen]);
+
+  // Monitor authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-  
+
       if (currentUser) {
         try {
           const role = await getUserRoleFromFirestore(currentUser.uid);
           setUserRole(role);
-  
-          // Fetch user's profile picture from Firestore
+
           const docRef = doc(db, 'users', currentUser.uid);
           const docSnap = await getDoc(docRef);
-  
+
           if (docSnap.exists() && docSnap.data().profilePicture) {
             setProfilePicture(docSnap.data().profilePicture);
           }
-  
-            // Navigate to the main page only if the user just logged in
-            if (!hasNavigatedAfterLogin.current) {
+
+          if (!hasNavigatedAfterLogin.current) {
             navigate('/');
-            hasNavigatedAfterLogin.current = true; // Set flag to true after navigation
+            hasNavigatedAfterLogin.current = true;
           }
-            } catch (error) {
-            console.error('Failed to fetch user role or profile picture: ', error);
-          }  
-            } else {
-            setUserRole('');
-            setProfilePicture(null); // Reset profile picture on logout
-            hasNavigatedAfterLogin.current = false; // Reset flag when logged out
-           }
-          });
-          
-           return () => unsubscribe();
-           }, [navigate]);
-          
-          
+        } catch (error) {
+          console.error('Failed to fetch user role or profile picture: ', error);
+        }
+      } else {
+        setUserRole('');
+        setProfilePicture(null);
+        hasNavigatedAfterLogin.current = false;
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  // Format relative time
+  const formatRelativeTime = (timestamp) => {
+    const now = new Date();
+    const messageTime = new Date(timestamp);
+    const secondsDiff = Math.floor((now - messageTime) / 1000);
+
+    if (secondsDiff < 60) return `${secondsDiff} seconds ago`;
+    const minutesDiff = Math.floor(secondsDiff / 60);
+    if (minutesDiff < 60) return `${minutesDiff} minutes ago`;
+    const hoursDiff = Math.floor(minutesDiff / 60);
+    if (hoursDiff < 24) return `${hoursDiff} hours ago`;
+    const daysDiff = Math.floor(hoursDiff / 24);
+    return `${daysDiff} days ago`;
+  };
+
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -98,12 +132,11 @@ const NavBar = () => {
       })
       .catch((error) => alert(error.message));
   };
-    
+
   const closeProfileModal = () => {
     setIsProfileModalOpen(false);
     setIsProfileDropdownOpen(false);
-    
-    // Fetch the updated profile picture after closing the modal
+
     if (user) {
       const fetchUpdatedProfilePicture = async () => {
         try {
@@ -125,59 +158,66 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar">
-        {/* Logo */}
         <div className="navbar-logo">
           <Link to="/">
             <img src={logo} alt="Website Logo" className="navbar-logo-image" />
           </Link>
         </div>
 
-        {/* Center Section */}
         <div className="navbar-center">
-
-
-
-        <div className="notification-bell">
-        <button
-          className="bell-icon" onClick={() => setIsModalOpen(!isModalOpen)}
-        >
-          <span className="bell">&#128276;</span>
-          {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
-        </button>
-      {isModalOpen && (
-        <div className="notification-modal">
-          <h3>Notifications</h3>
-          {userRole === 'instructor' && (
-        <button
-          className="add-message-button"
-          onClick={() => navigate('/send-message')}
-        >
-          Add New Message
-        </button>
-      )}
-          {notifications.length === 0 ? (
-            <p>No new notifications</p>
-          ) : (
-            <ul>
-              {notifications.map((notification) => (
-                <li key={notification.id} className={!notification.read ? "unread" : ''}>
-                  <p>{notification.subject}</p>
-                  <span>{notification.timestamp}</span>
+          <div className="notification-bell">
+            <button
+              ref={bellRef}
+              className="bell-icon"
+              onClick={() => setIsModalOpen(!isModalOpen)}
+            >
+              <span className="bell">&#128276;</span>
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+            </button>
+            {isModalOpen && (
+              <div className="notification-modal" ref={modalRef}>
+                <h3>Notifications</h3>
+                {userRole === 'instructor' && (
                   <button
-                      onClick={() => navigate(`/messages/${notification.id}`)} 
-                      >
-                    See Full Message
+                    className="add-message-button"
+                    onClick={() => navigate('/send-message')}
+                  >
+                    Add New Message
                   </button>
-                </li>
-              ))}
-            </ul>
-          )}
+                )}
+                {notifications.length === 0 ? (
+                  <p>No new notifications</p>
+                ) : (
+                  <ul>
+                    {notifications.map((notification) => (
+                      <li
+                        key={notification.id}
+                        className={!notification.read ? 'unread' : ''}
+                      >
+                        <p>{notification.subject}</p>
+                        <span className="timestamp"> before&nbsp;
+                        {formatRelativeTime(notification.timestamp)}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button
+                          className="text-button"
+                          onClick={() => navigate(`/messages/${notification.id}`)}
+                        >
+                          See Full Message
+                        </button>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      )}
-</div>
 
-        
-          <ul className="navbar-links">
+
+        <ul className="navbar-links">
             {!user && (
               <>
                 <li>
@@ -206,12 +246,11 @@ const NavBar = () => {
             </li>
           </ul>
           <div className="navbar-search">
-            <input type="text" placeholder="Search..." />
-            <button>Search</button>
+            <input type="text" placeholder="Search..." /> 
+            <button>Search</button> 
           </div>
-        </div>
 
-        {/* Right Section */}
+
         <ul className="navbar-actions">
           {user ? (
             <>
@@ -219,7 +258,9 @@ const NavBar = () => {
                 <li className="dropdown">
                   <button
                     className="dropdown-button"
-                    onClick={() => setIsInstructorDropdownOpen(!isInstructorDropdownOpen)}
+                    onClick={() =>
+                      setIsInstructorDropdownOpen(!isInstructorDropdownOpen)
+                    }
                   >
                     Instructor Options {isInstructorDropdownOpen ? '▲' : '▼'}
                   </button>
@@ -234,7 +275,9 @@ const NavBar = () => {
               <li className="dropdown">
                 <button
                   className="dropdown-button"
-                  onClick={() => setIsMyOptionsDropdownOpen(!isMyOptionsDropdownOpen)}
+                  onClick={() =>
+                    setIsMyOptionsDropdownOpen(!isMyOptionsDropdownOpen)
+                  }
                 >
                   My Options {isMyOptionsDropdownOpen ? '▲' : '▼'}
                 </button>
@@ -251,7 +294,6 @@ const NavBar = () => {
                 </button>
               </li>
               <li className="profile-icon-container">
-                {/* Profile Dropdown */}
                 <div
                   className="profile-icon"
                   onClick={() =>
@@ -272,8 +314,8 @@ const NavBar = () => {
                   <div className="profile-dropdown">
                     <button
                       onClick={() => {
-                        setIsProfileModalOpen(true); // Open the Profile Modal
-                        setIsProfileDropdownOpen(false); // Close the dropdown
+                        setIsProfileModalOpen(true);
+                        setIsProfileDropdownOpen(false);
                       }}
                     >
                       Edit Personal Details
@@ -322,11 +364,10 @@ const NavBar = () => {
       <LoginPage isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <SignupPage isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
 
-      {/* Profile Modal */}
       {isProfileModalOpen && (
         <ProfileModal
           isOpen={isProfileModalOpen}
-          onClose={closeProfileModal} // Close the modal
+          onClose={closeProfileModal}
         />
       )}
     </>
