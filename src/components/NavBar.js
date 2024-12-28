@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 import logo from '../assets/icons/logo.webp';
-import { auth } from '../firebase.js';
+import { auth, db } from '../firebase.js';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import LoginPage from '../pages/LoginPage.js';
-import SignupPage from '../pages/LoginPage.js';
+import SignupPage from '../pages/SignupPage.js';
 import ProfileModal from '../pages/ProfileModal.js';
 import { getUserRoleFromFirestore } from '../utils/firebaseUtils.js';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase.js'; // Firestore reference
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
@@ -23,7 +22,37 @@ const NavBar = () => {
   const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false); // My Options Dropdown State
   const navigate = useNavigate();
 
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
   const hasNavigatedAfterLogin = useRef(false); // Track if navigation after login has occurred
+
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (user) {
+        try {
+          const messagesRef = collection(db, "users", user.uid, "messages");
+          const messagesSnap = await getDocs(messagesRef);
+          const messages = messagesSnap.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          const unreadMessages = messages.filter((msg) => !msg.read);
+          setNotifications(messages);
+          setUnreadCount(unreadMessages.length);
+        } catch (error) {
+          console.error("Error fetching notifications:", error);
+        }
+      }
+    };
+
+    fetchNotifications();
+  }, [user]);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -56,11 +85,11 @@ const NavBar = () => {
             hasNavigatedAfterLogin.current = false; // Reset flag when logged out
            }
           });
-
+          
            return () => unsubscribe();
            }, [navigate]);
-  
-
+          
+          
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
@@ -69,11 +98,11 @@ const NavBar = () => {
       })
       .catch((error) => alert(error.message));
   };
-
+    
   const closeProfileModal = () => {
     setIsProfileModalOpen(false);
     setIsProfileDropdownOpen(false);
-
+    
     // Fetch the updated profile picture after closing the modal
     if (user) {
       const fetchUpdatedProfilePicture = async () => {
@@ -105,6 +134,49 @@ const NavBar = () => {
 
         {/* Center Section */}
         <div className="navbar-center">
+
+
+
+        <div className="notification-bell">
+        <button
+          className="bell-icon" onClick={() => setIsModalOpen(!isModalOpen)}
+        >
+          <span className="bell">&#128276;</span>
+          {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+        </button>
+      {isModalOpen && (
+        <div className="notification-modal">
+          <h3>Notifications</h3>
+          {userRole === 'instructor' && (
+        <button
+          className="add-message-button"
+          onClick={() => navigate('/send-message')}
+        >
+          Add New Message
+        </button>
+      )}
+          {notifications.length === 0 ? (
+            <p>No new notifications</p>
+          ) : (
+            <ul>
+              {notifications.map((notification) => (
+                <li key={notification.id} className={!notification.read ? "unread" : ''}>
+                  <p>{notification.subject}</p>
+                  <span>{notification.timestamp}</span>
+                  <button
+                      onClick={() => navigate(`/messages/${notification.id}`)} 
+                      >
+                    See Full Message
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+</div>
+
+        
           <ul className="navbar-links">
             {!user && (
               <>

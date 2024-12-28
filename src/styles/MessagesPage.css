@@ -1,0 +1,57 @@
+.messages-page {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .messages-sidebar {
+    width: 25%;
+    background: #f9f9f9;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+  }
+  
+  .messages-sidebar h3 {
+    margin-bottom: 20px;
+  }
+  
+  .messages-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .messages-sidebar li {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .messages-sidebar li:hover {
+    background: #f1f1f1;
+  }
+  
+  .messages-sidebar li.active {
+    background: #8c9fb3;
+    color: #fff;
+  }
+  
+  .message-details {
+    width: 70%;
+    padding: 20px;
+  }
+  
+  .message-details h3 {
+    margin-bottom: 20px;
+  }
+  
+  .message-details p {
+    margin: 10px 0;
+  }
+  
+  hr {
+    margin: 20px 0;
+  }
+  

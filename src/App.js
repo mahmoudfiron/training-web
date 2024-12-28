@@ -20,6 +20,8 @@ import InstructorCourses from "./pages/InstructorCourses.js";
 import EditCoursePage from './pages/EditCoursePage.js';
 import LessonsPage from './pages/LessonsPage.js';
 import RatingsPage from './pages/RatingsPage.js';
+import MessagesPage from './pages/MessagesPage.js';
+import SendMessagePage  from './pages/SendMessagePage.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -52,6 +54,9 @@ function App() {
         <Route path="/edit-course/:courseId" element={<EditCoursePage />} /> {/* Fixed route */}
         <Route path="/lessons/:courseId" element={<LessonsPage />} />
         <Route path="/ratings" element={<RatingsPage />} />
+        <Route path="/messages/:messageId?" element={<MessagesPage />} />
+        <Route path="/send-message" element={<SendMessagePage />} />
+
       </Routes>
       <Footer />
     </Router>
