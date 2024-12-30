@@ -166,14 +166,6 @@ const NavBar = () => {
 
         <div className="navbar-center">
           <div className="notification-bell">
-            <button
-              ref={bellRef}
-              className="bell-icon"
-              onClick={() => setIsModalOpen(!isModalOpen)}
-            >
-              <span className="bell">&#128276;</span>
-              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
-            </button>
             {isModalOpen && (
               <div className="notification-modal" ref={modalRef}>
                 <h3>Notifications</h3>
@@ -233,13 +225,25 @@ const NavBar = () => {
             )}
             {user && (
               <>
+            <button
+              ref={bellRef}
+              className="bell-icon"
+              onClick={() => setIsModalOpen(!isModalOpen)}
+            >
+              <span className="bell">&#128276;</span>
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+            </button>
+
                 <li>
-                  <Link to="/calculator">Calories Calculator</Link>
+                  <Link to="/CalculatorPage">Calories Calculator</Link>
                 </li>
                 <li>
                   <Link to="/calendar">My Calendar</Link>
                 </li>
+
+                
               </>
+
             )}
             <li>
               <Link to="/learnabout">About Us</Link>

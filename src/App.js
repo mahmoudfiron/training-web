@@ -22,6 +22,7 @@ import LessonsPage from './pages/LessonsPage.js';
 import RatingsPage from './pages/RatingsPage.js';
 import MessagesPage from './pages/MessagesPage.js';
 import SendMessagePage  from './pages/SendMessagePage.js';
+import CalculatorPage from './pages/CalculatorPage.js';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -56,6 +57,7 @@ function App() {
         <Route path="/ratings" element={<RatingsPage />} />
         <Route path="/messages/:messageId?" element={<MessagesPage />} />
         <Route path="/send-message" element={<SendMessagePage />} />
+        <Route path="/CalculatorPage" element={<CalculatorPage />} />
 
       </Routes>
       <Footer />
