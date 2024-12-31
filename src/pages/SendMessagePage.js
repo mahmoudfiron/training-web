@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../firebase.js';
+import { useNavigate } from 'react-router-dom';
 import '../styles/SendMessagePage.css';
 
 const SendMessagePage = () => {
@@ -14,6 +15,8 @@ const SendMessagePage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -200,9 +203,16 @@ const SendMessagePage = () => {
         ></textarea>
       </div>
 
-      <button onClick={handleSendMessage} className="send-button">
-        Send Message
-      </button>
+      <button
+  onClick={() => {
+    handleSendMessage(); // Call handleSendMessage
+    navigate('/'); // Navigate after sending the message
+  }}
+  className="send-button"
+>
+  Send Message
+</button>
+
     </div>
   );
 };

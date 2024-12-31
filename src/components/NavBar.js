@@ -8,7 +8,7 @@ import LoginPage from '../pages/LoginPage.js';
 import SignupPage from '../pages/SignupPage.js';
 import ProfileModal from '../pages/ProfileModal.js';
 import { getUserRoleFromFirestore } from '../utils/firebaseUtils.js';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
@@ -109,6 +109,20 @@ const NavBar = () => {
     return () => unsubscribe();
   }, [navigate]);
 
+  // Handle opening of notification modal and marking notifications as read
+  const handleNotificationClick = async () => {
+    setIsModalOpen(!isModalOpen);
+    if (!isModalOpen && unreadCount > 0) {
+      notifications.forEach(async (notification) => {
+        if (!notification.read) {
+          const notificationRef = doc(db, "users", user.uid, "messages", notification.id);
+          await updateDoc(notificationRef, { read: true });
+        }
+      });
+      setUnreadCount(0);  // Reset unread count after marking as read
+    }
+  };
+
   // Format relative time
   const formatRelativeTime = (timestamp) => {
     const now = new Date();
@@ -158,58 +172,69 @@ const NavBar = () => {
   return (
     <>
       <nav className="navbar">
+        {/* Logo */}
         <div className="navbar-logo">
           <Link to="/">
             <img src={logo} alt="Website Logo" className="navbar-logo-image" />
           </Link>
         </div>
 
+        {/* Center Section */}
         <div className="navbar-center">
           <div className="notification-bell">
-            {isModalOpen && (
-              <div className="notification-modal" ref={modalRef}>
-                <h3>Notifications</h3>
-                {userRole === 'instructor' && (
-                  <button
-                    className="add-message-button"
-                    onClick={() => navigate('/send-message')}
-                  >
-                    Add New Message
-                  </button>
-                )}
-                {notifications.length === 0 ? (
-                  <p>No new notifications</p>
-                ) : (
-                  <ul>
-                    {notifications.map((notification) => (
-                      <li
-                        key={notification.id}
-                        className={!notification.read ? 'unread' : ''}
-                      >
-                        <p>{notification.subject}</p>
-                        <span className="timestamp"> before&nbsp;
-                        {formatRelativeTime(notification.timestamp)}
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button
+            <button
+              ref={bellRef}
+              className="bell-icon"
+              onClick={handleNotificationClick}
+            >
+              <span className="bell">&#128276;</span>
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+            </button>
+          {isModalOpen && (
+            <div className="notification-modal" ref={modalRef}>
+              <h3>Notifications</h3>
+              {userRole === 'instructor' && (
+            <button
+              className="add-message-button"
+              onClick={() => navigate('/send-message')}
+            >
+              Add New Message
+            </button>
+          )}
+              {notifications.length === 0 ? (
+                <p>No new notifications</p>
+              ) : (
+                <ul>
+                  {notifications.map((notification) => (
+                    <li 
+                    key={notification.id}
+                     className={!notification.read ? "unread" : ''}
+                     >
+                      <p>{notification.subject}</p>
+                      <span className="timestamp"> before&nbsp;
+                      {formatRelativeTime(notification.timestamp)}
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <button
                           className="text-button"
-                          onClick={() => navigate(`/messages/${notification.id}`)}
-                        >
-                          See Full Message
-                        </button>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+                          onClick={() => navigate(`/messages/${notification.id}`)} 
+                          >
+                        See Full Message
+                      </button>
+                      </span>
+                      
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+</div>
 
-
-        <ul className="navbar-links">
+        
+          <ul className="navbar-links">
             {!user && (
               <>
                 <li>
@@ -225,36 +250,25 @@ const NavBar = () => {
             )}
             {user && (
               <>
-            <button
-              ref={bellRef}
-              className="bell-icon"
-              onClick={() => setIsModalOpen(!isModalOpen)}
-            >
-              <span className="bell">&#128276;</span>
-              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
-            </button>
-
                 <li>
-                  <Link to="/CalculatorPage">Calories Calculator</Link>
+                <Link to="/CalculatorPage">Calories Calculator</Link>
                 </li>
                 <li>
                   <Link to="/calendar">My Calendar</Link>
                 </li>
-
-                
               </>
-
             )}
             <li>
               <Link to="/learnabout">About Us</Link>
             </li>
           </ul>
           <div className="navbar-search">
-            <input type="text" placeholder="Search..." /> 
-            <button>Search</button> 
+            <input type="text" placeholder="Search..." />
+            <button>Search</button>
           </div>
+        </div>
 
-
+        {/* Right Section */}
         <ul className="navbar-actions">
           {user ? (
             <>
@@ -262,9 +276,7 @@ const NavBar = () => {
                 <li className="dropdown">
                   <button
                     className="dropdown-button"
-                    onClick={() =>
-                      setIsInstructorDropdownOpen(!isInstructorDropdownOpen)
-                    }
+                    onClick={() => setIsInstructorDropdownOpen(!isInstructorDropdownOpen)}
                   >
                     Instructor Options {isInstructorDropdownOpen ? '▲' : '▼'}
                   </button>
@@ -279,9 +291,7 @@ const NavBar = () => {
               <li className="dropdown">
                 <button
                   className="dropdown-button"
-                  onClick={() =>
-                    setIsMyOptionsDropdownOpen(!isMyOptionsDropdownOpen)
-                  }
+                  onClick={() => setIsMyOptionsDropdownOpen(!isMyOptionsDropdownOpen)}
                 >
                   My Options {isMyOptionsDropdownOpen ? '▲' : '▼'}
                 </button>
@@ -298,6 +308,7 @@ const NavBar = () => {
                 </button>
               </li>
               <li className="profile-icon-container">
+                {/* Profile Dropdown */}
                 <div
                   className="profile-icon"
                   onClick={() =>

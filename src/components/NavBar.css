@@ -54,9 +54,8 @@ html, body {
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 4rem;
-  margin-right: 37px;
-  margin-left: 0px;
+  gap: 3rem;
+  margin-right: 50px;
 }
 
 .navbar-links a {
@@ -74,7 +73,7 @@ html, body {
 .navbar-search {
   display: flex;
   gap: 0.3rem;
-  margin-right: 2.5rem; /* Add space to the right of search bar */
+  margin-right: 1rem;
 }
 
 .navbar-search input {
@@ -82,7 +81,7 @@ html, body {
   border: none;
   border-radius: 20px 0 0 20px;
   outline: none;
-  max-width: 800px; /* Limit search bar width */
+  width: 240px; 
 }
 
 .navbar-search button {
