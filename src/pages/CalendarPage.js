@@ -30,7 +30,7 @@ const CalendarPage = () => {
 
           let allClasses = [];
           for (let courseDoc of coursesSnap.docs) {
-            const { categoryName, courseName } = courseDoc.data();
+            const { categoryName } = courseDoc.data();
 
             const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseDoc.id, 'lessons');
             const lessonsSnap = await getDocs(lessonsRef);
@@ -75,21 +75,29 @@ const CalendarPage = () => {
     setValue(newDate);
   };
 
-  // Format selected date for display
-  const selectedDay = value.toLocaleDateString(undefined, {
+  // Format today's date for display
+  const todayDate = new Date().toLocaleDateString(undefined, {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
 
+   // Format selected date for display
+   const selectedDay = value.toLocaleDateString(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  
   return (
     <div className="calendar-page-wrapper"> {/* Added a wrapper for centering */}
       <div className="calendar-page"> {/* Original content inside this div */}
-        {/* Current Time and Selected Date */}
+        {/* Current Time and Today's Date */}
         <div className="current-time">
           <h1>{currentTime.toLocaleTimeString()}</h1>
-          <p>{selectedDay}</p>
+          <p>{todayDate}</p>
         </div>
 
         {/* Calendar Controls */}
@@ -99,7 +107,7 @@ const CalendarPage = () => {
           </button>
           <div className="dropdown-container">
             <button onClick={() => setCalendarVisible(!calendarVisible)} className="dropdown-button5">
-              {calendarVisible ? 'Hide Calendar' : 'Today ▼'}
+              {calendarVisible ? 'Hide Calendar' :  <p>{selectedDay}▼</p>}
             </button>
             {calendarVisible && <Calendar onChange={setValue} value={value} />}
           </div>
@@ -119,6 +127,7 @@ const CalendarPage = () => {
                   <p>
                     <strong>{cls.courseName}</strong>
                   </p>
+                  <p>{selectedDay}</p>
                   <p>
                     {cls.startTime} - {cls.endTime}
                   </p>
