@@ -1,102 +1,136 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
-import '../styles/CalendarPage.css'; // Custom CSS for the Calendar Page
+import '../styles/CalendarPage.css';
 
 const CalendarPage = () => {
   const [value, setValue] = useState(new Date());
   const [enrolledClasses, setEnrolledClasses] = useState([]);
   const [classesOnDate, setClassesOnDate] = useState([]);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [calendarVisible, setCalendarVisible] = useState(false);
 
-  // Fetch enrolled courses for the current user directly from courseCategories collection
+  // Update current time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Fetch enrolled classes
   useEffect(() => {
     const fetchEnrolledClasses = async () => {
       if (auth.currentUser) {
         try {
-          console.log("Fetching enrolled courses for user:", auth.currentUser.uid);
-
-          // Step 1: Get enrolled courses from user's enrolledCourses collection
           const enrolledCoursesRef = collection(db, 'users', auth.currentUser.uid, 'enrolledCourses');
           const coursesSnap = await getDocs(enrolledCoursesRef);
 
-          if (coursesSnap.empty) {
-            console.warn("No enrolled courses found for this user.");
-            setEnrolledClasses([]);
-            return;
-          }
-
-          // Step 2: Get detailed class info from courseCategories collection
           let allClasses = [];
           for (let courseDoc of coursesSnap.docs) {
-            const enrolledCourse = courseDoc.data();
-            const { categoryName, courseName } = enrolledCourse;
+            const { categoryName, courseName } = courseDoc.data();
 
-            console.log(`Fetching course details for Category: ${categoryName}, Course Name: ${courseName}`);
+            const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseDoc.id, 'lessons');
+            const lessonsSnap = await getDocs(lessonsRef);
 
-            // Fetch all classes under the categoryName/courseName path
-            const courseClassesRef = collection(db, 'courseCategories', categoryName, 'courses');
-            const q = query(courseClassesRef, where("courseName", "==", courseName));
-            const courseClassesSnap = await getDocs(q);
+            // Fetch course details (publisherName and courseName) from the courses collection
+            const courseRef = doc(db, 'courseCategories', categoryName, 'courses', courseDoc.id);
+            const courseSnap = await getDoc(courseRef);
+            const courseData = courseSnap.data();
 
-            if (!courseClassesSnap.empty) {
-              courseClassesSnap.forEach((doc) => {
-                allClasses.push({
-                  id: doc.id,
-                  ...doc.data(),
-                });
+            lessonsSnap.forEach((lessonDoc) => {
+              allClasses.push({
+                id: lessonDoc.id,
+                ...lessonDoc.data(),
+                courseName: courseData.courseName,  // Add course name from the course collection
+                publisherName: courseData.publisherName,  // Add publisher name from the course collection
               });
-            }
+            });
           }
-
           setEnrolledClasses(allClasses);
-          console.log("All Enrolled Classes Fetched:", allClasses);
         } catch (error) {
-          console.error('Error fetching enrolled classes:', error);
+          console.error('Error fetching classes:', error);
         }
       }
     };
-
     fetchEnrolledClasses();
   }, []);
 
-  // Filtering the classes based on the selected date
+  // Filter classes based on the selected date
   useEffect(() => {
     const formattedDate = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(
       value.getDate()
     ).padStart(2, '0')}`;
 
-    console.log("Selected Date (formatted):", formattedDate);
-    console.log("Enrolled Classes:", enrolledClasses);
-
-    // Filter classes that match the selected date
     const filteredClasses = enrolledClasses.filter((cls) => cls.date === formattedDate);
-    console.log("Filtered Classes on Selected Date:", filteredClasses);
     setClassesOnDate(filteredClasses);
   }, [value, enrolledClasses]);
 
+  // Change date with arrows
+  const changeDay = (direction) => {
+    const newDate = new Date(value);
+    newDate.setDate(value.getDate() + direction);
+    setValue(newDate);
+  };
+
+  // Format selected date for display
+  const selectedDay = value.toLocaleDateString(undefined, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
-    <div className="calendar-page">
-      <h2>My Calendar</h2>
-      <Calendar onChange={setValue} value={value} />
-      <div className="classes-on-date">
-        <h3>Classes on {value.toDateString()}:</h3>
-        {classesOnDate.length === 0 ? (
-          <p>No classes scheduled for this day.</p>
-        ) : (
-          <ul>
-            {classesOnDate.map((cls) => (
-              <li key={cls.id}>
-                <strong>{cls.courseName}</strong> - {cls.startTime} to {cls.endTime}
-                <br />
-                <a href={cls.zoomLink} target="_blank" rel="noopener noreferrer">
-                  Join via Zoom
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+    <div className="calendar-page-wrapper"> {/* Added a wrapper for centering */}
+      <div className="calendar-page"> {/* Original content inside this div */}
+        {/* Current Time and Selected Date */}
+        <div className="current-time">
+          <h1>{currentTime.toLocaleTimeString()}</h1>
+          <p>{selectedDay}</p>
+        </div>
+
+        {/* Calendar Controls */}
+        <div className="calendar-controls">
+          <button onClick={() => changeDay(-1)} className="arrow-button">
+            &larr;
+          </button>
+          <div className="dropdown-container">
+            <button onClick={() => setCalendarVisible(!calendarVisible)} className="dropdown-button5">
+              {calendarVisible ? 'Hide Calendar' : 'Today ▼'}
+            </button>
+            {calendarVisible && <Calendar onChange={setValue} value={value} />}
+          </div>
+          <button onClick={() => changeDay(1)} className="arrow-button">
+            &rarr;
+          </button>
+        </div>
+
+        {/* Classes on Selected Date */}
+        <div className="classes-on-date">
+          {classesOnDate.length === 0 ? (
+            <p>No classes scheduled for this day.</p>
+          ) : (
+            <div className="class-cards">
+              {classesOnDate.map((cls) => (
+                <div className="class-card" key={cls.id}>
+                  <p>
+                    <strong>{cls.courseName}</strong>
+                  </p>
+                  <p>
+                    {cls.startTime} - {cls.endTime}
+                  </p>
+                  <p>Host: {cls.publisherName}</p>
+                  <a href={cls.zoomLink} target="_blank" rel="noopener noreferrer" className="start-button">
+                    Start
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ const PaymentPage = () => {
     <div className="payment-page">
       <div className="payment-left">
         <h2>Try {course.courseName}</h2>
-        <h4>7 days free</h4>
+        <h3>7 days free</h3>
         <h4>Then ${course.price} per year</h4>
         <div className="course-summary">
           <div className="course-info">
