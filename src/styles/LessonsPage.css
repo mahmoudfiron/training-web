@@ -106,6 +106,7 @@ body {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
 }
 
+
 .instructor-dashboard .add-lesson-button:hover {
     background-color: #0056b3;
     cursor: pointer;
@@ -130,6 +131,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+
 .chat-icon:hover {
     background: #0056b3;
 }
@@ -148,6 +150,7 @@ body {
     color: white;
     font-size: 12px;
     font-weight: bold;
+    font-weight: bold;
     border-radius: 50%;
     padding: 2px 6px;
     min-width: 20px;
@@ -156,3 +159,31 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+
+.edit-button9 {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #15cf69; /* Blue color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.edit-button9:hover {
+    background-color: #15cf6949; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+
+  .edit-button9:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1); /* Focus outline */
+  }
+
+  .edit-button9:active {
+    background-color: #15cf6949; /* Even darker blue when clicked */
+    transform: scale(0.95); /* Slightly shrink on click */
+  }

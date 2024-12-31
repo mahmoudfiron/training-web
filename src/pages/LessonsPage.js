@@ -188,7 +188,7 @@ const LessonsPage = ({ instructorId }) => {
                   <Link
                     to={`/edit-lesson/${courseId}/${lesson.id}`}
                     state={{ categoryName }}
-                    className="edit-button"
+                    className="edit-button9"
                   >
                     Edit Lesson
                   </Link>
