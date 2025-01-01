@@ -119,3 +119,53 @@ textarea {
     flex-direction: column;
   }
 }
+
+.unit-input button{
+  display: inline-block;
+  padding: 12px 25px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #28a745; /* Green color */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unit-input button:hover{
+  background-color: #218838; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.unit-input button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.4); /* Focus outline */
+}
+
+.unit-input button:active  {
+  background-color: #1e7e34; /* Even darker green when clicked */
+  transform: scale(0.95); /* Slightly shrink on click */
+}
+
+.unit-input button:disabled   {
+  background-color: #c3e6cb; /* Light green for disabled state */
+  color: #6c757d;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.unit-list button{
+  display: inline-block;
+  padding: 12px 25px;
+  font-size: 10px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #dc3545; /* Red color */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
