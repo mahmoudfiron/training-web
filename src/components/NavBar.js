@@ -93,7 +93,7 @@ const NavBar = () => {
           }
 
           if (!hasNavigatedAfterLogin.current) {
-            navigate('/');
+            //navigate('/');
             hasNavigatedAfterLogin.current = true;
           }
         } catch (error) {

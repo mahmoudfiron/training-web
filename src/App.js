@@ -24,6 +24,9 @@ import MessagesPage from './pages/MessagesPage.js';
 import SendMessagePage  from './pages/SendMessagePage.js';
 import CalculatorPage from './pages/CalculatorPage.js';
 
+import Home from './pages/Home.js';
+import Yoga from './pages/Yoga.js';
+
 function App() {
   const [user, setUser] = useState(null);
 
@@ -59,6 +62,9 @@ function App() {
         <Route path="/send-message" element={<SendMessagePage />} />
         <Route path="/CalculatorPage" element={<CalculatorPage />} />
 
+        <Route path="/ai-trainer" element={<Home />} />
+        <Route path="/ai-trainer/yoga" element={<Yoga />} />
+        
       </Routes>
       <Footer />
     </Router>
