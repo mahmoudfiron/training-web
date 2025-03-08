@@ -1,51 +1,32 @@
 
-.home-header {
-    background: linear-gradient(100deg,#FF8C00, #FFA500);
-    width: 100vw;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.home-container {
-    background: black
-}
-.header-btn:hover {
-    border-color: white;
-}
-
-.home-heading {
-    padding: 0px;
-    margin: 0px;
-    font-size: 44px;
-    margin-left: 30px;
-    color: white;
-    font-family: 'Kaushan Script', cursive;
-}
-
 .home-main {
-    margin: auto;
-    margin-top: -50px;
     width: 100vw;
     height: 100vh;    
-    background: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.8)), url('../assets/AITrainer/warrior.jpg') ;
+    background: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.8)), url('../assets/AITrainer/yoga_pose.png') ;
     background-repeat: no-repeat;
     background-position: center;
-    background-size:  750px;
+    background-size:100%;
+}
+
+.title {
+    right: 10vw;
+    top: 40vh;
+    font-size: 64px;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
 }
 
 .description {
     font-size: 66px;
     color: white;
     text-align: center;
-    margin: 0px;
-    margin-top: 10px;
     font-family: 'Raleway', sans-serif;
     letter-spacing: 0.5px;
 }
 
 .btn-section {
-    position: absolute;
     left: 38vw;
     top: 60vh;
 }
@@ -84,4 +65,8 @@ body::-webkit-scrollbar {
     background: white;
     border-color: white;
     color: black;
+}
+
+.home-main + .footer {
+    margin-top: 0 !important;
 }
