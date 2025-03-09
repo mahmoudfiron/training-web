@@ -1,21 +1,17 @@
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as tf from '@tensorflow/tfjs';
-
-import backend from '@tensorflow/tfjs-backend-webgl';
-
+import React, { useRef, useState, useEffect } from 'react'
 import Webcam from 'react-webcam'
 import { count } from '../utils/AITrainer/music.js'; 
-
-import React, { useRef, useState, useEffect } from 'react'
-
+ 
 import Instructions from '../components/AITrainer/Instructions.js';
+
 import '../styles/Yoga.css';
  
 import DropDown from '../components/AITrainer/DropDown.js';
 import { poseImages } from '../utils/AITrainer/pose_images.js';
 import { POINTS, keypointConnections } from '../utils/AITrainer/data.js';
-import { drawPoint, drawSegment } from '../utils/AITrainer/helper.js'
-
+import { drawPoint, drawSegment } from '../utils/AITrainer/helper.js';
 
 
 let skeletonColor = 'rgb(255,255,255)'
@@ -52,7 +48,7 @@ function Yoga() {
     if((currentTime - startingTime)/1000 > bestPerform) {
       setBestPerform(timeDiff)
     }
-  }, [currentTime])
+  }, [currentTime,bestPerform,startingTime])
 
 
   useEffect(() => {
@@ -213,77 +209,73 @@ function Yoga() {
     
 
   if(isStartPose) {
-    return (
-      <div className="yoga-container">
-        <div className="performance-container">
-            <div className="pose-performance">
-              <h4>Pose Time: {poseTime} s</h4>
+      return (
+        <div className="yoga-container">
+          <div className="performance-container">
+
+          <button
+            onClick={stopPose}
+            className="secondary-btn"    
+          >Stop Pose</button>
+
+              <div className="pose-performance">
+                <h4>Pose Time: {poseTime} s</h4>
+              </div>
+              <div className="pose-performance">
+                <h4>Best: {bestPerform} s</h4>
+              </div>
             </div>
-            <div className="pose-performance">
-              <h4>Best: {bestPerform} s</h4>
-            </div>
-          </div>
-        <div>
           
-          <Webcam 
-          width='640px'
-          height='480px'
-          id="webcam"
-          ref={webcamRef}
-          style={{
-            position: 'absolute',
-            left: 120,
-            top: 100,
-            padding: '0px',
-          }}
-        />
-          <canvas
-            ref={canvasRef}
-            id="my-canvas"
+            <div className="webcam-pose-container">
+            <div className="webcam-container">
+            <Webcam 
             width='640px'
             height='480px'
-            style={{
-              position: 'absolute',
-              left: 120,
-              top: 100,
-              zIndex: 1
-            }}
-          >
-          </canvas>
-        <div>
-            <img 
-              src={poseImages[currentPose]}
-              className="pose-img"
-            />
+            id="webcam"
+            ref={webcamRef}
+          />
+            <canvas
+              ref={canvasRef}
+              id="my-canvas"
+              width='640px'
+              height='480px'
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                zIndex: 1
+              }}
+            >
+            </canvas>
+            </div>
+              <img 
+                src={poseImages[currentPose]}
+                className="pose-img"
+                alt='currentPose'
+              />
+            </div>
           </div>
-         
-        </div>
+      )
+    }
+  
+    return (
+      <div
+        className="yoga-container"
+      >
+        <DropDown
+          poseList={poseList}
+          currentPose={currentPose}
+          setCurrentPose={setCurrentPose}
+        />
+        <Instructions
+            currentPose={currentPose}
+          />
         <button
-          onClick={stopPose}
-          className="secondary-btn"    
-        >Stop Pose</button>
+            onClick={startYoga}
+            className="secondary-btn"    
+          >Start Pose</button>
       </div>
     )
   }
-
-  return (
-    <div
-      className="yoga-container"
-    >
-      <DropDown
-        poseList={poseList}
-        currentPose={currentPose}
-        setCurrentPose={setCurrentPose}
-      />
-      <Instructions
-          currentPose={currentPose}
-        />
-      <button
-          onClick={startYoga}
-          className="secondary-btn"    
-        >Start Pose</button>
-    </div>
-  )
-}
-
-export default Yoga
+  
+  export default Yoga

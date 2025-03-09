@@ -1,68 +1,86 @@
 .yoga-container {
-    background: linear-gradient(100deg, #FF8C00, #FFA500);
+    background: linear-gradient(100deg, #fddfb9, #ffb62ee0);
     min-width: 100vw;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px; /* Reduced padding at the top */
 }
 
 .secondary-btn {
-    position: relative;
-    left: 45%;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 20px;
     border-radius: 5px;
     border-color: rgba(125, 125, 125, 0.1);
     border-width: 5px;
-    background-color: rgba(0, 0, 0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 0px 0px;
     color: white;
+    margin-top: 10px; /* Reduced margin */
 }
 
 .secondary-btn:hover {
     background-color: rgba(0, 0, 0,0.4);
 }
 
-.starting-contdown {
-    margin: auto;
-    border: 10px solid rgba(125, 125, 125, 0.5);
-    width: max-content;
-    padding: 10px 30px;
-    border-radius: 50%;
-    background-color: rgba(255,255,255,0);
-    position: relative;
-    top: 45%;
-}
-.starting-contdown h1 {
-    color: white;
-}
 .pose-img {
-    position: absolute;
-    right: 120px;
-    top: 80px;
-    width: 500px;
-    aspect-ratio: 1;
+    width: 400px; /* Fixed width for pose image */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Optional: Add some styling */
 }
 
 .performance-container {
     display: flex;
-    padding: 20px;
-    position: absolute;
-    left: 150px;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px; /* Reduced margin */
 }
 
 
 .pose-performance {
-    margin: 10px 10px;
     background-color: white;
     border-radius: 8px;
     padding: 10px;
+    margin: 0 10px; /* Adjusted margin */
 }
+
 .pose-performance h4 {
     color: rgba(0,0,0,0.7);
+    margin: 0;
+}
+
+/* Flexbox container for webcam and pose image */
+.webcam-pose-container {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    gap: 20px; /* Space between webcam and pose image */
+    margin-top: 20px; /* Reduced margin */
+}
+
+/* Container for webcam and canvas */
+.webcam-container {
+    position: relative; /* Make this container relative for absolute positioning of canvas */
+    width: 640px; /* Match webcam width */
+    height: 480px; /* Match webcam height */
 }
 
 #webcam {
     transform: rotateY(180deg);
+    width: 100%; /* Fill the container */
+    height: 100%; /* Fill the container */
 }
 
 #my-canvas {
     transform: rotateY(180deg);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Match webcam width */
+    height: 100%; /* Match webcam height */
+    z-index: 1;
+}
+
+.yoga-container + .footer {
+    margin-top: 0 !important;
 }
