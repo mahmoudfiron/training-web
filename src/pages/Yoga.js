@@ -14,48 +14,40 @@ import { POINTS, keypointConnections } from '../utils/AITrainer/data.js';
 import { drawPoint, drawSegment } from '../utils/AITrainer/helper.js';
 
 
-let skeletonColor = 'rgb(255,255,255)'
+let skeletonColor = 'rgb(255,255,255)';
 let poseList = [
   'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
   'Shoulderstand', 'Traingle'
-]
+];
 
-let interval
-
-// flag variable is used to help capture the time when AI just detect 
-// the pose as correct(probability more than threshold)
-let flag = false
-
+let interval;
+let flag = false;
 
 function Yoga() {
-  const webcamRef = useRef(null)
-  const canvasRef = useRef(null)
-
-
-  const [startingTime, setStartingTime] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [poseTime, setPoseTime] = useState(0)
-  const [bestPerform, setBestPerform] = useState(0)
-  const [currentPose, setCurrentPose] = useState('Tree')
-  const [isStartPose, setIsStartPose] = useState(false)
-
-  
-  useEffect(() => {
-    const timeDiff = (currentTime - startingTime)/1000
-    if(flag) {
-      setPoseTime(timeDiff)
-    }
-    if((currentTime - startingTime)/1000 > bestPerform) {
-      setBestPerform(timeDiff)
-    }
-  }, [currentTime,bestPerform,startingTime])
-
+  const webcamRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [startingTime, setStartingTime] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [poseTime, setPoseTime] = useState(0);
+  const [bestPerform, setBestPerform] = useState(0);
+  const [currentPose, setCurrentPose] = useState('Tree');
+  const [isStartPose, setIsStartPose] = useState(false);
 
   useEffect(() => {
-    setCurrentTime(0)
-    setPoseTime(0)
-    setBestPerform(0)
-  }, [currentPose])
+    const timeDiff = (currentTime - startingTime) / 1000;
+    if (flag) {
+      setPoseTime(timeDiff);
+    }
+    if ((currentTime - startingTime) / 1000 > bestPerform) {
+      setBestPerform(timeDiff);
+    }
+  }, [currentTime, bestPerform, startingTime]);
+
+  useEffect(() => {
+    setCurrentTime(0);
+    setPoseTime(0);
+    setBestPerform(0);
+  }, [currentPose]);
 
   const CLASS_NO = {
     Chair: 0,
@@ -66,7 +58,7 @@ function Yoga() {
     Traingle: 5,
     Tree: 6,
     Warrior: 7,
-  }
+  };
 
   function get_center_point(landmarks, left_bodypart, right_bodypart) {
     let left = tf.gather(landmarks, left_bodypart, 1)
@@ -208,74 +200,36 @@ function Yoga() {
 
     
 
-  if(isStartPose) {
-      return (
-        <div className="yoga-container">
-          <div className="performance-container">
-
-          <button
-            onClick={stopPose}
-            className="secondary-btn"    
-          >Stop Pose</button>
-
-              <div className="pose-performance">
-                <h4>Pose Time: {poseTime} s</h4>
-              </div>
-              <div className="pose-performance">
-                <h4>Best: {bestPerform} s</h4>
-              </div>
-            </div>
-          
-            <div className="webcam-pose-container">
-            <div className="webcam-container">
-            <Webcam 
-            width='640px'
-            height='480px'
-            id="webcam"
-            ref={webcamRef}
-          />
-            <canvas
-              ref={canvasRef}
-              id="my-canvas"
-              width='640px'
-              height='480px'
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                zIndex: 1
-              }}
-            >
-            </canvas>
-            </div>
-              <img 
-                src={poseImages[currentPose]}
-                className="pose-img"
-                alt='currentPose'
-              />
-            </div>
-          </div>
-      )
-    }
-  
+  if (isStartPose) {
     return (
-      <div
-        className="yoga-container"
-      >
-        <DropDown
-          poseList={poseList}
-          currentPose={currentPose}
-          setCurrentPose={setCurrentPose}
-        />
-        <Instructions
-            currentPose={currentPose}
-          />
-        <button
-            onClick={startYoga}
-            className="secondary-btn"    
-          >Start Pose</button>
+      <div className="yoga-container">
+        <div className="performance-container">
+          <button onClick={stopPose} className="secondary-btn">Stop Pose</button>
+          <div className="pose-performance">
+            <h4>Pose Time: {poseTime} s</h4>
+          </div>
+          <div className="pose-performance">
+            <h4>Best: {bestPerform} s</h4>
+          </div>
+        </div>
+        <div className="webcam-pose-container">
+          <div className="webcam-container">
+            <Webcam width='640px' height='480px' id="webcam" ref={webcamRef} />
+            <canvas ref={canvasRef} id="my-canvas" width='640px' height='480px' style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}></canvas>
+          </div>
+          <img src={poseImages[currentPose]} className="pose-img" alt='currentPose' />
+        </div>
       </div>
-    )
+    );
   }
-  
-  export default Yoga
+
+  return (
+    <div className="yoga-container">
+      <DropDown poseList={poseList} currentPose={currentPose} setCurrentPose={setCurrentPose} />
+      <Instructions currentPose={currentPose} />
+      <button onClick={startYoga} className="secondary-btn">Start Pose</button>
+    </div>
+  );
+}
+
+export default Yoga;

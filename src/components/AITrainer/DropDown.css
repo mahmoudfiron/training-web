@@ -1,29 +1,28 @@
 #pose-dropdown-btn:hover {
     border-color: white;
 }
-/* #pose-dropdown-btn:active {
-    background-color: white;
-} */
+
 #pose-dropdown-btn {
     width: 400px;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
 }
-
-
 
 .dropdown-container {
     display: flex;
     justify-content: center;
+    margin-bottom: 20px;
 }
+
 #pose-dropdown-btn:focus {
     background-color: white;
     color: black;
     box-shadow: none;
 }
+
 #pose-dropdown-btn:focus-within {
     border-color: white;
-}
-.dropdown-option {
-    background: url('../../assets/AITrainer/chair.png');
 }
 
 .dropdown-custom-menu {
@@ -40,14 +39,15 @@
 .dropdown-item-container {
     width: 400px;
     display: flex;
-    border-radius: 4px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    padding: 10px;
 }
 
 .dropdown-item-1 {
-    margin: 10px;
+    margin: 0;
 }
+
 .dropdown-img {
     width: 80px;
     height: 80px;

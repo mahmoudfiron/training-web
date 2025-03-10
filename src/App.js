@@ -27,6 +27,11 @@ import CalculatorPage from './pages/CalculatorPage.js';
 import Home from './pages/Home.js';
 import Yoga from './pages/Yoga.js';
 
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
 function App() {
   const [user, setUser] = useState(null);
 
