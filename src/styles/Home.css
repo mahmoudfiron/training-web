@@ -1,118 +1,57 @@
-
-.home-main {
-    width: 100vw;
-    height: 100vh;    
-    background: linear-gradient(rgba(0,0,0,0.2), rgba(0, 0, 0, 0.8)), url('../assets/AITrainer/yoga_pose.png') ;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size:100%;
-}
-
-.title {
-    right: 10vw;
-    top: 40vh;
-    font-size: 64px;
-    color: white;
-    font-family: 'Raleway', sans-serif;
-    font-weight: bold;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
-}
-
-.description {
-    font-size: 66px;
-    color: white;
+.ai-trainer-home {
     text-align: center;
-    font-family: 'Raleway', sans-serif;
-    letter-spacing: 0.5px;
-}
-
-.btn-section {
-    left: 38vw;
-    top: 60vh;
-}
-
-.btn{
-    padding: 10px;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin: 10px 20px 10px 20px;
-    background-color: rgba(255, 255, 255, 0);
-    color: white;
-    font-size: 24px;
-    border-color: #FFA500;
-    border-radius: 8px;
-    border-width: 4px;
-    cursor: pointer;
-}
-.btn:hover {
-    background: rgba(255,165,0, 0.2);
-    color: white;
-}
-
-body::-webkit-scrollbar {
-    display: none;
-}
-#about-btn {
-    padding: 5px 10px;
-}
-#about-btn:hover {
-    border-color: white;
-    background-color: white;
-    color: black;
-}
-#about-btn:focus {
-    box-shadow: none;
-    background: white;
-    border-color: white;
-    color: black;
-}
-
-.home-main + .footer {
-    margin-top: 0 !important;
-}
-
-.start-btn {
-    padding: 15px 40px;
-    font-size: 26px;
+    padding: 4rem 2rem;
+    color: #fff;
+    background: linear-gradient(to bottom right, #141e30, #243b55);
+    min-height: 100vh;
+  }
+  
+  .page-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
     font-weight: bold;
-    font-family: 'Raleway', sans-serif;
-    text-transform: uppercase;
-    color: white;
-    background: linear-gradient(135deg, #FFA500, #FF4500);
-    border: none;
-    border-radius: 50px;
-    box-shadow: 0px 4px 15px rgba(255, 69, 0, 0.5);
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    position: relative;
-    overflow: hidden;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+    color: #ccc;
+  }
+  
+  .trainer-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  
+  .trainer-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 300px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
 }
-
-.start-btn::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 300%;
-    height: 300%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: all 0.4s ease-in-out;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-}
-
-.start-btn:hover::before {
-    width: 120%;
-    height: 120%;
-    opacity: 1;
-}
-
-.start-btn:hover {
+  
+  .trainer-card:hover {
     transform: scale(1.05);
-    box-shadow: 0px 6px 20px rgba(255, 69, 0, 0.7);
-}
-
-.start-btn:active {
-    transform: scale(0.98);
-}
+  }
+  
+  .start-btn {
+    margin-top: 1rem;
+    padding: 12px 24px;
+    font-size: 16px;
+    background: linear-gradient(to right, #ff512f, #dd2476);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .start-btn:hover {
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+  }
+  
