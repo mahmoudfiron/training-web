@@ -1,11 +1,19 @@
+# app.py
+
 from flask import Flask, Response
 from flask_cors import CORS
 import cv2
 import mediapipe as mp
 import numpy as np
 
+# 🔵 Import the new Squat Trainer routes
+from squat_routes import squat_bp
+
 app = Flask(__name__)
 CORS(app)
+
+# 🔵 Register the squat blueprint
+app.register_blueprint(squat_bp)
 
 # Initialize mediapipe pose
 mp_drawing = mp.solutions.drawing_utils
@@ -89,7 +97,6 @@ def biceps_video_feed():
         cap.release()
 
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
