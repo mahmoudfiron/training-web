@@ -45,7 +45,7 @@ html, body {
 
 /* Center Section */
 .navbar-center {
-  width: 678.531px;
+  width: 600.531px;
   display: flex;
   align-items: center;
   gap: 1rem; /* Consistent gap */
@@ -71,6 +71,23 @@ html, body {
 
 .navbar-links a:hover {
   color: #f39c12;
+}
+
+.navbar-links a.special-link {
+  color: #ffecce;
+  font-weight: bold;
+  font-size: 1.05rem;
+  animation: popEffect 1.5s infinite alternate;
+  text-shadow: 0 0 8px #f39c12, 0 0 12px #f39c12;
+}
+
+@keyframes popEffect {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 .navbar-search {

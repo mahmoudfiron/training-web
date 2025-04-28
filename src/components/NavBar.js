@@ -170,7 +170,7 @@ const NavBar = () => {
   };
 
   return (
-    <>
+    <div>
       <nav className="navbar">
         {/* Logo */}
         <div className="navbar-logo">
@@ -233,7 +233,6 @@ const NavBar = () => {
           )}
 </div>
 
-        
           <ul className="navbar-links">
             {!user && (
               <>
@@ -251,7 +250,7 @@ const NavBar = () => {
             {user && (
               <>
                 <li>
-                <Link to="/CalculatorPage">Calories Calculator</Link>
+                <Link to="/ai-trainer" className="special-link">AI Trainer</Link>
                 </li>
                 <li>
                   <Link to="/calendar">My Calendar</Link>
@@ -385,7 +384,7 @@ const NavBar = () => {
           onClose={closeProfileModal}
         />
       )}
-    </>
+    </div>
   );
 };
 
