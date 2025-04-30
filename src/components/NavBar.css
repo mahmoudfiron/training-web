@@ -16,21 +16,16 @@ html, body {
 
 /* General Navbar Styling */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background-color: #2c3e50;
-  padding: 0.5rem 2rem; /* Adjusted padding */
+  padding: 0.5rem 1rem; /* Adjusted padding */
   color: white;
   position: sticky;
-  top: 0;
-  z-index: 1000;
-  gap: 1rem; /* Consistent gap */
+  gap: 0.3rem; /* Consistent gap */
 }
 
 .navbar-logo {
   flex-shrink: 0; /* Prevent logo from shrinking */
-  margin-left: 1rem; /* Adjusted margin */
+  margin-left: 0.5rem; /* Adjusted margin */
 }
 
 .navbar-logo a {
@@ -45,23 +40,30 @@ html, body {
 
 /* Center Section */
 .navbar-center {
-  width: 600.531px;
+  width: 0px;
   display: flex;
   align-items: center;
-  gap: 1rem; /* Consistent gap */
   flex-grow: 1; /* Allow center to take space */
-  justify-content: center;
 }
 
-.navbar-links {
+.navbar-links1 {
   list-style: none;
   display: flex;
-  gap: 1rem; /* Consistent gap */
-  margin: 0; /* Removed margin-right */
-  padding: 0; /* Removed padding */
+  gap: 7.5rem; /* Consistent gap */
+  padding: 0;
+  margin: 0;
+  align-items: center; /* 🔥 This fixes the vertical alignment */
 }
 
-.navbar-links a {
+.navbar-links2 {
+  list-style: none;
+  display: flex;
+  gap: 0.9rem; /* Consistent gap */
+  margin: 0; /* Removed margin-right */
+  align-items: center; /* 🔥 This fixes the vertical alignment */
+}
+
+.navbar-links1 a {
   color: white;
   text-decoration: none;
   font-size: 1rem; /* Adjusted font size */
@@ -69,24 +71,55 @@ html, body {
   transition: color 0.3s ease;
 }
 
-.navbar-links a:hover {
+.navbar-links1 a:hover {
   color: #f39c12;
 }
 
-.navbar-links a.special-link {
-  color: #ffecce;
+
+.navbar-links2 a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem; /* Adjusted font size */
   font-weight: bold;
-  font-size: 1.05rem;
-  animation: popEffect 1.5s infinite alternate;
-  text-shadow: 0 0 8px #f39c12, 0 0 12px #f39c12;
+  transition: color 0.3s ease;
 }
 
-@keyframes popEffect {
-  from {
+.navbar-links2 a:hover {
+  color: #f39c12;
+}
+
+
+/* Highlighted Buttons for AI & Calculator */
+.special-link {
+  display: flex;
+  gap: 1rem;
+}
+
+.special-link {
+  background-color: #f39c12;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  animation: pulseGlow 1.5s infinite alternate;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px #f39c12;
+}
+
+.special-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #f39c12;
+}
+
+@keyframes pulseGlow {
+  0% {
     transform: scale(1);
+    box-shadow: 0 0 10px #f39c12;
   }
-  to {
+  100% {
     transform: scale(1.1);
+    box-shadow: 0 0 20px #f39c12;
   }
 }
 
@@ -94,6 +127,7 @@ html, body {
   display: flex;
   gap: 0.3rem;
   margin: 0; /* Removed margin-right */
+  
 }
 
 .navbar-search input {
@@ -101,7 +135,7 @@ html, body {
   border: none;
   border-radius: 20px 0 0 20px;
   outline: none;
-  width: 200px; /* Adjusted width */
+  width: 230px; /* Adjusted width */
 }
 
 .navbar-search button {
@@ -145,6 +179,8 @@ html, body {
 .login-button {
   background-color: #2980b9;
   color: white;
+  margin-right: 0.5rem; /* Adjusted margin */
+
 }
 
 .profile-button {
@@ -174,7 +210,7 @@ html, body {
   background-color: #34495e;
   color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 0.5rem 1rem; /* Adjusted padding */
   cursor: pointer;
 }

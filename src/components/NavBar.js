@@ -219,7 +219,7 @@ const NavBar = () => {
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <button
                           className="text-button"
-                          onClick={() => navigate(`/messages/${notification.id}`)} 
+                          onClick={() => navigate(/messages/`${notification.id}`)} 
                           >
                         See Full Message
                       </button>
@@ -233,7 +233,7 @@ const NavBar = () => {
           )}
 </div>
 
-          <ul className="navbar-links">
+          <ul className="navbar-links1">
             {!user && (
               <>
                 <li>
@@ -245,9 +245,17 @@ const NavBar = () => {
                 <li>
                   <Link to="/ratings">Ratings</Link>
                 </li>
+                <li>
+                  <Link to="/learnabout">About Us</Link>
+                </li>
+
+
               </>
             )}
-            {user && (
+          </ul>
+
+           <ul className="navbar-links2">
+           {user && (
               <>
                 <li>
                 <Link to="/ai-trainer" className="special-link">AI Trainer</Link>
@@ -255,17 +263,28 @@ const NavBar = () => {
                 <li>
                   <Link to="/calendar">My Calendar</Link>
                 </li>
+                <li>
+                  <Link to="/CalculatorPage">calculate calories</Link>
+                </li>
+                <li>
+                  <Link to="/my-courses">My Courses</Link>
+                </li>
               </>
-            )}
-            <li>
-              <Link to="/learnabout">About Us</Link>
-            </li>
-          </ul>
+             )}
+           </ul>
+
+           </div>
+
+
+
+
           <div className="navbar-search">
             <input type="text" placeholder="Search..." />
             <button>Search</button>
           </div>
-        </div>
+       
+
+
 
         {/* Right Section */}
         <ul className="navbar-actions">
@@ -277,7 +296,7 @@ const NavBar = () => {
                     className="dropdown-button"
                     onClick={() => setIsInstructorDropdownOpen(!isInstructorDropdownOpen)}
                   >
-                    Instructor Options {isInstructorDropdownOpen ? '▲' : '▼'}
+                    Coach Options {isInstructorDropdownOpen ? '▲' : '▼'}
                   </button>
                   {isInstructorDropdownOpen && (
                     <div className="dropdown-content">
@@ -287,19 +306,6 @@ const NavBar = () => {
                   )}
                 </li>
               )}
-              <li className="dropdown">
-                <button
-                  className="dropdown-button"
-                  onClick={() => setIsMyOptionsDropdownOpen(!isMyOptionsDropdownOpen)}
-                >
-                  My Options {isMyOptionsDropdownOpen ? '▲' : '▼'}
-                </button>
-                {isMyOptionsDropdownOpen && (
-                  <div className="dropdown-content">
-                    <Link to="/my-courses">My Courses</Link>
-                  </div>
-                )}
-              </li>
 
               <li>
                 <button className="logout-button" onClick={handleLogout}>
