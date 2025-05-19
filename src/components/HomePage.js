@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db, auth } from '../firebase.js'; // Ensure this points to your Firebase setup
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { db, auth } from '../firebase.js';
+import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import './HomePage.css'; // Ensure you have a CSS file to style this page
+import './HomePage.css';
 
 const HomePage = () => {
   const [courses, setCourses] = useState([]);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loadingEnrolled, setLoadingEnrolled] = useState(true);
-  const navigate = useNavigate(); // Use navigate hook to handle navigation
+  const [learnerCounts, setLearnerCounts] = useState({});
+  const navigate = useNavigate();
+
+  // ✅ Date formatter (kept for future use if needed)
+  // const formatDate = (isoString) => {
+  //   if (!isoString) return '';
+  //   const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  //   return new Date(isoString).toLocaleDateString(undefined, options);
+  // };
+
+  // ✅ Helper to check for free pricing
+  const isFreeCourse = (price) => {
+    const numericPrice = parseFloat(price);
+    return numericPrice <= 1;
+  };
 
   useEffect(() => {
-    // Set current user and fetch their enrolled courses
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         fetchEnrolledCourses(currentUser.uid);
@@ -39,6 +52,29 @@ const HomePage = () => {
     }
   };
 
+  const fetchLearnerCounts = async () => {
+    try {
+      const usersSnapshot = await getDocs(collection(db, 'users'));
+      const counts = {};
+
+      for (const userDoc of usersSnapshot.docs) {
+        const enrolledCoursesSnapshot = await getDocs(collection(db, `users/${userDoc.id}/enrolledCourses`));
+        enrolledCoursesSnapshot.forEach((doc) => {
+          const courseId = doc.id;
+          if (counts[courseId]) {
+            counts[courseId] += 1;
+          } else {
+            counts[courseId] = 1;
+          }
+        });
+      }
+
+      setLearnerCounts(counts);
+    } catch (error) {
+      console.error('Error fetching learner counts:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -53,6 +89,8 @@ const HomePage = () => {
         }
 
         setCourses(coursesData);
+
+        await fetchLearnerCounts();
       } catch (error) {
         console.error('Error fetching courses:', error);
       }
@@ -61,7 +99,6 @@ const HomePage = () => {
     fetchCourses();
   }, []);
 
-  // Update handleMoreInfo to be triggered when the button is clicked
   const handleMoreInfo = (courseId, categoryName) => {
     console.log(`Navigating to course-details for category: ${categoryName}, course ID: ${courseId}`);
     navigate(`/course-details/${categoryName}/${courseId}`);
@@ -76,21 +113,40 @@ const HomePage = () => {
       <div className="courses-container">
         {courses.map((course) => {
           const isEnrolled = enrolledCourses.includes(course.id);
+          const price = parseFloat(course.price).toFixed(2);
+          const isFree = isFreeCourse(course.price);
+
           return (
-            
             <div className="course-card" key={course.id}>
               <div className="course-card-header">
-                <span className="availability-badge">{course.available ? 'Available' : 'Unavailable'}</span>
-                <span className="category-badge">{course.categoryName}</span>
+            <span
+                   className="availability-badge"
+                      style={{ backgroundColor: course.available ? '#4caf50' : '#f44336' }}
+            >
+                  {course.available ? 'Available' : 'Unavailable'}
+            </span>                <span className="category-badge">{course.categoryName}</span>
               </div>
               <img src={course.imageBase64 || '/default-course.jpg'} alt={`${course.courseName}`} className="course-image" />
               <div className="course-card-body">
                 <h3>{course.courseName}</h3>
+
+
+
                 <div className="course-details">
-                  <span className="learners-count">{course.learners || '0'} learners</span>
-                  <span className="course-duration">
-                    <i className="fa fa-clock-o"></i> {course.duration} hrs
+                  <span className="learners-count">
+                    {learnerCounts[course.id] || 0} learners
                   </span>
+
+                  {/* ✅ Only show price if NOT free */}
+                  <span className="course-duration">
+  {isFree ? (
+    <span className="availability-badge" style={{ backgroundColor: '#ff9800' }}>Free</span>
+  ) : (
+    <>
+      <i className="fa fa-usd"></i> {price}
+    </>
+  )}
+</span>
                 </div>
 
                 <button

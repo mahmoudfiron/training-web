@@ -19,7 +19,7 @@ const NavBar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
   const [isInstructorDropdownOpen, setIsInstructorDropdownOpen] = useState(false);
-  const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false);
+  //const [isMyOptionsDropdownOpen, setIsMyOptionsDropdownOpen] = useState(false);
 
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
