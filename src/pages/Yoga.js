@@ -13,7 +13,6 @@ import { poseImages } from '../utils/AITrainer/pose_images.js';
 import { POINTS, keypointConnections } from '../utils/AITrainer/data.js';
 import { drawPoint, drawSegment } from '../utils/AITrainer/helper.js';
 
-
 let skeletonColor = 'rgb(255,255,255)';
 let poseList = [
   'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
@@ -22,6 +21,18 @@ let poseList = [
 
 let interval;
 let flag = false;
+
+// ✅ New voice control flags
+let spokenCorrect = false;
+let spokenIncorrect = false;
+let spokenRecord = false;
+
+
+let correctPoseTime = 0;
+let incorrectPoseTime = 0;
+let lastEncouragement = 0;
+let lastWarning = 0;
+
 
 function Yoga() {
   const webcamRef = useRef(null);
@@ -33,6 +44,13 @@ function Yoga() {
   const [currentPose, setCurrentPose] = useState('Tree');
   const [isStartPose, setIsStartPose] = useState(false);
 
+
+function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'he-IL';
+    window.speechSynthesis.speak(msg);
+}
+
   useEffect(() => {
     const timeDiff = (currentTime - startingTime) / 1000;
     if (flag) {
@@ -40,6 +58,10 @@ function Yoga() {
     }
     if ((currentTime - startingTime) / 1000 > bestPerform) {
       setBestPerform(timeDiff);
+      if (!spokenRecord) {
+        speak("שיא חדש! כל הכבוד.");
+        spokenRecord = true;
+      }
     }
   }, [currentTime, bestPerform, startingTime]);
 
@@ -47,6 +69,7 @@ function Yoga() {
     setCurrentTime(0);
     setPoseTime(0);
     setBestPerform(0);
+    spokenRecord = false;
   }, [currentPose]);
 
   const CLASS_NO = {
@@ -65,7 +88,6 @@ function Yoga() {
     let right = tf.gather(landmarks, right_bodypart, 1)
     const center = tf.add(tf.mul(left, 0.5), tf.mul(right, 0.5))
     return center
-    
   }
 
   function get_pose_size(landmarks, torso_size_multiplier=2.5) {
@@ -78,11 +100,8 @@ function Yoga() {
     pose_center_new = tf.broadcastTo(pose_center_new,
         [1, 17, 2]
       )
-      // return: shape(17,2)
     let d = tf.gather(tf.sub(landmarks, pose_center_new), 0, 0)
     let max_dist = tf.max(tf.norm(d,'euclidean', 0))
-
-    // normalize scale
     let pose_size = tf.maximum(tf.mul(torso_size, torso_size_multiplier), max_dist)
     return pose_size
   }
@@ -101,7 +120,6 @@ function Yoga() {
   }
 
   function landmarks_to_embedding(landmarks) {
-    // normalize landmarks 2D
     landmarks = normalize_pose_landmarks(tf.expandDims(landmarks, 0))
     let embedding = tf.reshape(landmarks, [1,34])
     return embedding
@@ -144,10 +162,7 @@ function Yoga() {
                        keypoints[POINTS[conName]].y]
                   , skeletonColor)
                 })
-              } catch(err) {
-
-              }
-              
+              } catch(err) {}
             }
           } else {
             notDetected += 1
@@ -165,26 +180,76 @@ function Yoga() {
           const classNo = CLASS_NO[currentPose]
           console.log(data[0][classNo])
           if(data[0][classNo] > 0.97) {
-            
             if(!flag) {
               countAudio.play()
               setStartingTime(new Date(Date()).getTime())
               flag = true
+
+              // ✅ voice when pose becomes correct
+              if (!spokenCorrect) {
+                speak("Great pose! Hold it steady.");
+                spokenCorrect = true;
+                spokenIncorrect = false;
+              }
             }
             setCurrentTime(new Date(Date()).getTime()) 
             skeletonColor = 'rgb(0,255,0)'
+
+
+
+              // ✅ Time tracking for encouragement
+  correctPoseTime += 0.1;
+  incorrectPoseTime = 0;
+
+  if (correctPoseTime - lastEncouragement >= 5) {
+    const encouragements = [
+      "יופי! תמשיך!",
+      "אתה עושה עבודה מדהימה!",
+      "כמעט מקצוען!",
+      "אתה עולה רמה!",
+      "אתה מרסק את זה!",
+      "אחי אתה הופך לאגדה!"
+    ];
+    const index = Math.floor(correctPoseTime / 5) - 1;
+    speak(encouragements[Math.min(index, encouragements.length - 1)]);
+    lastEncouragement = correctPoseTime;
+  }
+
           } else {
+            if (flag && !spokenIncorrect) {
+              speak("נסה להתאים את המיקום שלך.");
+              spokenIncorrect = true;
+              spokenCorrect = false;
+            }
             flag = false
             skeletonColor = 'rgb(255,255,255)'
             countAudio.pause()
             countAudio.currentTime = 0
+
+
+              // ✅ Time tracking for incorrect pose
+  incorrectPoseTime += 0.1;
+  correctPoseTime = 0;
+
+  if (incorrectPoseTime - lastWarning >= 5) {
+    const warnings = [
+      "אל תוותר! נסה שוב.",
+      "התאם מעט את התנוחה שלך.",
+      "אתה קרוב - רק עוד קצת!",
+      "התמקדו! אתם יכולים לעשות את זה!",
+      "אל תבזבזו זמן - חזרו לכושר!"
+    ];
+    const randomIndex = Math.floor(Math.random() * warnings.length);
+    speak(warnings[randomIndex]);
+    lastWarning = incorrectPoseTime;
+  }
+
+
           }
         })
       } catch(err) {
         console.log(err)
       }
-      
-      
     }
   }
 
@@ -196,9 +261,8 @@ function Yoga() {
   function stopPose() {
     setIsStartPose(false)
     clearInterval(interval)
+    window.speechSynthesis.cancel(); // ✅ stop speech when stopping session
   }
-
-    
 
   if (isStartPose) {
     return (

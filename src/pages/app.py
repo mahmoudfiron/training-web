@@ -1,25 +1,49 @@
-# app.py
-
-from flask import Flask, Response
+from flask import Flask, Response, render_template, jsonify
 from flask_cors import CORS
 import cv2
 import mediapipe as mp
 import numpy as np
 
-# 🔵 Import the new Squat Trainer routes
+# 🔵 Import squat trainer if needed
 from squat_routes import squat_bp
+
 
 app = Flask(__name__)
 CORS(app)
 
-# 🔵 Register the squat blueprint
+
+
+should_reset = {'flag': False}
+
+
+
+
+# 🔵 Register blueprint
 app.register_blueprint(squat_bp)
 
-# Initialize mediapipe pose
-mp_drawing = mp.solutions.drawing_utils
-mp_pose = mp.solutions.pose
+# ✅ Global rep counter
+rep_counter = {'count': 0}
 
-# Helper function to calculate angle
+# ✅ Route for Biceps HTML page
+@app.route('/biceps')
+def biceps_trainer():
+    return render_template('biceps.html')
+
+# ✅ Serve current rep count as JSON
+@app.route('/biceps/count')
+def biceps_count():
+    return jsonify(count=rep_counter['count'])
+
+
+@app.route('/biceps/reset')
+def biceps_reset():
+    rep_counter['count'] = 0
+    should_reset['flag'] = True
+    return jsonify(status="reset")
+
+
+
+# ✅ Angle calculation helper
 def calculate_angle(a, b, c):
     a = np.array(a)
     b = np.array(b)
@@ -30,19 +54,32 @@ def calculate_angle(a, b, c):
         angle = 360 - angle
     return angle
 
-@app.route('/biceps')
+# ✅ Biceps trainer video stream
+@app.route('/biceps/video')
 def biceps_video_feed():
     def generate():
+        global rep_counter
+        rep_counter['count'] = 0
         counter = 0
         stage = None
+
+        mp_drawing = mp.solutions.drawing_utils
+        mp_pose = mp.solutions.pose
         cap = cv2.VideoCapture(0)
+
         with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
             while cap.isOpened():
+
+                if should_reset['flag']:
+                    counter = 0
+                    stage = None
+                    rep_counter['count'] = 0
+                    should_reset['flag'] = False  # Reset the flag
+
                 ret, frame = cap.read()
                 if not ret:
                     break
 
-                # Recolor image to RGB
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image.flags.writeable = False
                 results = pose.process(image)
@@ -60,12 +97,12 @@ def biceps_video_feed():
 
                     angle = calculate_angle(shoulder, elbow, wrist)
 
-                    # Counter logic
                     if angle > 160:
                         stage = "down"
-                    if angle < 30 and stage == 'down':
+                    if angle < 40 and stage == 'down':
                         stage = "up"
                         counter += 1
+                        rep_counter['count'] = counter  # ✅ Sync to global counter
                         print(f'Reps: {counter}')
 
                     # Draw angle
@@ -73,7 +110,7 @@ def biceps_video_feed():
                                 tuple(np.multiply(elbow, [640, 480]).astype(int)),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2, cv2.LINE_AA)
 
-                    # Draw counters
+                    # Draw counter + stage box
                     cv2.rectangle(image, (0, 0), (225, 73), (245, 117, 16), -1)
                     cv2.putText(image, 'REPS', (15, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 0), 1, cv2.LINE_AA)
@@ -97,6 +134,7 @@ def biceps_video_feed():
         cap.release()
 
     return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
