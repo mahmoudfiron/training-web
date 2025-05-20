@@ -1,10 +1,20 @@
-/* Footer.css */
+/* Ensure Font Awesome is recognized */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
+i.fab {
+  font-family: "Font Awesome 6 Brands";
+  font-style: normal;
+}
+
+
 
 .footer {
   background-color: #2c3e50;
   color: #fff;
   padding: 2rem 1rem;
   font-size: 0.9rem;
+  margin-top: 3%;
+  border-top: 4px solid #f39c12; /* golden accent */
 }
 
 .footer-container {
@@ -38,12 +48,30 @@
 
 .footer-column ul li a {
   text-decoration: none;
-  color: #ccc;
+  color: #bbbbbb; /* Softer than white, easier on eyes */
   transition: color 0.3s ease;
+  font-weight: 500;
 }
 
 .footer-column ul li a:hover {
   color: #fff;
+  text-decoration: underline;
+}
+
+/* New: Styled footer button link */
+.footer-button-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  color: #ccc;
+  text-align: left;
+  cursor: pointer;
+}
+
+.footer-button-link:hover {
+  color: #fff;
+  text-decoration: underline;
 }
 
 /* Social Icons Styling */
@@ -60,7 +88,7 @@
 
 .social-icons a:hover {
   transform: scale(1.2);
-  color: #ff5722; /* Highlight color on hover */
+  color: #ff5722;
 }
 
 /* Responsive Styling */
@@ -74,4 +102,29 @@
   .footer-column {
     margin-bottom: 2rem;
   }
+
+  .social-icons {
+    justify-content: center;
+    gap: 1.2rem; /* tighter spacing on mobile */
+  }
+}
+
+
+.footer-divider {
+  border: none;
+  border-top: 1px solid #3c4a5a;
+  margin: 1rem auto 0;
+  max-width: 1200px;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #ccc;
+  padding-top: 1rem;
+  transition: color 0.3s ease;
+}
+
+.footer-bottom:hover {
+  color: #ddd;
 }

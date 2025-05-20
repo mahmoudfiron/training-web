@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react'; // ⬅️ ADD useEffect
+import { useLocation } from 'react-router-dom'; // ⬅️ NEW
 import '../styles/LearnAbout.css';
 import aboutImage from '../assets/images/about-Image.jpg';
 import missionImage from '../assets/images/mission-image.jpg';
 import storyImage from '../assets/images/our-story.jpg';
 
 const LearnAbout = () => {
+  const location = useLocation();
+
+useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const section = document.getElementById(id);
+      if (section) {
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }, 0);
+      }
+    }
+  }, [location]);
+
   return (
     <div className="learn-about">
       {/* About Us Section */}
-      <section className="about-section">
+        <section id="about" className="about-section">
         <div className="content">
           <h2>About Us</h2>
           <p>
@@ -18,7 +33,7 @@ const LearnAbout = () => {
         <img src={aboutImage} alt="About StreamFit" className="section-image" />
       </section>
       {/* Our Mission Section */}
-      <section className="mission-section">
+        <section id="mission" className="mission-section">
         <img src={missionImage} alt="Mission" className="section-image2" />
         <div className="content">
           <h2>Our Mission</h2>
@@ -28,7 +43,7 @@ const LearnAbout = () => {
         </div>
       </section>
       {/* Our Story Section */}
-      <section className="story-section">
+        <section id="story" className="story-section">
         <div className="content">
           <h2>Our Story</h2>
           <p>

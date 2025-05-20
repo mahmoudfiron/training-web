@@ -236,12 +236,14 @@ const NavBar = () => {
           <ul className="navbar-links1">
             {!user && (
               <>
-                <li>
-                  <Link to="/contact">Contact Us</Link>
+               <li>
+                 <a href="/contact">Contact Us</a>
                 </li>
+              
                 <li>
-                  <Link to="/faqs">FAQs</Link>
+                  <a href="/faqs">FAQs</a>
                 </li>
+
                 <li>
                   <Link to="/ratings">Ratings</Link>
                 </li>

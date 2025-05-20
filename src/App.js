@@ -27,6 +27,11 @@ import CalculatorPage from './pages/CalculatorPage.js';
 import Home from './pages/Home.js';
 import Yoga from './pages/Yoga.js';
 
+import ReferFriend from './pages/ReferFriend.js'; // ✅ Add at the top
+
+import ContactPage from './pages/ContactPage.js';
+import FAQsPage from './pages/FAQsPage.js';
+import TermsPage from './pages/TermsPage.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -71,6 +76,12 @@ function App() {
         <Route path="/ai-trainer" element={<Home />} />
         <Route path="/ai-trainer/yoga" element={<Yoga />} />
         
+        <Route path="/refer-a-friend" element={<ReferFriend />} />
+
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/faqs" element={<FAQsPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+
       </Routes>
       <Footer />
     </Router>
