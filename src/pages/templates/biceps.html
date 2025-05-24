@@ -5,180 +5,292 @@
   <title>Biceps AI Trainer</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      background-color: #f4f4f4;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
     }
 
     #stream {
-      border: 4px solid #2c3e50;
-      margin-top: 20px;
+      border: 6px solid #2c3e50;
+      border-radius: 12px;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
     .counter-box {
-      margin-top: 20px;
       background-color: #2c3e50;
       color: white;
-      display: inline-block;
-      padding: 15px 30px;
-      border-radius: 10px;
+      padding: 20px 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      z-index: 100;
     }
 
     .counter-box h3 {
-      margin: 5px 0;
+      margin: 10px 0;
+      font-size: 1.4rem;
+      line-height: 1.6;
+    }
+
+    #stopButton {
+      background-color: #c0392b;
+      color: white;
+      padding: 12px 28px;
+      font-size: 16px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      transform: scale(1.03);
+    }
+
+    #stopButton:hover {
+      background-color: #c0392b;
+    }
+
+    #reportModal {
+      display: none;
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      color: #2c3e50;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.25);
+      z-index: 1000;
+      width: 400px;
+    }
+
+    #reportModal h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+
+    #reportModal p {
+      font-size: 1rem;
+      margin: 10px 0;
+    }
+
+    #reportModal button {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #reportModal button:hover {
+      background-color: #34495e;
+    }
+
+    /* 👇 NEW: Webcam loading overlay */
+    #loadingOverlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.9);
+      padding: 30px;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 1500;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #2c3e50;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-top: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <h2>Biceps AI Trainer</h2>
 
-  <!-- Webcam feed -->
-  <img id="stream" src="/biceps/video" width="640" height="480" />
+  <!-- Countdown -->
+  <div id="countdownOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000a; color:white; font-size:4rem; display:flex; justify-content:center; align-items:center; z-index:2000;">
+    <span id="countdownNumber">3</span>
+  </div>
 
-  <!-- Rep + Stage Display -->
+  <!-- 👇 NEW: Stream loading indicator -->
+  <div id="loadingOverlay">
+    Loading camera...
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Webcam -->
+  <img id="stream" src="/biceps/video" width="640" height="480" onload="document.getElementById('loadingOverlay').style.display = 'none';" />
+
+  <!-- Tracker Box -->
   <div class="counter-box">
-    <h3>Reps: <span id="repCount">0</span></h3>
-    <h3>Stage: <span id="repStage">--</span></h3>
-
-    <!-- Stop Button -->
-  <button id="stopButton" style="margin-top: 20px; padding: 10px 20px;">Stop Training</button>
+    <h3>Reps:<br><span id="repCount">0</span></h3>
+    <h3>Stage:<br><span id="repStage">--</span></h3>
+    <button id="stopButton">Stop Training</button>
+  </div>
 
   <!-- Modal -->
-  <div id="reportModal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
-  background:#fff; color:#222; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.3); z-index:1000;">
-  
-  <h2>Workout Summary</h2>
-  <p id="reportText">Loading...</p>
-  <canvas id="repsChart" width="300" height="200"></canvas>
-  <p><strong>Tip:</strong> Rest at least 48 hours before working the same muscle group again!</p>
-  <button onclick="closeModal()">Close</button>
- </div>
-
-
+  <div id="reportModal">
+    <h2>Workout Summary</h2>
+    <p id="reportText">Loading...</p>
+    <canvas id="repsChart" width="300" height="200"></canvas>
+    <p><strong>Tip:</strong> Rest at least 48 hours before working the same muscle group again!</p>
+    <button onclick="closeModal()">Close</button>
+    <button onclick="restartSession()">Restart</button>
   </div>
 
   <script>
-    function speak(text) {
-     window.speechSynthesis.cancel();  // 🧼 Clears any leftover speech
-     const msg = new SpeechSynthesisUtterance(text);
-     msg.lang = 'en-US';
-     window.speechSynthesis.speak(msg);
-    } 
-
-    speak("Welcome to the Biceps Trainer! We're getting everything ready for your smart workout session. Get into position, take a breath, and let's get stronger together!");
+    const speak = (text) => {
+      window.speechSynthesis.cancel();
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'en-US';
+      window.speechSynthesis.speak(msg);
+    };
 
     let lastSpoken = 0;
+    let startTime = Date.now();
 
-    setInterval(() => {
-      fetch("/biceps/count")
-        .then(res => res.json())
-        .then(data => {
-          const current = data.count;
-          const stage = data.stage || "--";
+    const getPerformanceRating = (reps) => {
+      if (reps >= 20) return "🔥 Excellent endurance!";
+      if (reps >= 10) return "💪 Great job!";
+      return "👏 Keep going, you're improving!";
+    };
 
-          // Update UI
-          document.getElementById("repCount").textContent = current;
-          document.getElementById("repStage").textContent = stage;
+    const startTrainerAfterCountdown = () => {
+      startTime = Date.now();
+      setInterval(() => {
+        fetch("/biceps/count")
+          .then(res => res.json())
+          .then(data => {
+            const current = data.count;
+            const stage = data.stage || "--";
+            document.getElementById("repCount").textContent = current;
+            document.getElementById("repStage").textContent = stage;
 
-          // Voice feedback
-          if (current > lastSpoken) {
-            if (current === 1) {
-              speak("Great job! One rep completed!")
+            if (current > lastSpoken) {
+              if (current === 1) speak("Great job! One rep completed!");
+              if (current === 5) speak("You're improving, keep going!");
+              else if (current % 10 === 0) speak(`You’ve completed ${current} reps. Keep it up, bro!`);
               lastSpoken = current;
             }
-            if (current === 5) {
-              speak("You're improving, keep going!");
-              lastSpoken = current;
-            } else if (current % 10 === 0) {
-              speak(`You’ve completed ${current} reps. Keep it up, bro!`);
-              lastSpoken = current;
-            }
-          }
-        })
-        .catch(err => console.error("Failed to get rep count:", err));
+          })
+          .catch(err => console.error("Failed to get rep count:", err));
+      }, 1000);
+    };
+
+    let countdown = 3;
+    const countdownOverlay = document.getElementById("countdownOverlay");
+    const countdownNumber = document.getElementById("countdownNumber");
+
+    const countdownInterval = setInterval(() => {
+      if (countdown > 0) {
+        countdownNumber.textContent = countdown;
+        speak(countdown.toString());
+        countdown--;
+      } else {
+        clearInterval(countdownInterval);
+        countdownOverlay.style.display = "none";
+        speak("Go!");
+        startTrainerAfterCountdown();
+      }
     }, 1000);
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const stopButton = document.getElementById("stopButton");
+    const modal = document.getElementById("reportModal");
+    const reportText = document.getElementById("reportText");
+    let chartInstance = null;
 
+    stopButton.addEventListener("click", () => {
+      const durationSec = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = Math.floor(durationSec / 60);
+      const seconds = durationSec % 60;
 
+      fetch("/biceps/count")
+        .then(res => res.json())
+        .then(data => {
+          const reps = data.count;
+          const feedback = getPerformanceRating(reps);
 
+          reportText.innerHTML = `
+            You completed <strong>${reps}</strong> reps this session.<br>
+            Duration: <strong>${minutes}m ${seconds}s</strong><br>
+            Performance: <em>${feedback}</em>
+          `;
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const stopButton = document.getElementById("stopButton");
-  const modal = document.getElementById("reportModal");
-  const reportText = document.getElementById("reportText");
+          if (chartInstance) chartInstance.destroy();
 
-  let chartInstance = null;  // store chart to destroy it later
+          const canvas = document.getElementById('repsChart');
+          const ctx = canvas.getContext('2d');
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  stopButton.addEventListener("click", () => {
-    fetch("/biceps/count")
-      .then(res => res.json())
-      .then(data => {
-        const reps = data.count;
-        reportText.innerHTML = `You completed <strong>${reps}</strong> reps this session.`;
-
-        // DESTROY existing chart if it exists
-        if (chartInstance) {
-          chartInstance.destroy();
-        }
-
-        // CLEAR canvas content (optional but safe)
-        const canvas = document.getElementById('repsChart');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // CREATE new chart
-        chartInstance = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['You', 'Avg User'],
-            datasets: [{
-              label: 'Reps',
-              data: [reps, 15],
-              backgroundColor: ['#3498db', '#95a5a6']
-            }]
-          },
-          options: {
-            responsive: false,
-            plugins: {
-              legend: {
-                labels: { color: '#000' }
-              }
+          chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['You', 'Avg User'],
+              datasets: [{
+                label: 'Reps',
+                data: [reps, 15],
+                backgroundColor: ['#3498db', '#95a5a6']
+              }]
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: { color: '#000' }
+            options: {
+              responsive: false,
+              plugins: {
+                legend: { labels: { color: '#000' } }
               },
-              x: {
-                ticks: { color: '#000' }
+              scales: {
+                y: { beginAtZero: true, ticks: { color: '#000' } },
+                x: { ticks: { color: '#000' } }
               }
             }
-          }
+          });
+
+          modal.style.display = "block";
+          fetch("/biceps/reset");
+          document.getElementById("repCount").textContent = "0";
+          document.getElementById("repStage").textContent = "--";
+          lastSpoken = 0;
         });
+    });
 
-        // Show modal
-        modal.style.display = "block";
+    function closeModal() {
+      modal.style.display = "none";
+    }
 
-        // Reset on server
-        fetch("/biceps/reset");
-
-        // Reset UI
-        document.getElementById("repCount").textContent = "0";
-        document.getElementById("repStage").textContent = "--";
-        lastSpoken = 0;
-      });
-  });
-
-  function closeModal() {
-    modal.style.display = "none";
-  }
-</script>
-
-
-
-
-
+    function restartSession() {
+      modal.style.display = "none";
+      window.location.reload();
+    }
+  </script>
 </body>
 </html>
