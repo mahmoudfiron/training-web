@@ -30,6 +30,9 @@ const NavBar = () => {
   const bellRef = useRef(null);
   const navigate = useNavigate();
 
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  
   // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -169,6 +172,7 @@ const NavBar = () => {
     }
   };
 
+  
   return (
     <div>
       <nav className="navbar">
@@ -343,19 +347,21 @@ const NavBar = () => {
                       Edit Personal Details
                     </button>
                     <button
-                      onClick={() => {
-                        navigate('/financial-account');
-                      }}
-                    >
-                      Financial Account
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate('/account-settings');
-                      }}
-                    >
-                      Account Settings
-                    </button>
+  onClick={() => {
+    setIsProfileDropdownOpen(false);
+    navigate('/financial-account');
+  }}
+>
+  Financial Account
+</button>
+<button
+  onClick={() => {
+    setIsProfileDropdownOpen(false);
+    navigate('/account-settings');
+  }}
+>
+  Account Settings
+</button>
                   </div>
                 )}
               </li>

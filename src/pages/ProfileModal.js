@@ -5,6 +5,9 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase.js';
 import '../styles/ProfileModal.css';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const ProfileModal = ({ isOpen, onClose }) => {
   const userId = auth.currentUser?.uid;
 
@@ -21,7 +24,24 @@ const ProfileModal = ({ isOpen, onClose }) => {
     profilePicture: null,
   });
 
+
+const [errors, setErrors] = useState({});
+
+
+
+
+
+
+  const [isDirty, setIsDirty] = useState(false);
+
+  useEffect(() => {
+    setIsDirty(false); // reset when modal opens
+    }, [isOpen]);
+
+
   const [message, setMessage] = useState('');
+
+  const [isSaving, setIsSaving] = useState(false);
 
   // Fetch user profile data on modal open
   useEffect(() => {
@@ -55,6 +75,7 @@ const ProfileModal = ({ isOpen, onClose }) => {
       ...profileData,
       [name]: value,
     });
+    setIsDirty(true);
   };
 
   const handleImageUpload = (e) => {
@@ -73,32 +94,96 @@ const ProfileModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleSave = async () => {
-    if (!userId) {
-      setMessage('Error: User not authenticated.');
-      return;
-    }
+const validateForm = () => {
+  const newErrors = {};
 
-    try {
-      const docRef = doc(db, 'users', userId);
-      await setDoc(docRef, profileData, { merge: true });
-      setMessage('Profile updated successfully!');
-      setTimeout(() => setMessage(''), 3000); // Clear the message after 3 seconds
-    } catch (error) {
-      console.error('Error saving profile data:', error);
-      setMessage('Error saving profile. Please try again.');
-    }
-  };
+  if (!profileData.fullName || profileData.fullName.trim() === '') {
+    newErrors.fullName = "Full name is required";
+  }
+
+  if (!profileData.dob) {
+    newErrors.dob = "Date of birth is required";
+  }
+
+  if (!profileData.gender) {
+    newErrors.gender = "Gender is required";
+  }
+
+  if (!profileData.country.trim()) {
+    newErrors.country = "Country is required";
+  }
+
+  if (!profileData.jobTitle || profileData.jobTitle.trim() === '') {
+    newErrors.jobTitle = "Job title is required";
+  }
+
+  if (!profileData.languages.trim()) {
+    newErrors.languages = "Languages are required";
+  }
+
+  if (!profileData.email.trim()) {
+    newErrors.email = "Email is required";
+  }
+
+  if (
+    profileData.contactNumber &&
+    !/^\d{8,15}$/.test(profileData.contactNumber.trim())
+  ) {
+    newErrors.contactNumber = "Enter a valid phone number (8-15 digits)";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+
+  const handleSave = async () => {
+  if (!userId) {
+    toast.error('Error: User not authenticated.');
+    return;
+  }
+
+  if (!validateForm() || !profileData.fullName.trim()) {
+    return;
+  } 
+
+  setIsSaving(true);
+
+  try {
+    const docRef = doc(db, 'users', userId);
+    await setDoc(docRef, profileData, { merge: true });
+
+    toast.success('✅ Profile updated successfully!');
+    setMessage('Profile updated successfully!');
+    setIsDirty(false);
+  } catch (error) {
+    console.error('Error saving profile data:', error);
+    toast.error('❌ Error saving profile. Please try again.');
+    setMessage('Error saving profile. Please try again.');
+  } finally {
+    setIsSaving(false);
+    setTimeout(() => setMessage(''), 3000);
+  }
+};
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="profile-modal-overlay" onClick={onClose}>
+      <div className="profile-modal-content" onClick={(e) => e.stopPropagation()}>
         {/* Fixed Header */}
         <div className="modal-header">
           <h2>Edit Personal Details</h2>
-          <button className="close-button" onClick={onClose}>
+      
+        <button
+          className="close-button"
+          onClick={() => {
+          if (isDirty && !window.confirm("You have unsaved changes. Close anyway?")) {
+           return;
+        }
+         onClose();
+          }}
+        >
             ✖
           </button>
         </div>
@@ -138,6 +223,9 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={profileData.fullName}
                   onChange={handleChange}
                 />
+                {errors.fullName && (
+                  <div className="error-text">{errors.fullName}</div>
+                )}
               </div>
               <div className="form-group">
                 <label>Date of Birth</label>
@@ -147,6 +235,9 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={profileData.dob}
                   onChange={handleChange}
                 />
+                {errors.dob && (
+                  <div className="error-text">{errors.dob}</div>
+               )}
               </div>
             </div>
 
@@ -163,6 +254,9 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   <option value="female">Female</option>
                   <option value="other">Other</option>
                 </select>
+                {errors.gender && (
+                <div className="error-text">{errors.gender}</div>
+                )}
               </div>
               <div className="form-group">
                 <label>Country</label>
@@ -172,6 +266,9 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={profileData.country}
                   onChange={handleChange}
                 />
+                {errors.country && (
+                 <div className="error-text">{errors.country}</div>
+                )}
               </div>
             </div>
 
@@ -184,6 +281,10 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={profileData.jobTitle}
                   onChange={handleChange}
                 />
+                {errors.jobTitle && (
+                  <div className="error-text">{errors.jobTitle}</div>
+                )}
+
               </div>
               <div className="form-group">
                 <label>Languages</label>
@@ -193,6 +294,9 @@ const ProfileModal = ({ isOpen, onClose }) => {
                   value={profileData.languages}
                   onChange={handleChange}
                 />
+                {errors.languages && (
+                  <div className="error-text">{errors.languages}</div>
+               )}
               </div>
             </div>
 
@@ -207,6 +311,9 @@ const ProfileModal = ({ isOpen, onClose }) => {
                     value={profileData.contactNumber}
                     onChange={handleChange}
                   />
+                  {errors.contactNumber && (
+                  <div className="error-text">{errors.contactNumber}</div>
+                  )}
                 </div>
                 <div className="form-group">
                   <label>Email</label>
@@ -216,18 +323,35 @@ const ProfileModal = ({ isOpen, onClose }) => {
                     value={profileData.email}
                     readOnly
                   />
+                  {errors.email && (
+                  <div className="error-text">{errors.email}</div>
+                  )}
                 </div>
               </div>
+            <ToastContainer position="top-right" autoClose={3000} />
+
             </div>
           </form>
         </div>
 
         {/* Fixed Footer */}
         <div className="modal-footer">
-          <button className="save-button" onClick={handleSave}>
-            Save
+          <button className="save-button" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? 'Saving...' : 'Save'}
           </button>
-          {message && <p className="message">{message}</p>}
+
+        {message && (
+          <div
+          style={{
+          marginTop: "10px",
+          color: message.includes("success") ? "green" : "red",
+          fontWeight: 500,
+          }}
+          >
+        {message}
+        </div>
+        )}
+
         </div>
       </div>
     </div>

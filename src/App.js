@@ -38,6 +38,13 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import 'font-awesome/css/font-awesome.min.css';
 
+
+import FinancialAccount from './pages/FinancialAccount.js';
+import AccountSettings from './pages/AccountSettings.js';
+
+import { ToastContainer } from 'react-toastify';
+<ToastContainer position="top-right" autoClose={3000} />
+
 function App() {
   const [user, setUser] = useState(null);
 
@@ -81,6 +88,10 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/faqs" element={<FAQsPage />} />
         <Route path="/terms" element={<TermsPage />} />
+
+        <Route path="/financial-account" element={<FinancialAccount />} />
+        <Route path="/account-settings" element={<AccountSettings />} />
+
 
       </Routes>
       <Footer />

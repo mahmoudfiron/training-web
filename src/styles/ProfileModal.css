@@ -4,22 +4,29 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px); /* Optional blur on background */
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .modal-content {
-  background: rgb(255, 255, 255);
   width: 50%;
   max-height: 80%;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
+  background: rgba(255, 255, 255, 0.15); /* Glassmorphism */
+  backdrop-filter: blur(15px); /* Background blur */
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); /* Soft shadow */
+  animation: fadeInModal 0.4s ease forwards;
 }
 
 .modal-header {
@@ -42,7 +49,12 @@
   padding: 2.5%;
 }
 
+.close-button:hover {
+  color: #c0392b;
+}
+
 .modal-body {
+  padding: 20px 30px; /* add horizontal padding */
   overflow-y: auto;
 }
 
@@ -70,6 +82,23 @@
   align-items: center;
   border: 2px solid #ddd;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profile-picture-wrapper:hover {
+  transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.profile-picture-wrapper::after {
+  content: 'Change';
+  position: absolute;
+  bottom: -20px;
+  font-size: 0.85rem;
+  color: #555;
+  width: 100%;
+  text-align: center;
 }
 
 .profile-picture {
@@ -86,13 +115,15 @@
 
 .form-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 .form-group {
   flex: 1;
-  padding: 7px;
+  min-width: 200px;
+  padding: 5px 0;
 }
 
 label {
@@ -110,10 +141,10 @@ select {
 }
 
 .modal-footer {
-  background: #ececec;
-  padding: 10px 20px;
+  background: #f4f4f4;
+  padding: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   border-top: 1px solid #ddd;
 }
 
@@ -125,4 +156,36 @@ select {
   padding: 10px 20px;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.save-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.form-section h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-content {
+  animation: fadeInModal 0.3s ease-out;
+}
+
+.error-text {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 5px;
 }
