@@ -1,146 +1,163 @@
+// src/pages/CalendarPage.js
 import React, { useState, useEffect } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../firebase.js';
 import '../styles/CalendarPage.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const CalendarPage = () => {
-  const [value, setValue] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [enrolledClasses, setEnrolledClasses] = useState([]);
-  const [classesOnDate, setClassesOnDate] = useState([]);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [calendarVisible, setCalendarVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Update current time every second
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const fetchClasses = async () => {
+    setLoading(true);
+    if (auth.currentUser) {
+      const userCoursesRef = collection(db, 'users', auth.currentUser.uid, 'enrolledCourses');
+      const coursesSnap = await getDocs(userCoursesRef);
 
-  // Fetch enrolled classes
-  useEffect(() => {
-    const fetchEnrolledClasses = async () => {
-      if (auth.currentUser) {
-        try {
-          const enrolledCoursesRef = collection(db, 'users', auth.currentUser.uid, 'enrolledCourses');
-          const coursesSnap = await getDocs(enrolledCoursesRef);
+      const allClasses = [];
 
-          let allClasses = [];
-          for (let courseDoc of coursesSnap.docs) {
-            const { categoryName } = courseDoc.data();
+      for (const courseDoc of coursesSnap.docs) {
+        const { categoryName } = courseDoc.data();
+        const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseDoc.id, 'lessons');
+        const lessonsSnap = await getDocs(lessonsRef);
 
-            const lessonsRef = collection(db, 'courseCategories', categoryName, 'courses', courseDoc.id, 'lessons');
-            const lessonsSnap = await getDocs(lessonsRef);
+        const courseRef = doc(db, 'courseCategories', categoryName, 'courses', courseDoc.id);
+        const courseSnap = await getDoc(courseRef);
+        const courseData = courseSnap.data();
 
-            // Fetch course details (publisherName and courseName) from the courses collection
-            const courseRef = doc(db, 'courseCategories', categoryName, 'courses', courseDoc.id);
-            const courseSnap = await getDoc(courseRef);
-            const courseData = courseSnap.data();
-
-            lessonsSnap.forEach((lessonDoc) => {
-              allClasses.push({
-                id: lessonDoc.id,
-                ...lessonDoc.data(),
-                courseName: courseData.courseName,  // Add course name from the course collection
-                publisherName: courseData.publisherName,  // Add publisher name from the course collection
-              });
-            });
-          }
-          setEnrolledClasses(allClasses);
-        } catch (error) {
-          console.error('Error fetching classes:', error);
-        }
+        lessonsSnap.forEach((lesson) => {
+          allClasses.push({
+            ...lesson.data(),
+            courseName: courseData.courseName,
+            publisherName: courseData.publisherName,
+            lessonId: lesson.id,
+            courseId: courseDoc.id,
+            categoryName
+          });
+        });
       }
-    };
-    fetchEnrolledClasses();
-  }, []);
 
-  // Filter classes based on the selected date
-  useEffect(() => {
-    const formattedDate = `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(
-      value.getDate()
-    ).padStart(2, '0')}`;
-
-    const filteredClasses = enrolledClasses.filter((cls) => cls.date === formattedDate);
-    setClassesOnDate(filteredClasses);
-  }, [value, enrolledClasses]);
-
-  // Change date with arrows
-  const changeDay = (direction) => {
-    const newDate = new Date(value);
-    newDate.setDate(value.getDate() + direction);
-    setValue(newDate);
+      setEnrolledClasses(allClasses);
+    }
+    setLoading(false);
   };
 
-  // Format today's date for display
-  const todayDate = new Date().toLocaleDateString(undefined, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  fetchClasses(); // 👈 Don't forget to call it!
+}, []);
 
-   // Format selected date for display
-   const selectedDay = value.toLocaleDateString(undefined, {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-  
+
+
+  const getDaysInMonth = (year, month) => {
+    const date = new Date(year, month, 1);
+    const days = [];
+
+    const firstDayIndex = date.getDay(); // 0-6 (Sun-Sat)
+
+    let dayCounter = 1 - firstDayIndex;
+
+    for (let i = 0; i < 6; i++) {
+      const week = [];
+
+      for (let j = 0; j < 7; j++) {
+        const thisDate = new Date(year, month, dayCounter);
+        week.push({
+          date: thisDate,
+          isCurrentMonth: thisDate.getMonth() === month
+        });
+        dayCounter++;
+      }
+
+      days.push(week);
+    }
+
+    return days;
+  };
+
+  const isToday = (someDate) => {
+  const today = new Date();
   return (
-    <div className="calendar-page-wrapper"> {/* Added a wrapper for centering */}
-      <div className="calendar-page"> {/* Original content inside this div */}
-        {/* Current Time and Today's Date */}
-        <div className="current-time">
-          <h1>{currentTime.toLocaleTimeString()}</h1>
-          <p>{todayDate}</p>
-        </div>
+    someDate.getDate() === today.getDate() &&
+    someDate.getMonth() === today.getMonth() &&
+    someDate.getFullYear() === today.getFullYear()
+  );
+};
 
-        {/* Calendar Controls */}
-        <div className="calendar-controls">
-          <button onClick={() => changeDay(-1)} className="arrow-button">
-            &larr;
-          </button>
-          <div className="dropdown-container">
-            <button onClick={() => setCalendarVisible(!calendarVisible)} className="dropdown-button5">
-              {calendarVisible ? 'Hide Calendar' :  <p>{selectedDay}▼</p>}
-            </button>
-            {calendarVisible && <Calendar onChange={setValue} value={value} />}
-          </div>
-          <button onClick={() => changeDay(1)} className="arrow-button">
-            &rarr;
-          </button>
-        </div>
+  const formatDateKey = (date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+      date.getDate()
+    ).padStart(2, '0')}`;
+  };
 
-        {/* Classes on Selected Date */}
-        <div className="classes-on-date">
-          {classesOnDate.length === 0 ? (
-            <p>No classes scheduled for this day.</p>
-          ) : (
-            <div className="class-cards">
-              {classesOnDate.map((cls) => (
-                <div className="class-card" key={cls.id}>
-                  <p>
-                    <strong>{cls.courseName}</strong>
-                  </p>
-                  <p>{selectedDay}</p>
-                  <p>
-                    {cls.startTime} - {cls.endTime}
-                  </p>
-                  <p>Host: {cls.publisherName}</p>
-                  <a href={cls.zoomLink} target="_blank" rel="noopener noreferrer" className="start-button">
-                    Start
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+  const days = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
+
+  const goToPrevMonth = () => {
+    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+    setCurrentDate(newDate);
+  };
+
+  const goToNextMonth = () => {
+    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+    setCurrentDate(newDate);
+  };
+
+  return (
+    <div className="calendar-container">
+      <div className="calendar-header">
+        <button onClick={goToPrevMonth}>❮</button>
+        <h2>
+          {currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}
+        </h2>
+        <button onClick={goToNextMonth}>❯</button>
       </div>
+
+{loading ? (
+  <div className="loading">Loading calendar...</div>
+) : (
+      <div className="calendar-grid">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+  <div className="calendar-day-label" key={day}>
+    {day}
+  </div>
+))}
+
+
+        {days.map((week, i) => (
+          week.map((dayObj, j) => {
+            const dateKey = formatDateKey(dayObj.date);
+            const classesToday = enrolledClasses.filter(cls => cls.date === dateKey);
+
+            return (
+              <div
+  className={`calendar-cell ${dayObj.isCurrentMonth ? '' : 'faded'} ${isToday(dayObj.date) ? 'today' : ''}`}
+  key={`${i}-${j}`}
+>
+                <div className="cell-date">{dayObj.date.getDate()}</div>
+                {classesToday.map((cls) => (
+                  <button
+  key={cls.lessonId}
+  className="event-button"
+  onClick={() =>
+    navigate(`/lessons/${cls.courseId}`, {
+      state: { categoryName: cls.categoryName }
+    })
+  }
+>
+  {cls.courseName}
+</button>
+                ))}
+              </div>
+            );
+          })
+        ))}
+      </div>
+          )}
+
     </div>
   );
 };

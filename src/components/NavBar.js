@@ -29,9 +29,6 @@ const NavBar = () => {
   const modalRef = useRef(null);
   const bellRef = useRef(null);
   const navigate = useNavigate();
-
-  const [showDropdown, setShowDropdown] = useState(false);
-
   
   // Fetch notifications
   useEffect(() => {
