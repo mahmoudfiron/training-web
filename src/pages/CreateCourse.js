@@ -16,8 +16,13 @@ const CreateCourse = () => {
     learningOutcomes: '',
     courseUnits: [], // Initialize as an array
     publisherName: '',
-
   });
+
+  const [charCounts, setCharCounts] = useState({
+  description: 0,
+  learningOutcomes: 0,
+});
+
   const [unitInput, setUnitInput] = useState(''); // Temporary input for a unit
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
@@ -35,6 +40,10 @@ const CreateCourse = () => {
       };
       reader.readAsDataURL(files[0]);
     } else {
+      if (name === 'description' || name === 'learningOutcomes') {
+  setCharCounts((prev) => ({ ...prev, [name]: value.length }));
+}
+
       setFormData({
         ...formData,
         [name]: type === 'checkbox' ? checked : value,
@@ -177,16 +186,21 @@ const CreateCourse = () => {
         onChange={handleChange}
         required
       />
+     <label htmlFor="imagePreview">Image Preview:</label>
+      {formData.imageBase64 && (
+    <img src={formData.imageBase64} alt="Preview" className="image-preview" />
+  )}
     </div>
-    <div className="form-group">
-      <label htmlFor="available">Available:</label>
-      <input
-        type="checkbox"
-        id="available"
-        name="available"
-        checked={formData.available}
-        onChange={handleChange}
-      />
+
+    <div className="form-group checkbox-group">
+  <label htmlFor="available">Available:</label>
+  <input
+    type="checkbox"
+    id="available"
+    name="available"
+    checked={formData.available}
+    onChange={handleChange}
+  />
     </div>
   </div>
 
@@ -200,6 +214,9 @@ const CreateCourse = () => {
         onChange={handleChange}
         required
       />
+      <small style={{ color: '#999', fontSize: '0.8rem', marginTop: '5px'}}>
+  {charCounts.description}/500 characters
+</small>
     </div>
     
     <div className="form-group">
@@ -211,6 +228,9 @@ const CreateCourse = () => {
         onChange={handleChange}
         required
       />
+      <small style={{ color: '#999', fontSize: '0.8rem', marginTop: '5px'}}>
+  {charCounts.learningOutcomes}/500 characters
+</small>
     </div>
   </div>
 

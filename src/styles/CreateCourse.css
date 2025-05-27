@@ -2,65 +2,81 @@
 
 body {
   background: linear-gradient(to right, #ffeffe, #e3f2fd, #fffde7);
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
 }
 
 .create-course-page {
-  padding: 20px;
+  padding: 30px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  font-family:'Poppins', sans-serif;
 }
 
 .create-course-form {
-  width: 70%;
+  background: #fff;
+  width: 100%;
   max-width: 1000px;
-  background: transparent;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .create-course-form h2 {
   font-size: 2rem;
-  font-weight: bold;
+  font-weight: 700;
   color: #333;
   text-align: center;
-  margin-bottom: 30px;
-  font-family:'Poppins', sans-serif;
+  margin-bottom: 5px;
+}
+
+.create-course-form p {
+  text-align: center;
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 40px;
 }
 
 .form-group-row {
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .form-group {
   flex: 1;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding-top: 28px; /* Align with input height visually */
 }
 
 label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #555;
-  margin-bottom: 5px;
-  display: block;
-  font-family:'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 6px;
 }
 
 input,
 select,
 textarea {
-  width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
   background: #fafafa;
   transition: all 0.3s ease;
-  font-family:'Poppins', sans-serif;
 }
 
 input:focus,
@@ -73,99 +89,144 @@ select:focus {
 
 textarea {
   height: 100px;
-  resize: none;
+  resize: vertical;
 }
 
+
+/* Course Image Preview */
 .image-preview {
-  max-width: 150px;
-  margin-top: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 10px;
+  display: block;
 }
 
+/* Checkbox alignment */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 8px;
+}
+
+/* Course Units Section */
+.unit-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.unit-input input {
+  flex: 1;
+}
+
+.unit-input button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.unit-input button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+.unit-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  
+}
+
+.unit-list li:hover {
+  background-color: #e9ecef;
+}
+
+.unit-list li {
+  background: #f1f1f1;
+  margin-bottom: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unit-list button {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  transform: scale(1);
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+.unit-list button:hover {
+  background-color: #c82333;
+ transform: scale(1.05);
+}
+
+/* Submit Button */
 .submit-button {
   display: block;
   width: 100%;
   max-width: 300px;
-  margin: 20px auto 0;
+  margin: 30px auto 0;
   padding: 15px;
   background: #6c63ff;
   color: #fff;
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 700;
   text-align: center;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family:'Poppins', sans-serif;
 }
 
 .submit-button:hover {
   background: #5a52d6;
+  transform: translateY(-1px);
 }
 
-.message {
+/* Message Text */
+.message-text {
   text-align: center;
   margin-top: 20px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: green;
-  font-family:'Poppins', sans-serif;
+  font-weight: 600;
 }
 
-/* Responsive Design */
+/* Responsive Layout */
 @media (max-width: 768px) {
   .form-group-row {
     flex-direction: column;
   }
+
+  .unit-input {
+    flex-direction: column;
+  }
+
+  .unit-input button {
+    width: 100%;
+  }
 }
 
-.unit-input button{
-  display: inline-block;
-  padding: 12px 25px;
-  font-size: 13px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: #28a745; /* Green color */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
 }
 
-.unit-input button:hover{
-  background-color: #218838; /* Darker green on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-.unit-input button:focus {
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.4); /* Focus outline */
-}
-
-.unit-input button:active  {
-  background-color: #1e7e34; /* Even darker green when clicked */
-  transform: scale(0.95); /* Slightly shrink on click */
-}
-
-.unit-input button:disabled   {
-  background-color: #c3e6cb; /* Light green for disabled state */
-  color: #6c757d;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.unit-list button{
-  display: inline-block;
-  padding: 12px 25px;
-  font-size: 10px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: #dc3545; /* Red color */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}

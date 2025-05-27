@@ -286,9 +286,6 @@ const NavBar = () => {
             <button>Search</button>
           </div>
        
-
-
-
         {/* Right Section */}
         <ul className="navbar-actions">
           {user ? (
@@ -303,8 +300,18 @@ const NavBar = () => {
                   </button>
                   {isInstructorDropdownOpen && (
                     <div className="dropdown-content">
-                      <Link to="/create-course">Add Course</Link>
-                      <Link to="/instructor-courses">Manage Courses</Link>
+                      <Link
+      to="/create-course"
+      onClick={() => setIsInstructorDropdownOpen(false)}  // 👈 CLOSE after click
+    >
+      Add Course
+    </Link>
+                      <Link
+      to="/instructor-courses"
+      onClick={() => setIsInstructorDropdownOpen(false)}  // 👈 CLOSE after click
+    >
+      Manage Courses
+    </Link>
                     </div>
                   )}
                 </li>

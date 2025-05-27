@@ -17,6 +17,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
 }
 
 .no-lessons h3 {
@@ -43,7 +44,26 @@ body {
     background-color: #f9f9f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 1.5%;
+    animation: fadeIn 0.4s ease-in-out;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lesson-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lesson-card.fade-out {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
 
 .start-button {
     display: inline-block;
@@ -53,7 +73,7 @@ body {
     text-decoration: none;
     border-radius: 4px;
     font-weight: bold;
-    margin-right: 70%;
+    margin-right: 74%;
 }
 
 .start-button:hover {
@@ -111,6 +131,7 @@ body {
     background-color: #0056b3;
     cursor: pointer;
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.05);
 }
 
 .chat-icon {
@@ -171,6 +192,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  left: 100%;
 }
 
 .edit-button9:hover {
@@ -187,3 +209,91 @@ body {
     background-color: #15cf6949; /* Even darker blue when clicked */
     transform: scale(0.95); /* Slightly shrink on click */
   }
+
+  .lesson-status {
+  display: inline-block;
+  margin-left: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  vertical-align: middle;
+}
+
+.live {
+  background-color: #dc3545;
+}
+
+.upcoming {
+  background-color: #28a745;
+}
+
+.past {
+  background-color: #6c757d;
+}
+
+.fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.copy-link-button {
+  margin-left: 10px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.copy-link-button:hover {
+  background: #0056b3;
+}
+
+.delete-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-right: 0%;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+.delete-button:active {
+  transform: scale(0.95);
+}
+
+
+.lesson-buttons-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.lesson-buttons-row .start-button,
+.lesson-buttons-row .edit-button9 {
+  margin-right: auto;
+}
+
+.lesson-buttons-row .copy-link-button,
+.lesson-buttons-row .delete-button {
+  margin-left: auto;
+}
+
+
+

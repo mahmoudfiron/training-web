@@ -47,8 +47,14 @@ const InstructorCourses = () => {
   }, []);
 
   const handleDeleteCourse = async (categoryName, courseId) => {
+
     try {
-      // Delete all lessons associated with the course
+    // Fade out animation
+    const card = document.getElementById(`card-${courseId}`);
+    if (card) card.classList.add('fade-out');
+
+    // Delay before actual deletion
+    setTimeout(async () => {
       const lessonsRef = collection(db, `courseCategories/${categoryName}/courses/${courseId}/lessons`);
       const lessonsSnapshot = await getDocs(lessonsRef);
 
@@ -57,22 +63,20 @@ const InstructorCourses = () => {
         await deleteDoc(lessonRef);
       }
 
-      // Delete the course itself
       const courseRef = doc(db, `courseCategories/${categoryName}/courses`, courseId);
       await deleteDoc(courseRef);
 
-      // Update state to remove the deleted course from the UI
       setCourses((prevCourses) => prevCourses.filter((course) => course.id !== courseId));
-      alert('Course and its lessons deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting course:', error);
-      alert('Failed to delete course. Please try again.');
-    }
+    }, 400); // Wait for fade-out
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    alert('Failed to delete course. Please try again.');
+  }
   };
 
   if (loading) {
-    return <div>Loading your courses...</div>;
-  }
+  return <div className="loader"></div>;
+}
 
   return (
     <div className="instructor-courses">
@@ -80,22 +84,33 @@ const InstructorCourses = () => {
   <h2 style={{ fontSize: '1.6rem', fontWeight: 'bold', margin: 0, color: 'black' }}>
     your created course
   </h2>
-  <p style={{ fontSize: '1rem', fontWeight: 'normal', color: 'gray', marginTop: '10px', marginBottom:'40px' }}>
+  <p style={{ fontSize: '1rem', fontWeight: 'normal', color: 'gray', marginTop: '6px', marginBottom:'0px' }}>
     click on the course to open the lessons 
   </p>
 </div>
       {courses.length === 0 ? (
-        <p>You have not created any courses yet.</p>
+        <p style={{
+  background: '#fff',
+  padding: '30px',
+  borderRadius: '12px',
+  boxShadow: '0 4px 10px rgba(0,0,0,0.05)',
+  maxWidth: '500px',
+  margin: '40px auto',
+  fontSize: '1.1rem',
+}}>
+  You have not created any courses yet. Start creating one from the Coach Options menu!
+</p>
       ) : (
         <div className="courses-container">
           {courses.map((course) => (
             <div
-              className="course-card"
-              key={course.id}
-              onClick={() =>
-                navigate(`/lessons/${course.id}`, {
-                  state: { categoryName: course.categoryName, isInstructor: true },
-                })
+  id={`card-${course.id}`}
+  className="course-card"
+  key={course.id}
+  onClick={() =>
+    navigate(`/lessons/${course.id}`, {
+      state: { categoryName: course.categoryName, isInstructor: true },
+    })
               }
             >
               <div className="card-header">
@@ -113,14 +128,15 @@ const InstructorCourses = () => {
                   ✏
                 </Link>
                 <button
-                  className="delete-icon"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent navigation when clicking delete button
-                    handleDeleteCourse(course.categoryName, course.id);
-                  }}
-                >
-                  🗑
-                </button>
+  className="delete-icon"
+  onClick={(e) => {
+    e.stopPropagation(); // Prevent navigation when clicking delete button
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
+    handleDeleteCourse(course.categoryName, course.id);
+  }}
+>
+  🗑
+</button>
               </div>
               <div className="card-body">
                 <h3>{course.courseName}</h3>

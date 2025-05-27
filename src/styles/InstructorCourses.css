@@ -40,6 +40,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  padding-top: 20px;
 }
 
 .instructor-courses .course-image {
@@ -90,7 +92,10 @@
   font-size: 20px;
   font-weight: bold;
   margin: 10px 0;
-  margin-top: 100%;
+  margin-top: 90%;
+   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .instructor-courses .card-body p {
@@ -113,4 +118,25 @@
 
 .instructor-courses .social-icons .icon:hover {
   color: #333;
+}
+
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #6A82FB;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 60px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }

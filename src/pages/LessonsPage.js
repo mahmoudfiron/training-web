@@ -5,6 +5,8 @@ import { Link, useLocation } from 'react-router-dom';
 import ChatModal from './ChatModal.js'; // ChatModal component
 import '../styles/LessonsPage.css';
 
+import noCoursesImg from '../assets/images/no-courses.webp';
+
 const LessonsPage = ({ instructorId }) => {
   const [lessons, setLessons] = useState([]);
   const location = useLocation();
@@ -120,19 +122,23 @@ const LessonsPage = ({ instructorId }) => {
     await Promise.all(batchUpdates);
     setUnreadCount(0); // Reset unread count
   };
-
   
   const handleDeleteLesson = async (lessonId) => {
-    try {
+  try {
+    const card = document.getElementById(`lesson-${lessonId}`);
+    if (card) card.classList.add('fade-out');
+
+    setTimeout(async () => {
       const lessonRef = doc(db, `courseCategories/${categoryName}/courses/${courseId}/lessons`, lessonId);
       await deleteDoc(lessonRef);
       setLessons((prevLessons) => prevLessons.filter((lesson) => lesson.id !== lessonId));
       alert('Lesson deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting lesson:', error);
-      alert('Error deleting the lesson. Please try again.');
-    }
-  };
+    }, 300);
+  } catch (error) {
+    console.error('Error deleting lesson:', error);
+    alert('Error deleting the lesson. Please try again.');
+  }
+};
 
   const isMeetingReady = (lesson) => {
     const currentTime = new Date();
@@ -159,47 +165,66 @@ const LessonsPage = ({ instructorId }) => {
       {lessons.length === 0 ? (
         <div className="no-lessons">
           <h3>No Lessons Scheduled</h3>
+          <img src={noCoursesImg} alt="No courses" className="empty-image"  style={{ height: '280', width:'280px' }}/>
+
           <p>It looks like this course doesn't have any scheduled lessons yet. Create lessons to keep your participants engaged!</p>
         </div>
       ) : (
         <div className="lessons-container">
             
           {lessons.map((lesson, index) => (
-            <div className={`lesson-card ${isLessonRunning(lesson) ? 'running-lesson' : ''}`} key={lesson.id}>
+              <div id={`lesson-${lesson.id}`} className={`lesson-card ${isLessonRunning(lesson) ? 'running-lesson' : ''}`} key={lesson.id}>
               {isLessonRunning(lesson) && <div className="blinking-circle"></div>}
-              <h3>{`Lesson Number ${index + 1}`}</h3>
+              <h3>
+  Lesson Number {index + 1} 
+  <span className={`lesson-status ${isLessonRunning(lesson) ? 'live' : isLessonExpired(lesson) ? 'past' : 'upcoming'}`}>
+    {isLessonRunning(lesson) ? 'Live' : isLessonExpired(lesson) ? 'Past' : 'Upcoming'}
+  </span>
+              </h3>
               <p><strong>Date:</strong> {lesson.date}</p>
               <p><strong>Start Time:</strong> {lesson.startTime}</p>
               <p><strong>End Time:</strong> {lesson.endTime}</p>
-              {isMeetingReady(lesson) ? (
-                <a
-                  href={lesson.zoomStartUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="start-button"
-                >
-                  Start Meeting
-                </a>
-              ) : (
-                <p className="meeting-wait">Meeting link available 5 minutes before start time.</p>
-              )}
-              {isInstructor && (
-                <>
-                  <Link
-                    to={`/edit-lesson/${courseId}/${lesson.id}`}
-                    state={{ categoryName }}
-                    className="edit-button9"
-                  >
-                    Edit Lesson
-                  </Link>
-                  <button
-                    onClick={() => handleDeleteLesson(lesson.id)}
-                    className="delete-button"
-                  >
-                    Delete Lesson
-                  </button>
-                </>
-              )}
+        {isMeetingReady(lesson) ? (
+  <div className="lesson-buttons-row">
+    <a
+      href={lesson.zoomStartUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="start-button"
+    >
+      Start Meeting
+    </a>
+    <button
+      className="copy-link-button"
+      onClick={() => {
+        navigator.clipboard.writeText(lesson.zoomStartUrl);
+        alert('Meeting link copied!');
+      }}
+    >
+      📋
+    </button>
+  </div>
+) : (
+  <p className="meeting-wait">Meeting link available 5 minutes before start time.</p>
+)}
+
+{isInstructor && (
+  <div className="lesson-buttons-row">
+    <Link
+      to={`/edit-lesson/${courseId}/${lesson.id}`}
+      state={{ categoryName }}
+      className="edit-button9"
+    >
+      Edit Lesson
+    </Link>
+    <button
+      onClick={() => handleDeleteLesson(lesson.id)}
+      className="delete-button"
+    >
+      Delete Lesson
+    </button>
+  </div>
+)}
             </div>
           ))}
         </div>
