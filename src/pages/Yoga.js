@@ -13,6 +13,11 @@ import { poseImages } from '../utils/AITrainer/pose_images.js';
 import { POINTS, keypointConnections } from '../utils/AITrainer/data.js';
 import { drawPoint, drawSegment } from '../utils/AITrainer/helper.js';
 
+import { getFirestore, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+
+
 let skeletonColor = 'rgb(255,255,255)';
 let poseList = [
   'Tree', 'Chair', 'Cobra', 'Warrior', 'Dog',
@@ -44,6 +49,8 @@ function Yoga() {
   const [currentPose, setCurrentPose] = useState('Tree');
   const [isStartPose, setIsStartPose] = useState(false);
 
+  const [correctStart, setCorrectStart] = useState(null);
+  const [accumulatedTime, setAccumulatedTime] = useState(0);
 
 function speak(text) {
     const msg = new SpeechSynthesisUtterance(text);
@@ -64,6 +71,30 @@ function speak(text) {
       }
     }
   }, [currentTime, bestPerform, startingTime]);
+
+
+  useEffect(() => {
+  let interval;
+  if (flag && correctStart === null) {
+    setCorrectStart(Date.now());
+  }
+
+  if (flag && correctStart !== null) {
+    interval = setInterval(() => {
+      const elapsed = (Date.now() - correctStart) / 1000;
+      setPoseTime(accumulatedTime + elapsed);
+    }, 100);
+  }
+
+  if (!flag && correctStart !== null) {
+    const elapsed = (Date.now() - correctStart) / 1000;
+    setAccumulatedTime(prev => prev + elapsed);
+    setCorrectStart(null);
+  }
+
+  return () => clearInterval(interval);
+}, [flag]);
+
 
   useEffect(() => {
     setCurrentTime(0);
@@ -259,10 +290,29 @@ function speak(text) {
   } 
 
   function stopPose() {
-    setIsStartPose(false)
-    clearInterval(interval)
-    window.speechSynthesis.cancel(); // ✅ stop speech when stopping session
+  setIsStartPose(false);
+  clearInterval(interval);
+  window.speechSynthesis.cancel(); // ✅ stop speech
+
+  // ✅ Save session to Firebase
+  const db = getFirestore();
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    addDoc(collection(db, "users", user.uid, "aiSessions"), {
+      exerciseType: "yoga",
+      pose: currentPose,
+      duration: Math.round((Date.now() - startingTime) / 1000),
+      timestamp: serverTimestamp(),
+    }).then(() => {
+      console.log("Yoga session saved!");
+    }).catch((error) => {
+      console.error("Error saving session:", error);
+    });
   }
+}
+
 
   if (isStartPose) {
     return (

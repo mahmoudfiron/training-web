@@ -472,3 +472,51 @@ html, body {
 }
 
 
+
+
+
+
+
+@media (min-width: 2560px) {
+  .navbar {
+    justify-content: space-between;
+    padding: 0.5rem 3rem;
+  }
+
+  .navbar-logo-image {
+    height: 70px;
+  }
+
+  .navbar-links1 a,
+  .navbar-links2 a,
+  .dropdown-button,
+  .logout-button,
+  .special-link {
+    font-size: 1.4rem;
+    padding: 0.6rem 1.2rem;
+  }
+ 
+  .special-link {
+    font-size: 1.15rem;
+  }
+
+  .navbar-search input {
+    width: 400px;
+    font-size: 1.05rem;
+  }
+
+  .navbar-search button {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+  }
+
+  .bell-icon {
+    font-size: 2rem;
+  }
+
+  .profile-icon-image {
+    width: 60px;
+    height: 60px;
+  }
+}
+

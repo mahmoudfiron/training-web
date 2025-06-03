@@ -2,7 +2,6 @@
 import { db } from '../firebase.js'; // Import Firestore database instance from your firebase configuration
 import { doc, getDoc } from 'firebase/firestore';
 
-// Function to get the user role from Firestore
 export const getUserRoleFromFirestore = async (userId) => {
   try {
     const userRef = doc(db, 'users', userId);

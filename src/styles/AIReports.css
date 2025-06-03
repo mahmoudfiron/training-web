@@ -1,0 +1,42 @@
+.ai-reports-container {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.section {
+  margin-top: 40px;
+}
+
+.section h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+
+.summary-panel {
+  background: #fff8e1;
+  border-left: 6px solid #ffc107;
+  padding: 20px 30px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.summary-panel h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.summary-panel p {
+  margin: 5px 0;
+  font-size: 16px;
+}

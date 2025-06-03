@@ -24,7 +24,9 @@ import MessagesPage from './pages/MessagesPage.js';
 import SendMessagePage  from './pages/SendMessagePage.js';
 import CalculatorPage from './pages/CalculatorPage.js';
 
-import Home from './pages/Home.js';
+import AIReports from './pages/AIReports.js';
+
+import Home from './pages/Home.js';                                                    
 import Yoga from './pages/Yoga.js';
 
 import ReferFriend from './pages/ReferFriend.js'; // ✅ Add at the top
@@ -38,12 +40,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import 'font-awesome/css/font-awesome.min.css';
 
-
 import FinancialAccount from './pages/FinancialAccount.js';
 import AccountSettings from './pages/AccountSettings.js';
 
 import { ToastContainer } from 'react-toastify';
 <ToastContainer position="top-right" autoClose={3000} />
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -91,6 +93,8 @@ function App() {
 
         <Route path="/financial-account" element={<FinancialAccount />} />
         <Route path="/account-settings" element={<AccountSettings />} />
+
+        <Route path="/ai-reports" element={<AIReports />} />
 
 
       </Routes>

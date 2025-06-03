@@ -30,6 +30,24 @@ const NavBar = () => {
   const bellRef = useRef(null);
   const navigate = useNavigate();
   
+
+
+
+const [isWideScreen, setIsWideScreen] = useState(window.innerWidth >= 1920);
+
+useEffect(() => {
+  const handleResize = () => {
+    setIsWideScreen(window.innerWidth >= 1920);
+  };
+
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+
+
+
+
   // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -260,6 +278,17 @@ const NavBar = () => {
            <ul className="navbar-links2">
            {user && (
               <>
+
+              {window.innerWidth >= 1920 && (
+  <>
+    <li><Link to="/ai-reports">AI progress</Link></li>
+    <li><Link to="/faqs">FAQs</Link></li>
+    <li><Link to="/learnabout">About Us</Link></li>
+    <li><Link to="/learning">Learning on StreamFit</Link></li>
+  </>
+)}
+
+
                 <li>
                 <Link to="/ai-trainer" className="special-link">AI Trainer</Link>
                 </li>
@@ -277,9 +306,6 @@ const NavBar = () => {
            </ul>
 
            </div>
-
-
-
 
           <div className="navbar-search">
             <input type="text" placeholder="Search..." />

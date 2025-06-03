@@ -223,14 +223,30 @@
     }, 1000);
   </script>
 
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    const currentUID = "{{ uid }}";
+    console.log("📌 UID from Flask:", currentUID);
+
+
     const stopButton = document.getElementById("stopButton");
+    stopButton.disabled = false;
+
     const modal = document.getElementById("reportModal");
     const reportText = document.getElementById("reportText");
     let chartInstance = null;
 
+
     stopButton.addEventListener("click", () => {
+      if (!currentUID) {
+      alert("⚠️ Please login before saving your session.");
+      return;
+    }
+
+
       const durationSec = Math.floor((Date.now() - startTime) / 1000);
       const minutes = Math.floor(durationSec / 60);
       const seconds = durationSec % 60;
@@ -245,14 +261,11 @@
             You completed <strong>${reps}</strong> reps this session.<br>
             Duration: <strong>${minutes}m ${seconds}s</strong><br>
             Performance: <em>${feedback}</em>
-          `;
+            `
+          ;
 
           if (chartInstance) chartInstance.destroy();
-
-          const canvas = document.getElementById('repsChart');
-          const ctx = canvas.getContext('2d');
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+          const ctx = document.getElementById('repsChart').getContext('2d');
           chartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -276,10 +289,27 @@
           });
 
           modal.style.display = "block";
-          fetch("/biceps/reset");
-          document.getElementById("repCount").textContent = "0";
-          document.getElementById("repStage").textContent = "--";
-          lastSpoken = 0;
+          
+         // 🔄 Send to Firebase first
+fetch("http://localhost:5000/save-biceps-session", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ uid: currentUID, reps: reps })
+  })
+.then(res => res.json())
+.then(data => console.log("✅ Firebase saved:", data))
+.catch(err => console.error("❌ Error saving to Firebase:", err));
+
+
+
+
+// ✅ Wait a short moment (to allow Firebase to capture the reps count before reset)
+setTimeout(() => {
+  fetch("/biceps/reset");
+  document.getElementById("repCount").textContent = "0";
+  document.getElementById("repStage").textContent = "--";
+  lastSpoken = 0;
+}, 1000); // 1 second delay before reset
         });
     });
 
