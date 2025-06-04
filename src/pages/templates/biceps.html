@@ -20,7 +20,6 @@
     #stream {
       border: 6px solid #2c3e50;
       border-radius: 12px;
-      margin-top: 10px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
@@ -30,16 +29,16 @@
       padding: 20px 40px;
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      position: fixed;
-      bottom: 40px;
-      right: 40px;
+      position: absolute;
+      top: 60px;
+      left: 76px;
       z-index: 100;
+      width: 150px;
     }
 
     .counter-box h3 {
-      margin: 10px 0;
-      font-size: 1.4rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      line-height: 1;
     }
 
     #stopButton {
@@ -47,7 +46,7 @@
       color: white;
       padding: 12px 28px;
       font-size: 16px;
-      margin-top: 20px;
+      margin-bottom: 15px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -56,7 +55,7 @@
     }
 
     #stopButton:hover {
-      background-color: #c0392b;
+      background-color: #e74c3c;
     }
 
     #reportModal {
@@ -98,11 +97,10 @@
       background-color: #34495e;
     }
 
-    /* 👇 NEW: Webcam loading overlay */
     #loadingOverlay {
       position: absolute;
       top: 50%;
-      left: 50%;
+      left: 70%;
       transform: translate(-50%, -50%);
       background: rgba(255,255,255,0.9);
       padding: 30px;
@@ -133,27 +131,50 @@
   </style>
 </head>
 <body>
-  <h2>Biceps AI Trainer</h2>
-
   <!-- Countdown -->
   <div id="countdownOverlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000a; color:white; font-size:4rem; display:flex; justify-content:center; align-items:center; z-index:2000;">
     <span id="countdownNumber">3</span>
   </div>
 
-  <!-- 👇 NEW: Stream loading indicator -->
+  <!-- Loading Overlay -->
   <div id="loadingOverlay">
     Loading camera...
     <div class="spinner"></div>
   </div>
 
-  <!-- Webcam -->
-  <img id="stream" src="/biceps/video" width="640" height="480" onload="document.getElementById('loadingOverlay').style.display = 'none';" />
+  <!-- Layout -->
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 30px; margin-top: 20px;">
 
-  <!-- Tracker Box -->
-  <div class="counter-box">
-    <h3>Reps:<br><span id="repCount">0</span></h3>
-    <h3>Stage:<br><span id="repStage">--</span></h3>
-    <button id="stopButton">Stop Training</button>
+    <!-- LEFT (35%): Instructions -->
+    <div style="flex: 0 0 35%; text-align: left;">
+      <h3 style="color: #2c3e50;">How to Perform Biceps Curls</h3>
+            <img src="/static/images/biceps-help.jpg" alt="Biceps Instructions" style="max-width: 100%; border-radius: 10px; border: 2px solid #2c3e50; margin-bottom: 15px;">
+      <ul style="font-size: 1rem; color: #2c3e50; line-height: 1.6;">
+        <li>Stand upright, holding dumbbells by your sides.</li>
+        <li>Keep your elbows close to your torso throughout.</li>
+        <li>Curl the dumbbells while contracting your biceps.</li>
+        <li>Pause briefly at the top of the curl.</li>
+        <li>Slowly lower back to the starting position.</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT (65%): Stop button, Camera, Counter -->
+    <div style="flex: 0 0 65%; position: relative;">
+
+      <!-- Stop Button -->
+      <div style="text-align: center;">
+        <button id="stopButton">Stop Training</button>
+      </div>
+
+      <!-- Camera Stream -->
+      <img id="stream" src="/biceps/video" width="640" height="480"
+           onload="document.getElementById('loadingOverlay').style.display = 'none';" />
+
+      <!-- Counter Box inside video -->
+      <div class="counter-box">
+        <h3>Reps:<br><span id="repCount">0</span></h3>
+      </div>
+    </div>
   </div>
 
   <!-- Modal -->
@@ -223,14 +244,10 @@
     }, 1000);
   </script>
 
-
-
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const currentUID = "{{ uid }}";
     console.log("📌 UID from Flask:", currentUID);
-
 
     const stopButton = document.getElementById("stopButton");
     stopButton.disabled = false;
@@ -239,13 +256,11 @@
     const reportText = document.getElementById("reportText");
     let chartInstance = null;
 
-
     stopButton.addEventListener("click", () => {
       if (!currentUID) {
-      alert("⚠️ Please login before saving your session.");
-      return;
-    }
-
+        alert("⚠️ Please login before saving your session.");
+        return;
+      }
 
       const durationSec = Math.floor((Date.now() - startTime) / 1000);
       const minutes = Math.floor(durationSec / 60);
@@ -261,8 +276,7 @@
             You completed <strong>${reps}</strong> reps this session.<br>
             Duration: <strong>${minutes}m ${seconds}s</strong><br>
             Performance: <em>${feedback}</em>
-            `
-          ;
+          `;
 
           if (chartInstance) chartInstance.destroy();
           const ctx = document.getElementById('repsChart').getContext('2d');
@@ -289,27 +303,22 @@
           });
 
           modal.style.display = "block";
-          
-         // 🔄 Send to Firebase first
-fetch("http://localhost:5000/save-biceps-session", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ uid: currentUID, reps: reps })
-  })
-.then(res => res.json())
-.then(data => console.log("✅ Firebase saved:", data))
-.catch(err => console.error("❌ Error saving to Firebase:", err));
 
+          fetch("http://localhost:5000/save-biceps-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uid: currentUID, reps: reps })
+          })
+          .then(res => res.json())
+          .then(data => console.log("✅ Firebase saved:", data))
+          .catch(err => console.error("❌ Error saving to Firebase:", err));
 
-
-
-// ✅ Wait a short moment (to allow Firebase to capture the reps count before reset)
-setTimeout(() => {
-  fetch("/biceps/reset");
-  document.getElementById("repCount").textContent = "0";
-  document.getElementById("repStage").textContent = "--";
-  lastSpoken = 0;
-}, 1000); // 1 second delay before reset
+          setTimeout(() => {
+            fetch("/biceps/reset");
+            document.getElementById("repCount").textContent = "0";
+            document.getElementById("repStage").textContent = "--";
+            lastSpoken = 0;
+          }, 1000);
         });
     });
 
